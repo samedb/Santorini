@@ -13,6 +13,7 @@ class GameState(Enum):
     SELEKTOVANJE_FIGURE = 1
     POMERANJE_FIGURE = 2
     GRADNJA = 3 
+    KRAJ_IGRE = 4
 
 class Polje():
     broj_spratova = 0
@@ -51,7 +52,6 @@ class Tabla(Canvas):
         self.na_potezu = Igrac.PLAVI # plavi igrac je prvi na potezu
         self.game_state = GameState.POSTAVLJANJE_FIGURA # u pocetku svi igraci postavljaju svoje figure na tablu
         self.broj_figura = 0 # treba mi za prvu fazu gde se postavljaju figure
-        self.kraj_meca = False
         self.sastavi_poruku()
         self.dozvoljena_polja = []
         self.selektovana_figura = None
@@ -67,7 +67,7 @@ class Tabla(Canvas):
                 #nacrtaj pozadinu
                 if self.selektovana_figura == (i, j): # ako je to polje na kojem se nalazi selektovana figura onda oboji zutom bojom
                     boja = "yellow"
-                elif self.dozvoljena_polja.__contains__((i, j)): #ako je to polje dozvoljeno u sledecem potezu onda zelenom bojom
+                elif (i, j) in self.dozvoljena_polja: #ako je to polje dozvoljeno u sledecem potezu onda zelenom bojom
                     boja = "green"
                 else:
                     boja = "grey" # ako nije nista od toga onda siva boja
@@ -93,7 +93,7 @@ class Tabla(Canvas):
     def mouse_click(self, e):
         print(e.x, e.y) # koordinate piksela na koji je klikuo mis u ovom canvasu
         #ako je kliknuo vam table ili je kraj meca
-        if e.y < 50 or self.kraj_meca:
+        if e.y < 50 or self.game_state == GameState.KRAJ_IGRE:
             return
         # preracunavanje tih kooridnata u indekse polja tabele
         x = int(e.x / 100)
@@ -167,7 +167,7 @@ class Tabla(Canvas):
             raise Exception("Polje je vec zauzeto")
 
     def pomeri_figuru(self, x1, y1, x2, y2):
-        if self.dozvoljena_polja.__contains__((x2, y2)):
+        if (x2, y2) in self.dozvoljena_polja:
             figura = self.stanje.matrica[x1][y1].igrac
             self.stanje.matrica[x1][y1].igrac = None
             self.stanje.matrica[x2][y2].igrac = figura
@@ -181,7 +181,7 @@ class Tabla(Canvas):
             raise Exception("Nedozvoljen potez")
 
     def gradi(self, x, y):
-        if self.dozvoljena_polja.__contains__((x, y)):
+        if (x, y) in self.dozvoljena_polja:
             self.stanje.matrica[x][y].broj_spratova += 1
         else:
             raise Exception("Ne mozete da gradite na ovom polju")
@@ -206,7 +206,7 @@ class Tabla(Canvas):
         '''
 
     def pobeda(self, poruka):
-        self.kraj_meca = True
+        self.game_state = GameState.KRAJ_IGRE
         messagebox.showinfo("Pobeda", poruka)
         self.crtaj(self.stanje)
 
@@ -223,8 +223,8 @@ class Tabla(Canvas):
         return False
 
     def sastavi_poruku(self):
-        if not self.kraj_meca:
-            self.poruka = f"Na potezu je {self.na_potezu} \na gamestate je {self.game_state}"
+        #if self.game_state != GameState.KRAJ_IGRE:
+        self.poruka = f"Na potezu je {self.na_potezu} \na gamestate je {self.game_state}"
 
     def pronadji_dozvoljena_polja(self):
         self.dozvoljena_polja.clear()
