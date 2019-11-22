@@ -1,67 +1,53 @@
-from igra import *
+from tabla import Tabla, Igrac, Potez
 import math
+import random
+import copy
 
+#staticka funkcija procene neke tabele, za nju mi je potreban i potez kojim se doslo do te tabele
+def staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu: Igrac):
+    if tabla.pobeda(na_potezu):
+        return 1000000
+    if tabla.poraz(na_potezu):
+        return -1000000
 
-class Potez():
-    # x1,y1 su pocetna pozicija, x2, y2 su nova pozicija, a xg, yg su pozicija gradnje
-    def __init__(self, x1, y1, x2, y2, xg, yg):
-        self.x1 = x1
-        self.y1 = y1
-        self.x2 = x2
-        self.y2 = y2
-        self.xg = xg
-        self.yg = yg
-
-    def __str__(self):
-        return f"\t({self.x1}, {self.y1}), ({self.x2}, {self.y2}), ({self.xg}, {self.yg})"
-
-    def __repr__(self):
-        return self.__str__()
-
+    m = tabla.matrica[potez.x2][potez.y2].broj_spratova
+    rastojanja = 0
+    for i in range(5):
+        for j in range(5):
+            if tabla.matrica[i][j].igrac == na_potezu:
+                rastojanja += tabla.rastojanje(i, j, potez.xg, potez.yg)
+            elif tabla.matrica[i][j].igrac != na_potezu and tabla.matrica[i][j].igrac != None: # ako je protivnik
+                rastojanja -= tabla.rastojanje(i, j, potez.xg, potez.yg)
+    l = tabla.matrica[potez.xg][potez.yg].broj_spratova * rastojanja
+    return m + l
 
 class Node():
 
-    def __init__(self, stanje: Stanje, igrac: Igrac, potez: Potez):
-        self.stanje = stanje
+    def __init__(self, tabla: Tabla, vrednost = 0):
+        self.tabla = tabla
         self.children = [] # lista cvorova potomaka
-        self.igrac = igrac # za kojeg igraca (crvenog ili plavog) treba da se racuna vrednost
-        self.potez = potez # potez sa kojim se doslo do ovog stanja
-        self.vrednost = self.izracunaj_vrednost_stanja() # vrednsot ovog stanja
+        self.vrednost = vrednost
 
-    def rastojanje(self, x1, y1, x2, y2):
-        dx = abs(x1 - x2)
-        dy = abs(y1 - y2)
-        return abs(dx - dy)
-
-    def izracunaj_vrednost_stanja(self):
-        if self.potez == None:
-            return 0
-        #staticka funkcija procene nekog stanja
-        m = self.stanje.matrica[self.potez.x2][self.potez.y2].broj_spratova
-        rastojanja = 0
-        for i in range(5):
-            for j in range(5):
-                if self.stanje.matrica[i][j].igrac == Igrac.PLAVI:
-                    rastojanja += self.rastojanje(i, j, self.potez.xg, self.potez.yg)
-                elif self.stanje.matrica[i][j].igrac == Igrac.CRVENI:
-                    rastojanja -= self.rastojanje(i, j, self.potez.xg, self.potez.yg)
-        l = self.stanje.matrica[self.potez.xg][self.potez.yg].broj_spratova * rastojanja
-        return m + l
 
     def kraj_igre(self):
         # proveri da li ima mogucih poteza i da li je nego postavio figuru na polje sa nivoom 3
         return False
 
 
-#vraca listu svih mogucih validnih stanja do kojih moze da se dodje iz prosledjenog stanja
-def svi_moguci_potezi(node):
+#vraca listu svih mogucih validnih poteza iz prosledjene table
+def svi_moguci_potezi(node, na_potezu: Igrac):
     #lista mogucih stanja
     moguci_potezi = []
+
+    #ako je igra vec zavrsena u datom stanju onda nista, nema vise poteza, i vracam prazan niz
+    #igra je zavrsena ako jedan od igraca dostigne 3 nivo 
+    if node.tabla.da_li_je_zauzeo_treci_sprat(na_potezu) or node.tabla.da_li_je_zauzeo_treci_sprat(na_potezu.protivnik()):
+        return moguci_potezi
 
     # pronadji dve figure koje pripadaju trenutnom igracu
     for i in range(5):
         for j in range(5):
-            if node.stanje.matrica[i][j].igrac == node.igrac:
+            if node.tabla.matrica[i][j].igrac == na_potezu:
                 # prodji kroz sva njegova susedna polja
                 for k in range(i - 1, i + 2):
                     for l in range(j - 1, j + 2):
@@ -69,9 +55,10 @@ def svi_moguci_potezi(node):
                         unutar_matrice = k >= 0 and k <= 4 and l >= 0 and l <= 4
                         if not unutar_matrice:
                             continue
-                        slobodno_polje = node.stanje.matrica[k][l].igrac == None
-                        odgovara_broj_spratova = node.stanje.matrica[i][j].broj_spratova <= node.stanje.matrica[k][l].broj_spratova + 1
-                        if unutar_matrice and slobodno_polje and odgovara_broj_spratova:
+                        novo_polje = k != i or l != j # da li se polje razlikuje od onog u kome se sad nalazi
+                        slobodno_polje = node.tabla.matrica[k][l].igrac == None
+                        odgovara_broj_spratova = node.tabla.matrica[i][j].broj_spratova + 1 >= node.tabla.matrica[k][l].broj_spratova
+                        if unutar_matrice and novo_polje and slobodno_polje and odgovara_broj_spratova:
                             # kad imamo sva polja u koja mozemo da idemo sad treba iz njih da nadjemo sva polja u koja mozemo da gradimo
                             for m in range(k - 1, k + 2):
                                 for n in range(l - 1, l + 2):
@@ -79,39 +66,53 @@ def svi_moguci_potezi(node):
                                     unutar_matrice = m >= 0 and m <= 4 and n >= 0 and n <= 4
                                     if not unutar_matrice:
                                         continue
-                                    slobodno_polje = node.stanje.matrica[m][n].igrac == None
-                                    moze_da_se_gradi = node.stanje.matrica[m][n].broj_spratova < 4
-                                    if unutar_matrice and slobodno_polje and moze_da_se_gradi:
+                                    novo_polje = m != k or n != l
+                                    slobodno_polje = node.tabla.matrica[m][n].igrac == None
+                                    moze_da_se_gradi = node.tabla.matrica[m][n].broj_spratova < 4
+                                    if unutar_matrice and novo_polje and slobodno_polje and moze_da_se_gradi:
                                         moguci_potezi.append(Potez(i, j, k, l, m, n))
     return moguci_potezi
 
-
-# Ima dva parametra, stanje i potez, nad datim stanjem izvrsava zadati potez i novo stanje vraca
-def izvrsi_potez(stanje: Stanje, potez: Potez):
-    igrac = stanje.matrica[potez.x1][potez.y1].igrac
-    stanje.matrica[potez.x1][potez.y1].igrac = None
-    stanje.matrica[potez.x2][potez.y2].igrac = igrac
-    stanje.matrica[potez.xg][potez.yg].broj_spratova += 1
-    return stanje
-
 # prima pocetni cvor stabla, razvija stablo trazene dubine i vraca ga
-def kreiraj_stablo(node, dubina):
-    if dubina == 0 or node.vrednost == 1 or node.vrednost == -1: # ako je pobedjena ili izgubljena onda nema sta dalje da trazi tu
+def kreiraj_stablo(node: Node, dubina: int, na_potezu: Igrac):
+    if dubina == 0:
         return
-    
-    svi_potezi = svi_moguci_potezi(node)
+
+    svi_potezi = svi_moguci_potezi(node, na_potezu)
+
     for potez in svi_potezi:
-        novo_stanje = izvrsi_potez(node.stanje, potez)
-        novi_node = Node(novo_stanje, node.igrac, potez)
+        nova_tabla = copy.deepcopy(node.tabla)
+        nova_tabla.izvrsi_potez(potez)
+        vrednost = staticka_funkcija_procene(nova_tabla, potez, na_potezu)
+        novi_node = Node(nova_tabla, vrednost)
         node.children.append(novi_node)
-        kreiraj_stablo(novi_node, dubina - 1)
+        kreiraj_stablo(novi_node, dubina - 1, na_potezu)
     
     return node
 
 # prima pocetni cvor stabla, i vraca najbolje sledece stanje/potez uz pomoc minimax algoritma
-def minimax(node):
-
-    pass
+def minimax(node: Node, dubina: int, maximizingPlayer):
+    #print("Dubina", dubina)
+    if dubina == 0 or len(node.children) == 0:
+        return node.vrednost, node.tabla
+    if maximizingPlayer:
+        value = -math.inf
+        tabla = None
+        for child in node.children:
+            v, t = minimax(child, dubina - 1, False)
+            if v > value:
+                value = v
+                tabla = child.tabla
+        return value, tabla
+    else:
+        value = math.inf
+        tabla = None
+        for child in node.children:
+            v, t = minimax(child, dubina - 1, True)
+            if v < value:
+                value = v
+                tabla = child.tabla
+        return value, tabla
 
 # isto kao i ovo iznad samo koristi drugi algoritam
 def minimax_alfa_beta(node: Node):
@@ -127,8 +128,11 @@ def prebaci_u_potez(stanje1, stanje2):
     pass
 
 #glavna funkcija ovog modula, igra poziva ovu funkciju, prosledjuje jos stanje i algoritam koji treba da se koristi a ona vraca sledeci potez
-def sledeci_potez(node, algoritam):
-    return svi_moguci_potezi(node)[0]
+def sledeci_potez(tabla: Tabla, na_potezu: Igrac, algoritam):
+    node = kreiraj_stablo(Node(tabla), 2, na_potezu)
+    vrednost, tabla = minimax(node, 2, True)
+    print("Vrednost odabranog poteza: ", vrednost)
+    return tabla
 
 
 def stampaj_stablo(node):
@@ -139,13 +143,10 @@ def stampaj_stablo(node):
 
 # testiram neke stvari
 
-stanje = Stanje()
+stanje = Tabla()
 stanje.matrica[2][2].igrac = Igrac.PLAVI
 stanje.matrica[4][4].igrac = Igrac.PLAVI
 stanje.matrica[1][1].igrac = Igrac.CRVENI
 stanje.matrica[3][3].igrac = Igrac.CRVENI
 
-node = Node(stanje, Igrac.PLAVI, Potez(0,0,0,0,0,0))
-
-kreiraj_stablo(node, 3)
 
