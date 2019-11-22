@@ -1,6 +1,8 @@
 from tkinter import *
 from enum import Enum
 from tkinter import messagebox
+from ai import Node
+from ai import sledeci_potez
 
 
 class Igrac(Enum):
@@ -113,6 +115,15 @@ class Tabla(Canvas):
                     print("Sad pocinje prava igra")
 
             elif self.game_state == GameState.SELEKTOVANJE_FIGURE:
+                if self.na_potezu == Igrac.CRVENI:
+                    node = Node(self.stanje, self.na_potezu, Potez(0,0,0,0,0,0))
+                    potez = sledeci_potez(node, 0)
+                    #sad jos izvrsi taj potez
+                    igrac = stanje.matrica[potez.x1][potez.y1].igrac
+                    stanje.matrica[potez.x1][potez.y1].igrac = None
+                    stanje.matrica[potez.x2][potez.y2].igrac = igrac
+                    stanje.matrica[potez.xg][potez.yg].broj_spratova += 1
+
                 self.selektuj_figuru(x, y)
                 self.game_state = GameState.POMERANJE_FIGURE
                 self.sastavi_poruku()
