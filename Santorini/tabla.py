@@ -52,6 +52,7 @@ class Tabla():
                 red.append(polje)
             self.matrica.append(red)
 
+
     def postavi_figuru(self, x, y, igrac):
         if self.matrica[x][y].igrac == None:
             self.matrica[x][y].igrac = igrac
