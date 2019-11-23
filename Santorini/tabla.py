@@ -71,7 +71,7 @@ class Tabla():
         self.pomeri_figuru(potez.x1, potez.y1, potez.x2, potez.y2)
         self.gradi(potez.xg, potez.yg)
 
-    def da_li_je_zauzeo_treci_sprat(self, igrac: Igrac):
+    def zauzeo_treci_sprat(self, igrac: Igrac):
         for i in range(5):
             for j in range(5):
                 if self.matrica[i][j].broj_spratova == 3 and self.matrica[i][j].igrac == igrac:
@@ -90,10 +90,10 @@ class Tabla():
         return False
     
     def pobeda(self, na_potezu: Igrac):
-        return self.da_li_je_zauzeo_treci_sprat(na_potezu) or not self.ima_mogucih_poteza(na_potezu.protivnik())
+        return self.zauzeo_treci_sprat(na_potezu) or not self.ima_mogucih_poteza(na_potezu.protivnik())
 
     def poraz(self, na_potezu: Igrac):
-        return self.da_li_je_zauzeo_treci_sprat(na_potezu.protivnik()) or not self.ima_mogucih_poteza(na_potezu)
+        return self.zauzeo_treci_sprat(na_potezu.protivnik()) or not self.ima_mogucih_poteza(na_potezu)
 
     def pronadji_dozvoljena_polja(self, game_state: GameState, x , y, igrac_na_potezu: Igrac = None):
         dozvoljena_polja = []

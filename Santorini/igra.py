@@ -37,7 +37,7 @@ class IgraCanvas(Canvas):
                 if self.selektovana_figura == (i, j): # ako je to polje na kojem se nalazi selektovana figura onda oboji zutom bojom
                     boja = "yellow"
                 #ako je to polje dozvoljeno u sledecem potezu onda zelenom bojom
-                elif (i, j) in self.tabla.pronadji_dozvoljena_polja(self.game_state, self.selektovana_figura[0], self.selektovana_figura[1], self.na_potezu): 
+                elif (i, j) in tabla.pronadji_dozvoljena_polja(self.game_state, self.selektovana_figura[0], self.selektovana_figura[1], self.na_potezu):
                     boja = "green"
                 else:
                     boja = "grey" # ako nije nista od toga onda siva boja
@@ -123,7 +123,7 @@ class IgraCanvas(Canvas):
         # ovde treba da proverava da li igra AI sad
         #privremeno je crveni igrac uvek AI
         if self.na_potezu == Igrac.CRVENI:
-            time.sleep(0.5)
+            #time.sleep(0.5)
 
             if self.game_state == GameState.SELEKTOVANJE_FIGURE:
                 #AI odredi sledeci potez
@@ -169,7 +169,7 @@ class IgraCanvas(Canvas):
             messagebox.showinfo("Pobeda", f"Pobedio je {self.na_potezu.protivnik()} jer {self.na_potezu} nema mogucih poteza!")
             self.game_state = GameState.KRAJ_IGRE
         
-        if self.tabla.da_li_je_zauzeo_treci_sprat(self.na_potezu):
+        if self.tabla.zauzeo_treci_sprat(self.na_potezu):
             messagebox.showinfo("Pobeda", f"Pobedio je {self.na_potezu} jer je zauzeo polje sa nivoom 3!")
             self.game_state = GameState.KRAJ_IGRE
     
