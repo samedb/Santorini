@@ -40,17 +40,14 @@ class Polje():
     broj_spratova = 0
     igrac = None
 
-    def uradiNesto(self, event):
-        print("Radim nesto")
-
 
 class Tabla():
 
     def __init__(self):
         self.matrica = []
-        for i in range (0, 5):
+        for i in range (5):
             red = []
-            for j in range(0, 5):
+            for j in range(5):
                 polje = Polje()
                 red.append(polje)
             self.matrica.append(red)

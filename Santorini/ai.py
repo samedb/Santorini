@@ -85,8 +85,8 @@ def kreiraj_stablo(node: Node, dubina: int, na_potezu: Igrac):
         nova_tabla.izvrsi_potez(potez)
         vrednost = staticka_funkcija_procene(nova_tabla, potez, na_potezu)
         novi_node = Node(nova_tabla, vrednost)
-        node.children.append(novi_node)
         kreiraj_stablo(novi_node, dubina - 1, na_potezu)
+        node.children.append(novi_node)
     
     return node
 
@@ -129,8 +129,8 @@ def prebaci_u_potez(stanje1, stanje2):
 
 #glavna funkcija ovog modula, igra poziva ovu funkciju, prosledjuje jos stanje i algoritam koji treba da se koristi a ona vraca sledeci potez
 def sledeci_potez(tabla: Tabla, na_potezu: Igrac, algoritam):
-    node = kreiraj_stablo(Node(tabla), 2, na_potezu)
-    vrednost, tabla = minimax(node, 2, True)
+    node = kreiraj_stablo(Node(tabla), 3, na_potezu)
+    vrednost, tabla = minimax(node, 3, True)
     print("Vrednost odabranog poteza: ", vrednost)
     return tabla
 
