@@ -111,7 +111,7 @@ class Tabla():
             # moze da klikne i na svoju drugu figuru
             for i in range(5):
                 for j in range(5):
-                    if self.matrica[i][j].igrac == igrac_na_potezu and i != x and j != y:
+                    if self.matrica[i][j].igrac == igrac_na_potezu:
                         dozvoljena_polja.append((i, j))
             # prodji kroz sva polja u neposrednoj blizini selektovane figure
             for i in range(x - 1, x + 2):

@@ -94,13 +94,13 @@ class IgraCanvas(Canvas):
 
         elif self.game_state == GameState.POMERANJE_FIGURE:
             #ako klikne na istu figuru ili na svoju drugu figuru
-            #if self.tabla.matrica[x][y].igrac == self.na_potezu:
-            #    self.selektuj_figuru(x, y)
-            #else:
-            x1, y1 = self.selektovana_figura
-            self.tabla.pomeri_figuru(x1, y1, x, y)
-            self.selektovana_figura = (x, y)
-            self.game_state = GameState.GRADNJA
+            if self.tabla.matrica[x][y].igrac == self.na_potezu:
+                self.selektuj_figuru(x, y)
+            else:
+                x1, y1 = self.selektovana_figura
+                self.tabla.pomeri_figuru(x1, y1, x, y)
+                self.selektovana_figura = (x, y)
+                self.game_state = GameState.GRADNJA
             
         elif self.game_state == GameState.GRADNJA:
             self.tabla.gradi(x, y)
@@ -129,12 +129,13 @@ class IgraCanvas(Canvas):
                 #AI odredi sledeci potez
 #                self.da_li_je_kraj()
                 self.tabla = sledeci_potez(self.tabla, self.na_potezu, None)
-#                self.da_li_je_kraj()
                 self.game_state = GameState.SELEKTOVANJE_FIGURE
+                self.da_li_je_kraj()
                 self.zameni_igraca()
 
             if self.game_state == GameState.POSTAVLJANJE_FIGURA:
                 dozvoljena_polja = self.tabla.pronadji_dozvoljena_polja(self.game_state, -2, -2, self.na_potezu)
+                #ovo da se uradi malo bolje i da se izmesti u ai.py
                 random_polja = random.sample(range(len(dozvoljena_polja)), 2)
                 x1, y1 = dozvoljena_polja[random_polja[0]][0], dozvoljena_polja[random_polja[0]][1]
                 x2, y2 = dozvoljena_polja[random_polja[1]][0], dozvoljena_polja[random_polja[1]][1]
@@ -165,7 +166,6 @@ class IgraCanvas(Canvas):
             return
         #proveri da li je kraj meca, tj da li ima mogucih poteza za igraca na potezu
         if not self.tabla.ima_mogucih_poteza(self.na_potezu):
-
             messagebox.showinfo("Pobeda", f"Pobedio je {self.na_potezu.protivnik()} jer {self.na_potezu} nema mogucih poteza!")
             self.game_state = GameState.KRAJ_IGRE
         
