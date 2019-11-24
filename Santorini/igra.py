@@ -129,13 +129,13 @@ class IgraCanvas(Canvas):
                 #AI odredi sledeci potez
 #                self.da_li_je_kraj()
                 t1 = time.time_ns()
-                #potez2 = MiniMaxNovi().sledeci_potez(self.tabla, self.na_potezu)
-                #t2 = time.time_ns()
+                potez2 = MiniMaxNovi().sledeci_potez(self.tabla, self.na_potezu)
+                t2 = time.time_ns()
                 potez = MiniMaxStari().sledeci_potez(self.tabla, self.na_potezu)
                 t3 = time.time_ns()
 
-                #print("Vreme za novi minimax ", t2 - t1, "a potez je", potez2)
-                print("Vreme za stari minimax", t3 - t1, "a potez je", potez)
+                print("Vreme za novi minimax ", t2 - t1, "a potez je", potez2)
+                print("Vreme za stari minimax", t3 - t2, "a potez je", potez)
 
                 self.tabla.izvrsi_potez(potez)
                 self.game_state = GameState.SELEKTOVANJE_FIGURE
@@ -157,26 +157,7 @@ class IgraCanvas(Canvas):
 
                 self.zameni_igraca()
         
-        if self.na_potezu == Igrac.PLAVI:
-            #time.sleep(0.5)
-
-            if self.game_state == GameState.SELEKTOVANJE_FIGURE:
-                #AI odredi sledeci potez
-#                self.da_li_je_kraj()
-                t1 = time.time_ns()
-                #potez2 = MiniMaxNovi().sledeci_potez(self.tabla, self.na_potezu)
-                #t2 = time.time_ns()
-                potez = MiniMaxNovi().sledeci_potez(self.tabla, self.na_potezu)
-                t3 = time.time_ns()
-
-                #print("Vreme za novi minimax ", t2 - t1, "a potez je", potez2)
-                print("Vreme za novi minimax", t3 - t1, "a potez je", potez)
-
-                self.tabla.izvrsi_potez(potez)
-                self.game_state = GameState.SELEKTOVANJE_FIGURE
-                self.da_li_je_kraj()
-                self.zameni_igraca()
-            
+        
 
         '''
             if trenutni igrac == AI

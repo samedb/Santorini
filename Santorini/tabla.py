@@ -1,4 +1,5 @@
 from enum import Enum
+import numpy as np
 
 class Igrac(Enum):
     PLAVI = 0
