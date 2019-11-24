@@ -34,10 +34,24 @@ class Node:
         self.children = []  # lista cvorova potomaka
         #self.vrednost = vrednost
 
-    # ja stvarno ne znam sta ovo ovde radi
-    def kraj_igre(self):
-        # proveri da li ima mogucih poteza i da li je nego postavio figuru na polje sa nivoom 3
-        return False
+class Node2:
+    def __init__(self, vrednost = 0, children = None):
+        self.vrednost = vrednost
+        self.children = children or []
+    
+    def max_child_vrednost(self):
+        value = -math.inf
+        for node in self.children:
+            if (node.vrednost > value):
+                value = node.vrednost
+        return value
+
+    def min_child_vrednost(self):
+        value = math.inf
+        for node in self.children:
+            if (node.vrednost < value):
+                value = node.vrednost
+        return value
 
 
 #Abstraktna klasa za AI, koju ce da naslede svi razliciti algoritmi za easy, medium i hard
@@ -58,7 +72,7 @@ class MiniMaxStari(AI):
     def sledeci_potez(self, tabla, na_potezu):
         node = kreiraj_stablo(Node(tabla, None), 3, na_potezu)
         vrednost, potez = self.minimax(node, 3, True, na_potezu)
-        print("Vrednost odabranog poteza: ", vrednost, potez)
+        print("Stari minimax Vrednost odabranog poteza: ", vrednost, potez)
         return potez
 
     # prima pocetni cvor stabla, i vraca najbolje sledece stanje/potez uz pomoc minimax algoritma
@@ -66,7 +80,7 @@ class MiniMaxStari(AI):
         # print("Dubina", dubina)
         if dubina == 0 or len(node.children) == 0:
             # ovo moze da se spoji kao jedan parametar, da ne bude posebno potez i tabla
-            return staticka_funkcija_procene(node.tabla, node.potez, na_potezu) + dubina, node.potez
+            return staticka_funkcija_procene(node.tabla, node.potez, na_potezu), node.potez
             # ovo plus dubina je ovde sa razlogom, na ovaj nacin vise vrednuje poteze koji se nalaze pri vrhu stabla
 
         if maximizing_player:
@@ -74,6 +88,8 @@ class MiniMaxStari(AI):
             potez = None
             for child in node.children:
                 v, t = self.minimax(child, dubina - 1, False, na_potezu)
+                if dubina == 3:
+                    print("stari minimax:", child.potez, v)
                 if v > value:
                     value = v
                     potez = child.potez
@@ -88,7 +104,50 @@ class MiniMaxStari(AI):
                     potez = child.potez
             return value, potez
 
+
+class MiniMaxNovi(AI):
+    def sledeci_potez(self, tabla, na_potezu):
+        stablo = self.kreiraj_stablo(tabla, 3, na_potezu, True, None)
+        svi_potezi = svi_moguci_potezi(tabla, na_potezu)
+        for i in range(len(svi_potezi)):
+            print(svi_potezi[i], stablo.children[i].vrednost)
+        
+        for i in range(len(svi_potezi)):
+            if stablo.children[i].vrednost == stablo.vrednost:
+                return svi_potezi[i]
+
+    # rekurzivna funkcija koja kreira stablo dubine n, stablo se sastoji od Node2 objekata, i izvrsava minimax i izracuna vrednost svakog cvora u stablu
+    def kreiraj_stablo(self, tabla, dubina, na_potezu, maximizing_player, potez):
+        if dubina == 0:
+            vrednost = staticka_funkcija_procene(tabla, potez, na_potezu)
+            return Node2(vrednost)
+        
+        if maximizing_player:
+            svi_potezi = svi_moguci_potezi(tabla, na_potezu)
+        else:
+            svi_potezi = svi_moguci_potezi(tabla, na_potezu.protivnik())
+
+        # ako nema mogucih poteza vrati vrednost tog cvora
+        if len(svi_potezi) == 0:
+            vrednost = staticka_funkcija_procene(tabla, potez, na_potezu)
+            return Node2(vrednost)
+        else:
+            novi_node = Node2()
+            for p in svi_potezi:
+                nova_tabla = copy.deepcopy(tabla)
+                nova_tabla.izvrsi_potez(p)
+                novi_node.children.append(self.kreiraj_stablo(nova_tabla, dubina - 1, na_potezu, not maximizing_player, p))
+
+        if maximizing_player:
+            novi_node.vrednost = novi_node.max_child_vrednost()
+        else:
+            novi_node.vrednost = novi_node.min_child_vrednost()
+        
+        return novi_node
+
     
+
+        
 
 
 # vraca listu svih mogucih validnih poteza iz prosledjene table
