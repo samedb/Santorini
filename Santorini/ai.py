@@ -92,13 +92,13 @@ class MiniMaxStari(AI):
 
 
 # vraca listu svih mogucih validnih poteza iz prosledjene table
-def svi_moguci_potezi(node, na_potezu: Igrac):
+def svi_moguci_potezi(tabla, na_potezu: Igrac):
     # lista mogucih stanja
     moguci_potezi = []
 
     # ako je igra vec zavrsena u datom stanju onda nista, nema vise poteza, i vracam prazan niz
     # igra je zavrsena ako jedan od igraca dostigne 3 nivo
-    if node.tabla.zauzeo_treci_sprat(na_potezu) or node.tabla.zauzeo_treci_sprat(na_potezu.protivnik()):
+    if tabla.zauzeo_treci_sprat(na_potezu) or tabla.zauzeo_treci_sprat(na_potezu.protivnik()):
         return moguci_potezi
 
     # pronadji dve figure koje pripadaju trenutnom igracu
@@ -107,7 +107,7 @@ def svi_moguci_potezi(node, na_potezu: Igrac):
         if broj_pronadjenih_figura == 2:
             break
         for j in range(5):
-            if node.tabla.matrica[i][j].igrac == na_potezu:
+            if tabla.matrica[i][j].igrac == na_potezu:
                 broj_pronadjenih_figura += 1
                 # prodji kroz sva njegova susedna polja
                 for k in range(i - 1, i + 2):
@@ -117,8 +117,8 @@ def svi_moguci_potezi(node, na_potezu: Igrac):
                         if not unutar_matrice:
                             continue
                         novo_polje = k != i or l != j  # da li se polje razlikuje od onog u kome se sad nalazi
-                        slobodno_polje = node.tabla.matrica[k][l].igrac == None
-                        odgovara_broj_spratova = node.tabla.matrica[i][j].broj_spratova + 1 >= node.tabla.matrica[k][l].broj_spratova
+                        slobodno_polje = tabla.matrica[k][l].igrac == None
+                        odgovara_broj_spratova = tabla.matrica[i][j].broj_spratova + 1 >= tabla.matrica[k][l].broj_spratova
                         if unutar_matrice and novo_polje and slobodno_polje and odgovara_broj_spratova:
                             # kad imamo sva polja u koja mozemo da idemo sad treba iz njih da nadjemo sva polja u koja mozemo da gradimo
                             for m in range(k - 1, k + 2):
@@ -128,8 +128,8 @@ def svi_moguci_potezi(node, na_potezu: Igrac):
                                     if not unutar_matrice:
                                         continue
                                     novo_polje = m != k or n != l
-                                    slobodno_polje = node.tabla.matrica[m][n].igrac == None
-                                    moze_da_se_gradi = node.tabla.matrica[m][n].broj_spratova < 4
+                                    slobodno_polje = tabla.matrica[m][n].igrac == None
+                                    moze_da_se_gradi = tabla.matrica[m][n].broj_spratova < 4
                                     if unutar_matrice and novo_polje and slobodno_polje and moze_da_se_gradi:
                                         moguci_potezi.append(Potez(i, j, k, l, m, n))
     return moguci_potezi
@@ -140,7 +140,7 @@ def kreiraj_stablo(node: Node, dubina: int, na_potezu: Igrac):
     if dubina == 0:
         return
 
-    svi_potezi = svi_moguci_potezi(node, na_potezu)
+    svi_potezi = svi_moguci_potezi(node.tabla, na_potezu)
     if dubina == 3:
         print("Broj svih mogucih poteza iz ovog stanja: ", len(svi_potezi))
 
