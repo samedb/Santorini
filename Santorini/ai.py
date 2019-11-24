@@ -2,6 +2,7 @@ from tabla import Tabla, Igrac, Potez
 import math
 import random
 import copy
+from abc import ABC, abstractmethod
 
 
 # staticka funkcija procene neke tabele, za nju mi je potreban i potez kojim se doslo do te tabele
@@ -39,6 +40,57 @@ class Node:
         return False
 
 
+#Abstraktna klasa za AI, koju ce da naslede svi razliciti algoritmi za easy, medium i hard
+class AI(ABC):
+
+    #todo u konstruktoru treba da otvori window gde ce da se prikazuju vrednosti mogucih poteza
+
+    # glavna funkcija ovog modula, igra poziva ovu funkciju, prosledjuje jos stanje i algoritam koji treba da se koristi
+    # a ona vraca sledeci potez
+    @abstractmethod
+    def sledeci_potez(self, tabla, na_potezu):
+        pass
+
+
+
+class MiniMaxStari(AI):
+
+    def sledeci_potez(self, tabla, na_potezu):
+        node = kreiraj_stablo(Node(tabla, None), 3, na_potezu)
+        vrednost, potez = self.minimax(node, 3, True, na_potezu)
+        print("Vrednost odabranog poteza: ", vrednost, potez)
+        return potez
+
+    # prima pocetni cvor stabla, i vraca najbolje sledece stanje/potez uz pomoc minimax algoritma
+    def minimax(self, node: Node, dubina: int, maximizing_player, na_potezu):
+        # print("Dubina", dubina)
+        if dubina == 0 or len(node.children) == 0:
+            # ovo moze da se spoji kao jedan parametar, da ne bude posebno potez i tabla
+            return staticka_funkcija_procene(node.tabla, node.potez, na_potezu) + dubina, node.potez
+            # ovo plus dubina je ovde sa razlogom, na ovaj nacin vise vrednuje poteze koji se nalaze pri vrhu stabla
+
+        if maximizing_player:
+            value = -math.inf
+            potez = None
+            for child in node.children:
+                v, t = self.minimax(child, dubina - 1, False, na_potezu)
+                if v > value:
+                    value = v
+                    potez = child.potez
+            return value, potez
+        else:
+            value = math.inf
+            potez = None
+            for child in node.children:
+                v, t = self.minimax(child, dubina - 1, True, na_potezu)
+                if v < value:
+                    value = v
+                    potez = child.potez
+            return value, potez
+
+    
+
+
 # vraca listu svih mogucih validnih poteza iz prosledjene table
 def svi_moguci_potezi(node, na_potezu: Igrac):
     # lista mogucih stanja
@@ -50,9 +102,13 @@ def svi_moguci_potezi(node, na_potezu: Igrac):
         return moguci_potezi
 
     # pronadji dve figure koje pripadaju trenutnom igracu
+    broj_pronadjenih_figura = 0
     for i in range(5):
+        if broj_pronadjenih_figura == 2:
+            break
         for j in range(5):
             if node.tabla.matrica[i][j].igrac == na_potezu:
+                broj_pronadjenih_figura += 1
                 # prodji kroz sva njegova susedna polja
                 for k in range(i - 1, i + 2):
                     for l in range(j - 1, j + 2):
@@ -62,8 +118,7 @@ def svi_moguci_potezi(node, na_potezu: Igrac):
                             continue
                         novo_polje = k != i or l != j  # da li se polje razlikuje od onog u kome se sad nalazi
                         slobodno_polje = node.tabla.matrica[k][l].igrac == None
-                        odgovara_broj_spratova = node.tabla.matrica[i][j].broj_spratova + 1 >= node.tabla.matrica[k][
-                            l].broj_spratova
+                        odgovara_broj_spratova = node.tabla.matrica[i][j].broj_spratova + 1 >= node.tabla.matrica[k][l].broj_spratova
                         if unutar_matrice and novo_polje and slobodno_polje and odgovara_broj_spratova:
                             # kad imamo sva polja u koja mozemo da idemo sad treba iz njih da nadjemo sva polja u koja mozemo da gradimo
                             for m in range(k - 1, k + 2):
@@ -100,71 +155,20 @@ def kreiraj_stablo(node: Node, dubina: int, na_potezu: Igrac):
     return node
 
 
-# prima pocetni cvor stabla, i vraca najbolje sledece stanje/potez uz pomoc minimax algoritma
-def minimax(node: Node, dubina: int, maximizing_player, na_potezu):
-    # print("Dubina", dubina)
-    if dubina == 0 or len(node.children) == 0:
-        # ovo moze da se spoji kao jedan parametar, da ne bude posebno potez i tabla
-        return staticka_funkcija_procene(node.tabla, node.potez, na_potezu) + dubina, node.potez
-        # ovo plus dubina je ovde sa razlogom, na ovaj nacin vise vrednuje poteze koji se nalaze pri vrhu stabla
 
-    if maximizing_player:
-        value = -math.inf
-        potez = None
-        for child in node.children:
-            v, t = minimax(child, dubina - 1, False, na_potezu)
-            if v > value:
-                value = v
-                potez = child.potez
-        return value, potez
-    else:
-        value = math.inf
-        potez = None
-        for child in node.children:
-            v, t = minimax(child, dubina - 1, True, na_potezu)
-            if v < value:
-                value = v
-                potez = child.potez
-        return value, potez
 
 
 # isto kao i ovo iznad samo koristi drugi algoritam
-def minimax_alfa_beta(node: Node):
-    return node.children[0]
+#def minimax_alfa_beta(node: Node):
+#    return node.children[0]
 
 
 # posto se u zadatku trazi jos jedan treci optimizovani algoritam on ide ovde
-def super_zeznuti_algoritam(node):
-    pass
+#def super_zeznuti_algoritam(node):
+#    pass
 
 
 # ovo ce vrv da se izbaci a mozda i nece, prima dva stanja kao parametre i vraca potez kojim se prelazi iz stanja1 u
 # stanje 2 u formatu kao sto se trazi u zadatku
-def prebaci_u_potez(stanje1, stanje2):
-    pass
-
-
-# glavna funkcija ovog modula, igra poziva ovu funkciju, prosledjuje jos stanje i algoritam koji treba da se koristi
-# a ona vraca sledeci potez
-def sledeci_potez(tabla: Tabla, na_potezu: Igrac, algoritam):
-    node = kreiraj_stablo(Node(tabla, None), 3, na_potezu)
-    print("Stablo kreirano")
-    vrednost, potez = minimax(node, 3, True, na_potezu)
-    print("Vrednost odabranog poteza: ", vrednost, potez)
-    tabla.izvrsi_potez(potez)
-    return tabla
-
-
-def stampaj_stablo(node):
-    print(node.stanje.matrica)
-    for n in node.children:
-        stampaj_stablo(n)
-
-
-# testiram neke stvari
-
-stanje = Tabla()
-stanje.matrica[2][2].igrac = Igrac.PLAVI
-stanje.matrica[4][4].igrac = Igrac.PLAVI
-stanje.matrica[1][1].igrac = Igrac.CRVENI
-stanje.matrica[3][3].igrac = Igrac.CRVENI
+#def prebaci_u_potez(stanje1, stanje2):
+#    pass

@@ -3,7 +3,7 @@ from enum import Enum
 from tkinter import messagebox
 import time
 import random
-from ai import sledeci_potez
+from ai import MiniMaxStari
 from tabla import Tabla, Igrac, GameState
 
 
@@ -128,7 +128,8 @@ class IgraCanvas(Canvas):
             if self.game_state == GameState.SELEKTOVANJE_FIGURE:
                 #AI odredi sledeci potez
 #                self.da_li_je_kraj()
-                self.tabla = sledeci_potez(self.tabla, self.na_potezu, None)
+                potez = MiniMaxStari().sledeci_potez(self.tabla, self.na_potezu)
+                self.tabla.izvrsi_potez(potez)
                 self.game_state = GameState.SELEKTOVANJE_FIGURE
                 self.da_li_je_kraj()
                 self.zameni_igraca()
