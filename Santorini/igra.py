@@ -128,14 +128,14 @@ class IgraCanvas(Canvas):
             if self.game_state == GameState.SELEKTOVANJE_FIGURE:
                 #AI odredi sledeci potez
 #                self.da_li_je_kraj()
-                t1 = time.time_ns()
-                potez2 = MiniMaxNovi().sledeci_potez(self.tabla, self.na_potezu)
-                t2 = time.time_ns()
-                potez = MiniMaxStari().sledeci_potez(self.tabla, self.na_potezu)
-                t3 = time.time_ns()
+                #t1 = time.time_ns()
+                potez = MiniMaxNovi().sledeci_potez(self.tabla, self.na_potezu)
+                #t2 = time.time_ns()
+                #potez = MiniMaxStari().sledeci_potez(self.tabla, self.na_potezu)
+                #t3 = time.time_ns()
 
-                print("Vreme za novi minimax ", t2 - t1, "a potez je", potez2)
-                print("Vreme za stari minimax", t3 - t2, "a potez je", potez)
+                #print("Vreme za novi minimax ", t2 - t1, "a potez je", potez2)
+                #print("Vreme za stari minimax", t3 - t2, "a potez je", potez)
 
                 self.tabla.izvrsi_potez(potez)
                 self.game_state = GameState.SELEKTOVANJE_FIGURE

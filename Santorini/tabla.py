@@ -1,5 +1,4 @@
 from enum import Enum
-import numpy as np
 
 class Igrac(Enum):
     PLAVI = 0
@@ -11,6 +10,11 @@ class Igrac(Enum):
         else:
             return Igrac.PLAVI
 
+IGRAC_PLAVI = 0
+IGRAC_CRVENI = 1
+
+def protivnik(igrac):
+    return 1 - igrac
 
 class GameState(Enum):
     POSTAVLJANJE_FIGURA = 0
@@ -44,14 +48,21 @@ class Polje():
 
 class Tabla():
 
-    def __init__(self):
-        self.matrica = []
-        for i in range (5):
-            red = []
-            for j in range(5):
-                polje = Polje()
-                red.append(polje)
-            self.matrica.append(red)
+    def __init__(self, tabla = None):
+        self.matrica = ((Polje(), Polje(), Polje(), Polje(), Polje()),
+                        (Polje(), Polje(), Polje(), Polje(), Polje()),
+                        (Polje(), Polje(), Polje(), Polje(), Polje()),
+                        (Polje(), Polje(), Polje(), Polje(), Polje()),
+                        (Polje(), Polje(), Polje(), Polje(), Polje()))
+        
+        
+        if tabla != None:
+            for i in range(5):
+                for j in range(5):
+                    self.matrica[i][j].broj_spratova = tabla.matrica[i][j].broj_spratova
+                    if tabla.matrica[i][j].igrac != None:
+                        self.matrica[i][j].igrac = tabla.matrica[i][j].igrac
+
 
 
     def postavi_figuru(self, x, y, igrac):

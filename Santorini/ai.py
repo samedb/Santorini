@@ -2,13 +2,14 @@ from tabla import Tabla, Igrac, Potez
 import math
 import random
 import copy
+import time
 from abc import ABC, abstractmethod
 
 
 # staticka funkcija procene neke tabele, za nju mi je potreban i potez kojim se doslo do te tabele
 def staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu: Igrac):
     if tabla.pobeda(na_potezu):
-        print("Potbeda")
+        print("Pobeda")
         return 100
     if tabla.poraz(na_potezu):
         print("Poraz")
@@ -109,8 +110,8 @@ class MiniMaxNovi(AI):
     def sledeci_potez(self, tabla, na_potezu):
         stablo = self.kreiraj_stablo(tabla, 3, na_potezu, True, None)
         svi_potezi = svi_moguci_potezi(tabla, na_potezu)
-        for i in range(len(svi_potezi)):
-            print(svi_potezi[i], stablo.children[i].vrednost)
+        #for i in range(len(svi_potezi)):
+        #    print(svi_potezi[i], stablo.children[i].vrednost)
         
         for i in range(len(svi_potezi)):
             if stablo.children[i].vrednost == stablo.vrednost:
@@ -134,7 +135,8 @@ class MiniMaxNovi(AI):
         else:
             novi_node = Node2()
             for p in svi_potezi:
-                nova_tabla = copy.deepcopy(tabla)
+                #nova_tabla = copy.deepcopy(tabla)
+                nova_tabla = Tabla(tabla)
                 nova_tabla.izvrsi_potez(p)
                 novi_node.children.append(self.kreiraj_stablo(nova_tabla, dubina - 1, na_potezu, not maximizing_player, p))
 
@@ -231,3 +233,23 @@ def kreiraj_stablo(node: Node, dubina: int, na_potezu: Igrac):
 # stanje 2 u formatu kao sto se trazi u zadatku
 #def prebaci_u_potez(stanje1, stanje2):
 #    pass
+
+
+
+#test
+if __name__ == "__main__":
+    tabla = Tabla()
+
+    tabla.matrica[2][2].igrac = Igrac.PLAVI
+    tabla.matrica[2][3].igrac = Igrac.PLAVI
+    tabla.matrica[0][0].igrac = Igrac.CRVENI
+    tabla.matrica[0][1].igrac = Igrac.CRVENI
+
+    ukupno = 0
+    for i in range(5):
+        start = time.time()
+        potez = MiniMaxNovi().sledeci_potez(tabla, Igrac.PLAVI)
+        print("Vreme potrebno za izracunavanje: ", time.time() - start)
+        ukupno += time.time() - start
+
+    print("Prosek:", ukupno / 5.)
