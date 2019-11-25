@@ -1,14 +1,5 @@
 from enum import Enum
 
-class Igrac(Enum):
-    PLAVI = 0
-    CRVENI = 1
-
-    def protivnik(self):
-        if self == Igrac.PLAVI:
-            return Igrac.CRVENI
-        else:
-            return Igrac.PLAVI
 
 IGRAC_PLAVI = 0
 IGRAC_CRVENI = 1
@@ -83,14 +74,14 @@ class Tabla():
         self.pomeri_figuru(potez.x1, potez.y1, potez.x2, potez.y2)
         self.gradi(potez.xg, potez.yg)
 
-    def zauzeo_treci_sprat(self, igrac: Igrac):
+    def zauzeo_treci_sprat(self, igrac):
         for i in range(5):
             for j in range(5):
                 if self.matrica[i][j].broj_spratova == 3 and self.matrica[i][j].igrac == igrac:
                     return True
         return False
 
-    def ima_mogucih_poteza(self, igrac: Igrac):
+    def ima_mogucih_poteza(self, igrac):
         for x in range(5):
             for y in range(5):
                 if self.matrica[x][y].igrac == igrac:
@@ -101,13 +92,13 @@ class Tabla():
                                 return True
         return False
     
-    def pobeda(self, na_potezu: Igrac):
-        return self.zauzeo_treci_sprat(na_potezu) or not self.ima_mogucih_poteza(na_potezu.protivnik())
+    def pobeda(self, na_potezu):
+        return self.zauzeo_treci_sprat(na_potezu) or not self.ima_mogucih_poteza(protivnik(na_potezu))
 
-    def poraz(self, na_potezu: Igrac):
-        return self.zauzeo_treci_sprat(na_potezu.protivnik()) or not self.ima_mogucih_poteza(na_potezu)
+    def poraz(self, na_potezu):
+        return self.zauzeo_treci_sprat(protivnik(na_potezu)) or not self.ima_mogucih_poteza(na_potezu)
 
-    def pronadji_dozvoljena_polja(self, game_state: GameState, x , y, igrac_na_potezu: Igrac = None):
+    def pronadji_dozvoljena_polja(self, game_state: GameState, x , y, igrac_na_potezu = None):
         dozvoljena_polja = []
         if game_state == GameState.POSTAVLJANJE_FIGURA:
             for i in range(0, 5):

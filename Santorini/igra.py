@@ -4,7 +4,7 @@ from tkinter import messagebox
 import time
 import random
 from ai import MiniMaxStari, MiniMaxNovi
-from tabla import Tabla, Igrac, GameState
+from tabla import Tabla, GameState, IGRAC_CRVENI, IGRAC_PLAVI, protivnik
 
 
 
@@ -18,7 +18,7 @@ class IgraCanvas(Canvas):
         self.bind("<Button-1>", self.mouse_click)
         #inicijalizacije matrice
         self.tabla = Tabla()
-        self.na_potezu = Igrac.PLAVI # plavi igrac je prvi na potezu
+        self.na_potezu = IGRAC_PLAVI # plavi igrac je prvi na potezu
         self.game_state = GameState.POSTAVLJANJE_FIGURA # u pocetku svi igraci postavljaju svoje figure na tablu
         self.broj_figura = 0 # treba mi za prvu fazu gde se postavljaju figure
         self.sastavi_poruku()
@@ -53,9 +53,9 @@ class IgraCanvas(Canvas):
                 if stepen >= 4:
                     self.create_oval(x1 + 30, y1 + 30, x1 + 70, y1 + 70, fill = "black")
                 #nacrtaj igraca
-                if tabla.matrica[i][j].igrac == Igrac.PLAVI: # 0 znaci plavi igrac
+                if tabla.matrica[i][j].igrac == IGRAC_PLAVI: # 0 znaci plavi igrac
                     self.create_oval(x1 + 30, y1 + 30, x1 + 70, y1 + 70, fill = "blue")
-                elif tabla.matrica[i][j].igrac == Igrac.CRVENI: # 1 znaci crveni igrac
+                elif tabla.matrica[i][j].igrac == IGRAC_CRVENI: # 1 znaci crveni igrac
                     self.create_oval(x1 + 30, y1 + 30, x1 + 70, y1 + 70, fill = "red")
 
         self.create_text(250, 25, text = self.poruka, font = "Airal 12")
@@ -115,14 +115,14 @@ class IgraCanvas(Canvas):
         self.selektovana_figura = (x, y)
 
     def zameni_igraca(self):
-        self.na_potezu = self.na_potezu.protivnik()
+        self.na_potezu = protivnik(self.na_potezu)
 
         self.selektovana_figura = (-2, -2)
         self.crtaj(self.tabla)
 
         # ovde treba da proverava da li igra AI sad
         #privremeno je crveni igrac uvek AI
-        if self.na_potezu == Igrac.CRVENI:
+        if self.na_potezu == IGRAC_CRVENI:
             #time.sleep(0.5)
 
             if self.game_state == GameState.SELEKTOVANJE_FIGURE:

@@ -1,4 +1,4 @@
-from tabla import Tabla, Igrac, Potez
+from tabla import Tabla, IGRAC_CRVENI, IGRAC_PLAVI, protivnik, Potez
 import math
 import random
 import copy
@@ -7,7 +7,7 @@ from abc import ABC, abstractmethod
 
 
 # staticka funkcija procene neke tabele, za nju mi je potreban i potez kojim se doslo do te tabele
-def staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu: Igrac):
+def staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):
     if tabla.pobeda(na_potezu):
         print("Pobeda")
         return 100
@@ -126,7 +126,7 @@ class MiniMaxNovi(AI):
         if maximizing_player:
             svi_potezi = svi_moguci_potezi(tabla, na_potezu)
         else:
-            svi_potezi = svi_moguci_potezi(tabla, na_potezu.protivnik())
+            svi_potezi = svi_moguci_potezi(tabla, protivnik(na_potezu))
 
         # ako nema mogucih poteza vrati vrednost tog cvora
         if len(svi_potezi) == 0:
@@ -153,13 +153,13 @@ class MiniMaxNovi(AI):
 
 
 # vraca listu svih mogucih validnih poteza iz prosledjene table
-def svi_moguci_potezi(tabla, na_potezu: Igrac):
+def svi_moguci_potezi(tabla, na_potezu):
     # lista mogucih stanja
     moguci_potezi = []
 
     # ako je igra vec zavrsena u datom stanju onda nista, nema vise poteza, i vracam prazan niz
     # igra je zavrsena ako jedan od igraca dostigne 3 nivo
-    if tabla.zauzeo_treci_sprat(na_potezu) or tabla.zauzeo_treci_sprat(na_potezu.protivnik()):
+    if tabla.zauzeo_treci_sprat(na_potezu) or tabla.zauzeo_treci_sprat(protivnik(na_potezu)):
         return moguci_potezi
 
     # pronadji dve figure koje pripadaju trenutnom igracu
@@ -197,7 +197,7 @@ def svi_moguci_potezi(tabla, na_potezu: Igrac):
 
 
 # prima pocetni cvor stabla, razvija stablo trazene dubine i vraca ga
-def kreiraj_stablo(node: Node, dubina: int, na_potezu: Igrac):
+def kreiraj_stablo(node: Node, dubina: int, na_potezu):
     if dubina == 0:
         return
 
@@ -210,7 +210,7 @@ def kreiraj_stablo(node: Node, dubina: int, na_potezu: Igrac):
         nova_tabla.izvrsi_potez(potez)
         #vrednost = staticka_funkcija_procene(nova_tabla, potez, na_potezu)
         novi_node = Node(nova_tabla, potez)
-        kreiraj_stablo(novi_node, dubina - 1, na_potezu.protivnik())
+        kreiraj_stablo(novi_node, dubina - 1, protivnik(na_potezu))
         node.children.append(novi_node)
 
     return node
@@ -240,16 +240,16 @@ def kreiraj_stablo(node: Node, dubina: int, na_potezu: Igrac):
 if __name__ == "__main__":
     tabla = Tabla()
 
-    tabla.matrica[2][2].igrac = Igrac.PLAVI
-    tabla.matrica[2][3].igrac = Igrac.PLAVI
-    tabla.matrica[0][0].igrac = Igrac.CRVENI
-    tabla.matrica[0][1].igrac = Igrac.CRVENI
+    tabla.matrica[2][2].igrac = IGRAC_PLAVI
+    tabla.matrica[2][3].igrac = IGRAC_PLAVI
+    tabla.matrica[0][0].igrac = IGRAC_CRVENI
+    tabla.matrica[0][1].igrac = IGRAC_CRVENI
 
     ukupno = 0
-    for i in range(5):
+    for i in range(20):
         start = time.time()
-        potez = MiniMaxNovi().sledeci_potez(tabla, Igrac.PLAVI)
+        potez = MiniMaxNovi().sledeci_potez(tabla, IGRAC_PLAVI)
         print("Vreme potrebno za izracunavanje: ", time.time() - start)
         ukupno += time.time() - start
 
-    print("Prosek:", ukupno / 5.)
+    print("Prosek:", ukupno / 20.)
