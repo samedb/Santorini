@@ -3,7 +3,7 @@ from enum import Enum
 from tkinter import messagebox
 import time
 import random
-from ai import MiniMaxStari, MiniMaxNovi
+from ai import MiniMaxStari, MiniMaxNovi, MiniMaxAlfaBeta
 from tabla import Tabla, GameState, IGRAC_CRVENI, IGRAC_PLAVI, protivnik
 
 
@@ -129,7 +129,7 @@ class IgraCanvas(Canvas):
                 #AI odredi sledeci potez
 #                self.da_li_je_kraj()
                 #t1 = time.time_ns()
-                potez = MiniMaxNovi().sledeci_potez(self.tabla, self.na_potezu)
+                potez = MiniMaxAlfaBeta().sledeci_potez(self.tabla, self.na_potezu)
                 #t2 = time.time_ns()
                 #potez = MiniMaxStari().sledeci_potez(self.tabla, self.na_potezu)
                 #t3 = time.time_ns()

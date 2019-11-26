@@ -135,7 +135,7 @@ class MiniMaxNovi(AI):
         else:
             novi_node = Node2()
             for p in svi_potezi:
-                #nova_tabla = copy.deepcopy(tabla)
+                #nova_tabla = copy.deepcopy(tabla) deepcopy je ZLO
                 nova_tabla = Tabla(tabla)
                 nova_tabla.izvrsi_potez(p)
                 novi_node.children.append(self.kreiraj_stablo(nova_tabla, dubina - 1, na_potezu, not maximizing_player, p))
@@ -149,7 +149,76 @@ class MiniMaxNovi(AI):
 
     
 
+class MiniMaxAlfaBeta(AI): 
+    lista_poteza = []
+    dubina = 4 # konstanta, koliku dubinu treba da pretrazuje...idk
+    na_potezu = IGRAC_CRVENI # ovo treba da pokazuje za koga se racuna staticka funkcija procene, i ne treba da bude const, vec da se zadaje u ctoru
+    
+    def sledeci_potez(self, tabla, na_potezu):
+        self.na_potezu = na_potezu
+        return self.alfa_beta_pretraga(tabla, self.dubina, None)
+
+
+    def alfa_beta_pretraga(self, tabla, dubina, potez):
+        self.lista_poteza.clear()
+        v = self.max_value(tabla, dubina, potez, -1000, 1000)
         
+        for p in self.lista_poteza:
+            if p[0] == v:
+                return p[1]
+
+    def max_value(self, tabla, dubina, potez, alfa, beta):
+        if dubina == 0:
+            vrednost = staticka_funkcija_procene(tabla, potez, self.na_potezu) #ova konstanta je samo privremena todo
+            return vrednost
+
+        v = -1000
+
+        svi_potezi = svi_moguci_potezi(tabla, self.na_potezu)
+        # ako nema mogucih poteza vrati vrednost tog cvora
+        if len(svi_potezi) == 0:
+            vrednost = staticka_funkcija_procene(tabla, potez, self.na_potezu)
+            return vrednost
+        else:
+            for p in svi_potezi:
+                nova_tabla = Tabla(tabla)
+                nova_tabla.izvrsi_potez(p)
+                nova_vrednost = self.min_value(nova_tabla, dubina - 1, p, alfa, beta)
+
+                # sad upisujem sve poteze u self.lista_poteza da bih na kraju znao koji da uzmem
+                if dubina == self.dubina:
+                    self.lista_poteza.append((nova_vrednost, p))
+
+                v = max(v, nova_vrednost)
+                if v >= beta:
+                    return v
+                alfa = max(alfa, v)
+        return v
+
+
+    def min_value(self, tabla, dubina, potez, alfa, beta):
+        if dubina == 0:
+            vrednost = staticka_funkcija_procene(tabla, potez, self.na_potezu) #ova konstanta je samo privremena todo
+            return vrednost
+
+        v = 1000
+
+        svi_potezi = svi_moguci_potezi(tabla, protivnik(self.na_potezu))
+        # ako nema mogucih poteza vrati vrednost tog cvora
+        if len(svi_potezi) == 0:
+            vrednost = staticka_funkcija_procene(tabla, potez, self.na_potezu)
+            return vrednost
+        else:
+            for p in svi_potezi:
+                nova_tabla = Tabla(tabla)
+                nova_tabla.izvrsi_potez(p)
+                nova_vrednost = self.max_value(nova_tabla, dubina - 1, p, alfa, beta)
+
+                v = min(v, nova_vrednost)
+                if v <= alfa:
+                    return v
+                beta = min(beta, v)
+        return v
 
 
 # vraca listu svih mogucih validnih poteza iz prosledjene table
@@ -196,6 +265,7 @@ def svi_moguci_potezi(tabla, na_potezu):
     return moguci_potezi
 
 
+# ovo je osudjeno na propast, ne moze da generise stablo dubine 4 jer nema dovoljno memorije
 # prima pocetni cvor stabla, razvija stablo trazene dubine i vraca ga
 def kreiraj_stablo(node: Node, dubina: int, na_potezu):
     if dubina == 0:
@@ -206,7 +276,7 @@ def kreiraj_stablo(node: Node, dubina: int, na_potezu):
         print("Broj svih mogucih poteza iz ovog stanja: ", len(svi_potezi))
 
     for potez in svi_potezi:
-        nova_tabla = copy.deepcopy(node.tabla)
+        nova_tabla = Tabla(node.tabla)
         nova_tabla.izvrsi_potez(potez)
         #vrednost = staticka_funkcija_procene(nova_tabla, potez, na_potezu)
         novi_node = Node(nova_tabla, potez)
@@ -246,10 +316,21 @@ if __name__ == "__main__":
     tabla.matrica[0][1].igrac = IGRAC_CRVENI
 
     ukupno = 0
-    for i in range(20):
+    for i in range(10):
         start = time.time()
         potez = MiniMaxNovi().sledeci_potez(tabla, IGRAC_PLAVI)
+        print(potez)
         print("Vreme potrebno za izracunavanje: ", time.time() - start)
         ukupno += time.time() - start
 
-    print("Prosek:", ukupno / 20.)
+    print("Prosek:", ukupno / 10.)
+
+    ukupno = 0
+    for i in range(10):
+        start = time.time()
+        potez = MiniMaxAlfaBeta().sledeci_potez(tabla, IGRAC_PLAVI)
+        print(potez)
+        print("Vreme potrebno za izracunavanje: ", time.time() - start)
+        ukupno += time.time() - start
+
+    print("Prosek:", ukupno / 10.)
