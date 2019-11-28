@@ -5,6 +5,8 @@ from igra import IgraCanvas
 
 LARGE_FONT= ("Verdana bold", 24)
 
+TIPOVI_IGRACA = ("Osoba", "AI easy", "AI medium", "AI hard")
+
 
 class Application(Tk):
 
@@ -59,12 +61,12 @@ class OdabirTipaIgreFrame(Frame):
         Label(self, text="Odabir tipa i tezine igre", font=LARGE_FONT).grid(row = 0, columnspan = 2, sticky = "n", pady = 30)
 
         Label(self, text = "Plavi igrac").grid(row = 1, column = 0)
-        cb1 = ttk.Combobox(self, values = ["Osoba", "AI easy", "AI medium", "AI hard"], width = 25)
+        cb1 = ttk.Combobox(self, values = TIPOVI_IGRACA, width = 25)
         cb1.grid(row = 2, column = 0, padx = 40, pady = 20)
         cb1.current(0)
 
         Label(self, text = "Crveni igrac").grid(row = 1, column = 1)
-        cb2 = ttk.Combobox(self, values = ["Osoba", "AI easy", "AI medium", "AI hard"], width = 25)
+        cb2 = ttk.Combobox(self, values = TIPOVI_IGRACA, width = 25)
         cb2.grid(row = 2, column = 1, padx = 40, pady = 20)
         cb2.current(0)
 
@@ -81,7 +83,7 @@ class OdabirTipaIgreFrame(Frame):
         Button(self, text="Pokreni igru", command=lambda: controller.show_frame(IgraFrame, igrac1 = cb1.get(), igrac2 = cb2.get()), width = 20).grid(row = 4, column = 1)
 
 
-class IgraFrame(Frame):
+class IgraFrame(Frame, app):
     x_offset = 150
     y_offset = 50
 

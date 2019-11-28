@@ -9,10 +9,10 @@ from abc import ABC, abstractmethod
 # staticka funkcija procene neke tabele, za nju mi je potreban i potez kojim se doslo do te tabele
 def staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):
     if tabla.pobeda(na_potezu):
-        print("Pobeda")
+        #print("Pobeda")
         return 100
     if tabla.poraz(na_potezu):
-        print("Poraz")
+        #print("Poraz")
         return -100
 
     m = tabla.matrica[potez.x2][potez.y2].broj_spratova
@@ -54,6 +54,8 @@ class Node2:
                 value = node.vrednost
         return value
 
+
+#todo nasledjivanje nema svrhe u pythonu
 
 #Abstraktna klasa za AI, koju ce da naslede svi razliciti algoritmi za easy, medium i hard
 class AI(ABC):
@@ -151,7 +153,7 @@ class MiniMaxNovi(AI):
 
 class MiniMaxAlfaBeta(AI): 
     lista_poteza = []
-    dubina = 4 # konstanta, koliku dubinu treba da pretrazuje...idk
+    dubina = 3 # konstanta, koliku dubinu treba da pretrazuje...idk, bolje mozda da ovo ide u konsturktor?
     na_potezu = IGRAC_CRVENI # ovo treba da pokazuje za koga se racuna staticka funkcija procene, i ne treba da bude const, vec da se zadaje u ctoru
     
     def sledeci_potez(self, tabla, na_potezu):

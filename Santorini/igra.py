@@ -1,4 +1,4 @@
-from tkinter import *
+from tkinter import Canvas
 from enum import Enum
 from tkinter import messagebox
 import time
@@ -16,15 +16,22 @@ class IgraCanvas(Canvas):
         Canvas.__init__(self, parent)
         self.config(width = 500, height = 550) 
         self.bind("<Button-1>", self.mouse_click)
+
+        #todo ovo treba da se uzima iz konsturkotra
+        # u zavisnosti od argumenata treba da dodeli pravu Ai ili da ostavi Osobu
+        self.plavi_AI = MiniMaxAlfaBeta()
+        self.crveni_AI = MiniMaxAlfaBeta()
+
         #inicijalizacije matrice
         self.tabla = Tabla()
-        self.na_potezu = IGRAC_PLAVI # plavi igrac je prvi na potezu
+        self.na_potezu = None # da napisem dobar komentar za ovo
         self.game_state = GameState.POSTAVLJANJE_FIGURA # u pocetku svi igraci postavljaju svoje figure na tablu
         self.broj_figura = 0 # treba mi za prvu fazu gde se postavljaju figure
         self.sastavi_poruku()
         self.dozvoljena_polja = []
         self.selektovana_figura = (-2, -2)
         self.crtaj(self.tabla)
+        self.zameni_igraca()
     
     def crtaj(self, tabla):
         self.delete("all")
@@ -114,28 +121,34 @@ class IgraCanvas(Canvas):
     def selektuj_figuru(self, x, y):
         self.selektovana_figura = (x, y)
 
+
     def zameni_igraca(self):
+        if self.na_potezu == None:
+            self.na_potezu = IGRAC_PLAVI
+
         self.na_potezu = protivnik(self.na_potezu)
 
         self.selektovana_figura = (-2, -2)
         self.crtaj(self.tabla)
 
+
+        if self.na_potezu == IGRAC_PLAVI and self.plavi_AI != None or self.na_potezu == IGRAC_CRVENI and self.crveni_AI != None:
+
+
+
         # ovde treba da proverava da li igra AI sad
         #privremeno je crveni igrac uvek AI
-        if self.na_potezu == IGRAC_CRVENI:
-            #time.sleep(0.5)
+        #if self.na_potezu == IGRAC_CRVENI:
+            time.sleep(0.5)
 
             if self.game_state == GameState.SELEKTOVANJE_FIGURE:
                 #AI odredi sledeci potez
-#                self.da_li_je_kraj()
-                #t1 = time.time_ns()
-                potez = MiniMaxAlfaBeta().sledeci_potez(self.tabla, self.na_potezu)
-                #t2 = time.time_ns()
-                #potez = MiniMaxStari().sledeci_potez(self.tabla, self.na_potezu)
-                #t3 = time.time_ns()
+                if self.na_potezu == IGRAC_PLAVI:
+                    potez = self.crveni_AI.sledeci_potez(self.tabla, self.na_potezu)
+                if self.na_potezu == IGRAC_CRVENI:
+                    potez = self.plavi_AI.sledeci_potez(self.tabla, self.na_potezu)
 
-                #print("Vreme za novi minimax ", t2 - t1, "a potez je", potez2)
-                #print("Vreme za stari minimax", t3 - t2, "a potez je", potez)
+                print("Na potezu je " + str(self.na_potezu) + " i on je odgirao sledeci potez: " + str(potez))
 
                 self.tabla.izvrsi_potez(potez)
                 self.game_state = GameState.SELEKTOVANJE_FIGURE
