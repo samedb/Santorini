@@ -1,6 +1,5 @@
-from tkinter import Canvas
+from tkinter import Canvas, messagebox
 from enum import Enum
-from tkinter import messagebox
 import time
 import random
 import os
@@ -31,6 +30,17 @@ class IgraCanvas(Canvas):
         self.sastavi_poruku()
         self.selektovana_figura = (-2, -2)
 
+
+        #otvaranje fajla, citanje i izvrsavanje poteza ako ih ima u njemu
+        self.procitaj_fajl_i_popuni_tabelu(naziv_fajla)
+        #otvaranje fajla za pisanje sad, svaki put kad se izvrsi neki potez on se upisuje u fajl
+        self.f = open(naziv_fajla, "a")
+
+        self.crtaj(self.tabla)
+        self.zameni_igraca()
+
+
+    def procitaj_fajl_i_popuni_tabelu(self, naziv_fajla):
         #otvaranje fajla, citanje i izvrsavanje poteza ako ih ima u njemu
         self.f = open(naziv_fajla, "r")
         lines = self.f.readlines()
@@ -56,12 +66,6 @@ class IgraCanvas(Canvas):
             
         self.f.close()
 
-        #otvaranje fajla za pisanje sad, svaki put kad se izvrsi neki potez onda se to upisuje u fajl
-        self.f = open(naziv_fajla, "a")
-
-        self.crtaj(self.tabla)
-        self.zameni_igraca()
-
 
     def odaberi_AI(self, tip_igraca):
         if tip_igraca == TIPOVI_IGRACA[0]: #Osoba
@@ -74,6 +78,7 @@ class IgraCanvas(Canvas):
             return MiniMaxAlfaBeta() #todo da se uradi jos jedan klasa
     
 
+    #todo crtanje kasni jedan korak kad igraju AI vs Ai
     def crtaj(self, tabla):
         self.delete("all")
         for i in range (0, 5):
@@ -250,13 +255,13 @@ class IgraCanvas(Canvas):
         if not self.tabla.ima_mogucih_poteza(self.na_potezu):
             messagebox.showinfo("Pobeda", f"Pobedio je {self.na_potezu.protivnik()} jer {self.na_potezu} nema mogucih poteza!")
             self.game_state = GameState.KRAJ_IGRE
-            self.f.close()
+            self.zatovori_fajl()
         
         if self.tabla.zauzeo_treci_sprat(self.na_potezu):
             messagebox.showinfo("Pobeda", f"Pobedio je {self.na_potezu} jer je zauzeo polje sa nivoom 3!")
             self.game_state = GameState.KRAJ_IGRE
             self.f.write(str(self.trenutni_potez_osobe) + "\n")
-            self.f.close()
+            self.zatovori_fajl()
 
     def zatovori_fajl(self):
         self.f.close()
