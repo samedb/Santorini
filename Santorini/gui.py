@@ -83,7 +83,7 @@ class OdabirTipaIgreFrame(Frame):
         Button(self, text="Pokreni igru", command=lambda: controller.show_frame(IgraFrame, igrac1 = cb1.get(), igrac2 = cb2.get()), width = 20).grid(row = 4, column = 1)
 
 
-class IgraFrame(Frame, app):
+class IgraFrame(Frame):
     x_offset = 150
     y_offset = 50
 

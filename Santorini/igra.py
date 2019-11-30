@@ -153,7 +153,7 @@ class IgraCanvas(Canvas):
                 self.tabla.izvrsi_potez(potez)
                 self.game_state = GameState.SELEKTOVANJE_FIGURE
                 self.da_li_je_kraj()
-                self.zameni_igraca()
+                self.after(200, self.zameni_igraca)
 
             if self.game_state == GameState.POSTAVLJANJE_FIGURA:
                 dozvoljena_polja = self.tabla.pronadji_dozvoljena_polja(self.game_state, -2, -2, self.na_potezu)
@@ -168,7 +168,7 @@ class IgraCanvas(Canvas):
                 if self.broj_figura == 4:
                     self.game_state = GameState.SELEKTOVANJE_FIGURE
 
-                self.zameni_igraca()
+                self.after(200, self.zameni_igraca)
         
         
 
