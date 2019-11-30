@@ -28,14 +28,6 @@ def staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):
 
 
 class Node:
-
-    def __init__(self, tabla: Tabla, potez: Potez, vrednost=0):
-        self.tabla = tabla # trenutno stanje igre
-        self.potez = potez # potez koji je doveo do trenutnog stanja
-        self.children = []  # lista cvorova potomaka
-        #self.vrednost = vrednost
-
-class Node2:
     def __init__(self, vrednost = 0, children = None):
         self.vrednost = vrednost
         self.children = children or []
@@ -55,7 +47,7 @@ class Node2:
         return value
 
 
-#todo nasledjivanje nema svrhe u pythonu
+#todo nasledjivanje nema svrhe u pythonu, mozda i ima ako hocu u novom prozoru da pokazujem vrednosti svih poteza
 
 #Abstraktna klasa za AI, koju ce da naslede svi razliciti algoritmi za easy, medium i hard
 class AI(ABC):
@@ -69,46 +61,7 @@ class AI(ABC):
         pass
 
 
-
-class MiniMaxStari(AI):
-
-    def sledeci_potez(self, tabla, na_potezu):
-        node = kreiraj_stablo(Node(tabla, None), 3, na_potezu)
-        vrednost, potez = self.minimax(node, 3, True, na_potezu)
-        print("Stari minimax Vrednost odabranog poteza: ", vrednost, potez)
-        return potez
-
-    # prima pocetni cvor stabla, i vraca najbolje sledece stanje/potez uz pomoc minimax algoritma
-    def minimax(self, node: Node, dubina: int, maximizing_player, na_potezu):
-        # print("Dubina", dubina)
-        if dubina == 0 or len(node.children) == 0:
-            # ovo moze da se spoji kao jedan parametar, da ne bude posebno potez i tabla
-            return staticka_funkcija_procene(node.tabla, node.potez, na_potezu), node.potez
-            # ovo plus dubina je ovde sa razlogom, na ovaj nacin vise vrednuje poteze koji se nalaze pri vrhu stabla
-
-        if maximizing_player:
-            value = -math.inf
-            potez = None
-            for child in node.children:
-                v, t = self.minimax(child, dubina - 1, False, na_potezu)
-                if dubina == 3:
-                    print("stari minimax:", child.potez, v)
-                if v > value:
-                    value = v
-                    potez = child.potez
-            return value, potez
-        else:
-            value = math.inf
-            potez = None
-            for child in node.children:
-                v, t = self.minimax(child, dubina - 1, True, na_potezu)
-                if v < value:
-                    value = v
-                    potez = child.potez
-            return value, potez
-
-
-class MiniMaxNovi(AI):
+class MiniMax(AI):
     def sledeci_potez(self, tabla, na_potezu):
         stablo = self.kreiraj_stablo(tabla, 3, na_potezu, True, None)
         svi_potezi = svi_moguci_potezi(tabla, na_potezu)
@@ -123,7 +76,7 @@ class MiniMaxNovi(AI):
     def kreiraj_stablo(self, tabla, dubina, na_potezu, maximizing_player, potez):
         if dubina == 0:
             vrednost = staticka_funkcija_procene(tabla, potez, na_potezu)
-            return Node2(vrednost)
+            return Node(vrednost)
         
         if maximizing_player:
             svi_potezi = svi_moguci_potezi(tabla, na_potezu)
@@ -133,9 +86,9 @@ class MiniMaxNovi(AI):
         # ako nema mogucih poteza vrati vrednost tog cvora
         if len(svi_potezi) == 0:
             vrednost = staticka_funkcija_procene(tabla, potez, na_potezu)
-            return Node2(vrednost)
+            return Node(vrednost)
         else:
-            novi_node = Node2()
+            novi_node = Node()
             for p in svi_potezi:
                 #nova_tabla = copy.deepcopy(tabla) deepcopy je ZLO
                 nova_tabla = Tabla(tabla)
@@ -267,46 +220,6 @@ def svi_moguci_potezi(tabla, na_potezu):
     return moguci_potezi
 
 
-# ovo je osudjeno na propast, ne moze da generise stablo dubine 4 jer nema dovoljno memorije
-# prima pocetni cvor stabla, razvija stablo trazene dubine i vraca ga
-def kreiraj_stablo(node: Node, dubina: int, na_potezu):
-    if dubina == 0:
-        return
-
-    svi_potezi = svi_moguci_potezi(node.tabla, na_potezu)
-    if dubina == 3:
-        print("Broj svih mogucih poteza iz ovog stanja: ", len(svi_potezi))
-
-    for potez in svi_potezi:
-        nova_tabla = Tabla(node.tabla)
-        nova_tabla.izvrsi_potez(potez)
-        #vrednost = staticka_funkcija_procene(nova_tabla, potez, na_potezu)
-        novi_node = Node(nova_tabla, potez)
-        kreiraj_stablo(novi_node, dubina - 1, protivnik(na_potezu))
-        node.children.append(novi_node)
-
-    return node
-
-
-
-
-
-# isto kao i ovo iznad samo koristi drugi algoritam
-#def minimax_alfa_beta(node: Node):
-#    return node.children[0]
-
-
-# posto se u zadatku trazi jos jedan treci optimizovani algoritam on ide ovde
-#def super_zeznuti_algoritam(node):
-#    pass
-
-
-# ovo ce vrv da se izbaci a mozda i nece, prima dva stanja kao parametre i vraca potez kojim se prelazi iz stanja1 u
-# stanje 2 u formatu kao sto se trazi u zadatku
-#def prebaci_u_potez(stanje1, stanje2):
-#    pass
-
-
 
 #test
 if __name__ == "__main__":
@@ -320,7 +233,7 @@ if __name__ == "__main__":
     ukupno = 0
     for i in range(10):
         start = time.time()
-        potez = MiniMaxNovi().sledeci_potez(tabla, IGRAC_PLAVI)
+        potez = MiniMax().sledeci_potez(tabla, IGRAC_PLAVI)
         print(potez)
         print("Vreme potrebno za izracunavanje: ", time.time() - start)
         ukupno += time.time() - start

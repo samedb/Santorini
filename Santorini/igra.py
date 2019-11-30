@@ -3,7 +3,7 @@ from enum import Enum
 import time
 import random
 import os
-from ai import MiniMaxStari, MiniMaxNovi, MiniMaxAlfaBeta
+from ai import  MiniMax, MiniMaxAlfaBeta
 from tabla import Tabla, GameState, IGRAC_CRVENI, IGRAC_PLAVI, protivnik, Potez
 
 
@@ -71,7 +71,7 @@ class IgraCanvas(Canvas):
         if tip_igraca == TIPOVI_IGRACA[0]: #Osoba
             return None
         elif tip_igraca == TIPOVI_IGRACA[1]: #AI easy
-            return MiniMaxNovi()
+            return MiniMax()
         elif tip_igraca == TIPOVI_IGRACA[2]: #AI medium
             return MiniMaxAlfaBeta()
         elif tip_igraca == TIPOVI_IGRACA[3]: #AI hard
@@ -184,7 +184,7 @@ class IgraCanvas(Canvas):
 
     def AI_izvrsi_potez(self):
         # minimalno trajanje poteza AI, da se ne bi momentalno izvrsio potez, potez moze da traje i duze ako treba
-        PAUZA_IZMEDJU_POTEZA = 1 #sekunda
+        PAUZA_IZMEDJU_POTEZA = 0.8 #sekunda
         pocetak = time.time()
         #AI odredi sledeci potez 
         if self.na_potezu == IGRAC_PLAVI:
@@ -241,7 +241,7 @@ class IgraCanvas(Canvas):
                 self.postavi_figure_na_slucajno_izabrana_mesta()
 
             # veoma vazna stvar, kreira pauzu i omogucava GUI-u da se updateuje, inace blokira
-            self.after(100, self.zameni_igraca)
+            self.after(200, self.zameni_igraca)
 
 
     def sastavi_poruku(self):
@@ -260,7 +260,8 @@ class IgraCanvas(Canvas):
         if self.tabla.zauzeo_treci_sprat(self.na_potezu):
             messagebox.showinfo("Pobeda", f"Pobedio je {self.na_potezu} jer je zauzeo polje sa nivoom 3!")
             self.game_state = GameState.KRAJ_IGRE
-            self.f.write(str(self.trenutni_potez_osobe) + "\n")
+            if not self.AI_je_na_potezu():
+                self.f.write(str(self.trenutni_potez_osobe) + "\n")
             self.zatovori_fajl()
 
     def zatovori_fajl(self):
