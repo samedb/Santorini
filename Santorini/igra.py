@@ -132,21 +132,27 @@ class IgraCanvas(Canvas):
         self.crtaj(self.tabla)
 
 
-        if self.na_potezu == IGRAC_PLAVI and self.plavi_AI != None or self.na_potezu == IGRAC_CRVENI and self.crveni_AI != None:
+        if (self.na_potezu == IGRAC_PLAVI and self.plavi_AI != None) or (self.na_potezu == IGRAC_CRVENI and self.crveni_AI != None):
 
 
 
         # ovde treba da proverava da li igra AI sad
         #privremeno je crveni igrac uvek AI
         #if self.na_potezu == IGRAC_CRVENI:
-            time.sleep(0.5)
 
             if self.game_state == GameState.SELEKTOVANJE_FIGURE:
                 #AI odredi sledeci potez
+                PAUZA_IZMEDJU_POTEZA = 1 #sekunda
+                pocetak = time.time()
                 if self.na_potezu == IGRAC_PLAVI:
-                    potez = self.crveni_AI.sledeci_potez(self.tabla, self.na_potezu)
-                if self.na_potezu == IGRAC_CRVENI:
                     potez = self.plavi_AI.sledeci_potez(self.tabla, self.na_potezu)
+                if self.na_potezu == IGRAC_CRVENI:
+                    potez = self.crveni_AI.sledeci_potez(self.tabla, self.na_potezu)
+                vreme_potrebno_za_nalazenje_poteza = time.time() - pocetak
+                if vreme_potrebno_za_nalazenje_poteza < PAUZA_IZMEDJU_POTEZA:
+                    time.sleep(PAUZA_IZMEDJU_POTEZA - vreme_potrebno_za_nalazenje_poteza)
+
+
 
                 print("Na potezu je " + str(self.na_potezu) + " i on je odgirao sledeci potez: " + str(potez))
 
