@@ -1,7 +1,9 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
+from tkinter import filedialog
 from igra import IgraCanvas, TIPOVI_IGRACA
+import datetime
 
 LARGE_FONT= ("Verdana bold", 24)
 
@@ -72,15 +74,22 @@ class OdabirTipaIgreFrame(Frame):
         #vs ili protiv izmedju
         Label(self, text = "vs").grid(row = 2, columnspan = 2)
 
+        Button(self, text="Ucitaj iz fajla", command=self.ucitaj_fajl, width = 20).grid(row = 3, columnspan = 2)
+
+        self.naziv_fajla_labela = Label(self, text = "")
+        self.naziv_fajla_labela.grid(row = 4, columnspan = 2)
+
         objasnjenje_tezina = "Opis raznih nivoa vestacke inteligencije \nLupam \n• AI easy - minimax algoritam sa dubinom 5 \n• AI medium - minimax algoritam sa dubinom 10 uz alfa-beta odsecanje \n• AI hard - minimax algoritam sa dubinom 15 uz alfa-beta odsecanje"
             
-        Label(self, text=objasnjenje_tezina, justify = LEFT, font = "Arial 16").grid(row = 3, columnspan = 2, pady = 100)
+        Label(self, text=objasnjenje_tezina, justify = LEFT, font = "Arial 16").grid(row = 5, columnspan = 2, pady = 50)
 
-        Button(self, text="Nazad na pocetnu stranu", command=lambda: controller.show_frame(PocetniFrame), width = 20).grid(row = 4, column = 0)
+        Button(self, text="Nazad na pocetnu stranu", command=lambda: controller.show_frame(PocetniFrame), width = 20).grid(row = 6, column = 0)
         
-        
-        Button(self, text="Pokreni igru", command=lambda: controller.show_frame(IgraFrame, igrac1 = cb1.get(), igrac2 = cb2.get()), width = 20).grid(row = 4, column = 1)
+        Button(self, text="Pokreni igru", command=lambda: controller.show_frame(IgraFrame, igrac1 = cb1.get(), igrac2 = cb2.get(), naziv_fajla = self.naziv_fajla_labela["text"]), width = 20).grid(row = 6, column = 1)
 
+    #Otvara openFileDialog, selektuje fajl i putanju pamti u naziv_fajla_labela
+    def ucitaj_fajl(self):
+        self.naziv_fajla_labela["text"] = filedialog.askopenfilename(initialdir = "Igre/",title = "Select file",filetypes = (("txt files","*.txt"),("all files","*.*")))
 
 class IgraFrame(Frame):
     x_offset = 150
@@ -98,19 +107,28 @@ class IgraFrame(Frame):
    #         igrac2 = kwarg.get("igrac2", None)
    #         Label(self, text="Igra frame!!!", font=LARGE_FONT).grid(row = 0, column = 0)
    #         Label(self, text=f"Ovde treba da bude igra\n {igrac1} vs {igrac2}").grid(row = 0, column = 3)
-        player1 = kwarg.get("igrac1", TIPOVI_IGRACA[0])
-        player2 = kwarg.get("igrac2", TIPOVI_IGRACA[0])
-        print(player1, " vs ", player2)
+        igrac1 = kwarg.get("igrac1", TIPOVI_IGRACA[0])
+        igrac2 = kwarg.get("igrac2", TIPOVI_IGRACA[0])
+        naziv_fajla = kwarg.get("naziv_fajla", "")
+        if naziv_fajla == "":
+            naziv_fajla = self.kreiraj_fajl()
 
-        IgraCanvas(self, player1, player2).place(x = 150, y = 0)
+        IgraCanvas(self, igrac1, igrac2, naziv_fajla).place(x = 150, y = 0)
         Button(self, text="Nazad na pocetnu stranu", command=self.povratak_na_pocetnu).pack(side = BOTTOM, pady = 3)
 
     def povratak_na_pocetnu(self):
         odg = messagebox.askquestion("Nazad na pocetnu stranicu?", "Da li ste sigurni da zelite da prekinete igru i da se vratite na pocetnu stranicu?")
         if odg == "yes":
             self.controller.show_frame(PocetniFrame)
+    
+    def kreiraj_fajl(self):
+        #kreiraj fajl koji u imenu nosi trenutno vreme
+        naziv_fajla = f"Igre/Santorini {datetime.datetime.now().strftime('%d-%m-%Y %H-%M-%S')}.txt"
+        f = open(naziv_fajla, "w+")
+        f.close()
+        return naziv_fajla
 
-
+# kanta za smece
 class UcitajIgruFrame(Frame):
 
     def __init__(self, parent, controller):

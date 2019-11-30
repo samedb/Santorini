@@ -153,7 +153,7 @@ class MiniMaxNovi(AI):
 
 class MiniMaxAlfaBeta(AI): 
     lista_poteza = []
-    dubina = 3 # konstanta, koliku dubinu treba da pretrazuje...idk, bolje mozda da ovo ide u konsturktor?
+    dubina = 4 # konstanta, koliku dubinu treba da pretrazuje...idk, bolje mozda da ovo ide u konsturktor?
     na_potezu = IGRAC_CRVENI # ovo treba da pokazuje za koga se racuna staticka funkcija procene, i ne treba da bude const, vec da se zadaje u ctoru
     
     def sledeci_potez(self, tabla, na_potezu):

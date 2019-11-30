@@ -24,8 +24,28 @@ class Potez():
         self.xg = xg
         self.yg = yg
 
+    @staticmethod
+    def iz_stringa(text):
+        p = Potez(0, 0, 0, 0, 0, 0)
+        reci = text.split(" ")
+        p.x1, p.y1 = Potez.string_u_koordinate(reci[0])
+        p.x2, p.y2 = Potez.string_u_koordinate(reci[1])
+        p.xg, p.yg = Potez.string_u_koordinate(reci[2])
+        return p
+
+    @staticmethod
+    def string_u_koordinate(text):
+        x = ord(text[0]) - ord("A")
+        y = ord(text[1]) - ord("0")
+        return x, y
+
+    @staticmethod
+    def koordinate_u_string(x, y):
+        return f"{chr(x + 65)}{y}"
+
+
     def __str__(self):
-        return f"\t({self.x1}, {self.y1}), ({self.x2}, {self.y2}), ({self.xg}, {self.yg})"
+        return f"{chr(self.x1 + 65)}{self.y1} {chr(self.x2 + 65)}{self.y2} {chr(self.xg + 65)}{self.yg}"
 
     def __repr__(self):
         return self.__str__()
@@ -134,3 +154,11 @@ class Tabla():
         dy = abs(y1 - y2)
         return abs(dx - dy)
     
+
+
+
+#test
+
+if __name__ == "__main__":
+    p = Potez.iz_stringa("A1 B2 C3")
+    print(p)
