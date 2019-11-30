@@ -3,6 +3,7 @@ from enum import Enum
 from tkinter import messagebox
 import time
 import random
+import os
 from ai import MiniMaxStari, MiniMaxNovi, MiniMaxAlfaBeta
 from tabla import Tabla, GameState, IGRAC_CRVENI, IGRAC_PLAVI, protivnik, Potez
 
@@ -37,7 +38,7 @@ class IgraCanvas(Canvas):
         for i in range(len(lines)):
             #prva dva reda su za postavljanje figura
             if i < 2:
-                line = lines[i].split(" ")
+                line = lines[i].strip().split(" ")
                 for l in line:
                     x, y = Potez.string_u_koordinate(l)
                     self.tabla.postavi_figuru(x, y, i)
@@ -129,11 +130,14 @@ class IgraCanvas(Canvas):
 
         if self.game_state == GameState.POSTAVLJANJE_FIGURA:
             self.tabla.postavi_figuru(x, y, self.na_potezu) 
+            self.f.write(Potez.koordinate_u_string(x, y) + " ")
             self.broj_figura += 1
             if self.broj_figura == 2:
                 self.zameni_igraca()
+                self.f.write("\n")
             elif self.broj_figura == 4:
                 self.game_state = GameState.SELEKTOVANJE_FIGURE
+                self.f.write("\n")
                 self.zameni_igraca()
                 print("Sad pocinje prava igra")
 
@@ -148,11 +152,15 @@ class IgraCanvas(Canvas):
             else:
                 x1, y1 = self.selektovana_figura
                 self.tabla.pomeri_figuru(x1, y1, x, y)
+                self.trenutni_potez_osobe = Potez(x1, y1, x, y, 0, 0)
                 self.selektovana_figura = (x, y)
                 self.game_state = GameState.GRADNJA
             
         elif self.game_state == GameState.GRADNJA:
             self.tabla.gradi(x, y)
+            self.trenutni_potez_osobe.xg = x
+            self.trenutni_potez_osobe.yg = y
+            self.f.write(str(self.trenutni_potez_osobe) + "\n") #zapamti u fajl potez
             self.game_state = GameState.SELEKTOVANJE_FIGURE
             self.zameni_igraca()
 
@@ -247,5 +255,9 @@ class IgraCanvas(Canvas):
         if self.tabla.zauzeo_treci_sprat(self.na_potezu):
             messagebox.showinfo("Pobeda", f"Pobedio je {self.na_potezu} jer je zauzeo polje sa nivoom 3!")
             self.game_state = GameState.KRAJ_IGRE
+            self.f.write(str(self.trenutni_potez_osobe) + "\n")
             self.f.close()
+
+    def zatovori_fajl(self):
+        self.f.close()
     

@@ -1,13 +1,8 @@
-from tkinter import *
-from tkinter import ttk
-from tkinter import messagebox
-from tkinter import filedialog
+from tkinter import Tk, Frame, Label, Button, sys, LEFT, BOTTOM, ttk, messagebox, filedialog
 from igra import IgraCanvas, TIPOVI_IGRACA
-import datetime
+from datetime import datetime
 
 LARGE_FONT= ("Verdana bold", 24)
-
-
 
 class Application(Tk):
 
@@ -42,17 +37,9 @@ class PocetniFrame(Frame):
         label = Label(self, text="Santorini\n\n", font=LARGE_FONT)
         label.pack(pady=20,padx=10)
 
-        if self.ima_nedovrsen_mec():
-            Button(self, text="Nastavi igru", command=lambda: controller.show_frame(IgraFrame, nastavi = "path to file"), width = 25).pack(pady = 5)
-
-        Button(self, text="Nova igra",    command=lambda: controller.show_frame(OdabirTipaIgreFrame), width = 25).pack(pady = 5)
-        Button(self, text="Ucitaj igru",  command=lambda: controller.show_frame(UcitajIgruFrame),     width = 25).pack(pady = 5)
-        Button(self, text="Podesavanja",  command=lambda: controller.show_frame(PodesavanjaFrame),    width = 25).pack(pady = 5)
-        Button(self, text="Pravila",      command=lambda: controller.show_frame(PravilaFrame),        width = 25).pack(pady = 5)
-        Button(self, text="Izlaz",        command=sys.exit,                                           width = 25).pack(pady = 5)
-
-    def ima_nedovrsen_mec(self):
-        return True
+        Button(self, text="Igra",    command=lambda: controller.show_frame(OdabirTipaIgreFrame), width = 25).pack(pady = 10)
+        Button(self, text="Pravila", command=lambda: controller.show_frame(PravilaFrame),        width = 25).pack(pady = 10)
+        Button(self, text="Izlaz",   command=sys.exit,                                           width = 25).pack(pady = 10)
 
 
 class OdabirTipaIgreFrame(Frame):
@@ -113,42 +100,22 @@ class IgraFrame(Frame):
         if naziv_fajla == "":
             naziv_fajla = self.kreiraj_fajl()
 
-        IgraCanvas(self, igrac1, igrac2, naziv_fajla).place(x = 150, y = 0)
+        self.igraCanvas = IgraCanvas(self, igrac1, igrac2, naziv_fajla)
+        self.igraCanvas.place(x = 150, y = 0)
         Button(self, text="Nazad na pocetnu stranu", command=self.povratak_na_pocetnu).pack(side = BOTTOM, pady = 3)
 
     def povratak_na_pocetnu(self):
         odg = messagebox.askquestion("Nazad na pocetnu stranicu?", "Da li ste sigurni da zelite da prekinete igru i da se vratite na pocetnu stranicu?")
         if odg == "yes":
+            self.igraCanvas.zatovori_fajl()
             self.controller.show_frame(PocetniFrame)
     
     def kreiraj_fajl(self):
         #kreiraj fajl koji u imenu nosi trenutno vreme
-        naziv_fajla = f"Igre/Santorini {datetime.datetime.now().strftime('%d-%m-%Y %H-%M-%S')}.txt"
+        naziv_fajla = f"Igre/Santorini {datetime.now().strftime('%d-%m-%Y %H-%M-%S')}.txt"
         f = open(naziv_fajla, "w+")
         f.close()
         return naziv_fajla
-
-# kanta za smece
-class UcitajIgruFrame(Frame):
-
-    def __init__(self, parent, controller):
-        Frame.__init__(self, parent)
-        Label(self, text="Ucitavanje igre", font=LARGE_FONT).pack()
-        Label(self, text="Ovde treba da se pojavi lista svih save game-ova\n koji mogu da se ucitaju,\n da se nastavi sa igranjem ili da se pusti replay").pack(pady = 30)
-        Button(self, text="Nazad na pocetnu stranu", command=lambda: controller.show_frame(PocetniFrame)).pack()
-
-
-class PodesavanjaFrame(Frame):
-
-    def __init__(self, parent, controller):
-        Frame.__init__(self, parent)
-        Label(self, text="Podesavanja igre", font=LARGE_FONT).pack(pady = 20)
-        Button(self, text="Grafika", command = self.ne_radi_nista, width = 25).pack(pady = 5)
-        Button(self, text="Audio"  , command = self.ne_radi_nista, width = 25).pack(pady = 5)
-        Button(self, text="Nazad na pocetnu stranu", command=lambda: controller.show_frame(PocetniFrame) , width = 25).pack(pady = 5)
-
-    def ne_radi_nista(self):
-        messagebox.showinfo("XD", "Nema ovde nista :D")
 
 
 class PravilaFrame(Frame):
@@ -189,9 +156,6 @@ if __name__ == "__main__":
     app.mainloop()
 
     #todo celava latinica
-    #todo da prosledjujem parametre izmedju frame-ova  - uradnjeno
-    #todo da izdvojim ove klase u posebne fajlove
-
-    #combobox da bude readonly\
+    # todo combobox da bude readonly\
 
 

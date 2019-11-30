@@ -1,6 +1,5 @@
 from enum import Enum
 
-
 IGRAC_PLAVI = 0
 IGRAC_CRVENI = 1
 
@@ -24,6 +23,7 @@ class Potez():
         self.xg = xg
         self.yg = yg
 
+    # staticka metoda koja prima string jednog poteza kako se upisuje u fajl i pretrvara u objekat klase Potez koji vraca
     @staticmethod
     def iz_stringa(text):
         p = Potez(0, 0, 0, 0, 0, 0)
@@ -33,20 +33,23 @@ class Potez():
         p.xg, p.yg = Potez.string_u_koordinate(reci[2])
         return p
 
+    # staticka metoda koja prima string jednog polja npr. A0 ili D3 i vraca njegove x i y koordinate
     @staticmethod
     def string_u_koordinate(text):
         x = ord(text[0]) - ord("A")
         y = ord(text[1]) - ord("0")
         return x, y
 
+    # staticka metoda koja prima x i y koordinate i vraca string
     @staticmethod
     def koordinate_u_string(x, y):
         return f"{chr(x + 65)}{y}"
 
-
+    # preklopljenja funkcija str koja ispisuje Potez u formatu koji se trazi u zadatku npr. A0 A1 B2
     def __str__(self):
         return f"{chr(self.x1 + 65)}{self.y1} {chr(self.x2 + 65)}{self.y2} {chr(self.xg + 65)}{self.yg}"
 
+    # isto ovo gore
     def __repr__(self):
         return self.__str__()
 
@@ -66,7 +69,7 @@ class Tabla():
                         (Polje(), Polje(), Polje(), Polje(), Polje()),
                         (Polje(), Polje(), Polje(), Polje(), Polje()))
         
-        
+        # kopiranje tabele koja se prosledi u konstruktoru, nesto kao copy konstruktor 
         if tabla != None:
             for i in range(5):
                 for j in range(5):
@@ -153,12 +156,3 @@ class Tabla():
         dx = abs(x1 - x2)
         dy = abs(y1 - y2)
         return abs(dx - dy)
-    
-
-
-
-#test
-
-if __name__ == "__main__":
-    p = Potez.iz_stringa("A1 B2 C3")
-    print(p)
