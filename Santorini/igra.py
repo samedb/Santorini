@@ -7,20 +7,20 @@ from ai import MiniMaxStari, MiniMaxNovi, MiniMaxAlfaBeta
 from tabla import Tabla, GameState, IGRAC_CRVENI, IGRAC_PLAVI, protivnik
 
 
+TIPOVI_IGRACA = ("Osoba", "AI easy", "AI medium", "AI hard")
 
-# zadatak ove klase je da crta Tablu i da prima inpute od korisnika
+# zadatak ove klase je da crta Tablu i da prima inpute od korisnika, kao i da upravlja potezima AI-a
 
 class IgraCanvas(Canvas):
 
-    def __init__(self, parent):
+    def __init__(self, parent, igrac1, igrac2):
         Canvas.__init__(self, parent)
         self.config(width = 500, height = 550) 
         self.bind("<Button-1>", self.mouse_click)
 
-        #todo ovo treba da se uzima iz konsturkotra
-        # u zavisnosti od argumenata treba da dodeli pravu Ai ili da ostavi Osobu
-        self.plavi_AI = MiniMaxAlfaBeta()
-        self.crveni_AI = MiniMaxAlfaBeta()
+        #postavljanje tip igraca koji su prosledjeni kao parametri
+        self.plavi_AI = self.odaberi_AI(igrac1)
+        self.crveni_AI = self.odaberi_AI(igrac2)
 
         #inicijalizacije matrice
         self.tabla = Tabla()
@@ -28,10 +28,19 @@ class IgraCanvas(Canvas):
         self.game_state = GameState.POSTAVLJANJE_FIGURA # u pocetku svi igraci postavljaju svoje figure na tablu
         self.broj_figura = 0 # treba mi za prvu fazu gde se postavljaju figure
         self.sastavi_poruku()
-        self.dozvoljena_polja = []
         self.selektovana_figura = (-2, -2)
         self.crtaj(self.tabla)
         self.zameni_igraca()
+
+    def odaberi_AI(self, tip_igraca):
+        if tip_igraca == TIPOVI_IGRACA[0]: #Osoba
+            return None
+        elif tip_igraca == TIPOVI_IGRACA[1]: #AI easy
+            return MiniMaxNovi()
+        elif tip_igraca == TIPOVI_IGRACA[2]: #AI medium
+            return MiniMaxAlfaBeta()
+        elif tip_igraca == TIPOVI_IGRACA[3]: #AI hard
+            return MiniMaxAlfaBeta() #todo da se uradi jos jedan klasa
     
     def crtaj(self, tabla):
         self.delete("all")
@@ -125,8 +134,8 @@ class IgraCanvas(Canvas):
     def zameni_igraca(self):
         if self.na_potezu == None:
             self.na_potezu = IGRAC_PLAVI
-
-        self.na_potezu = protivnik(self.na_potezu)
+        else:
+            self.na_potezu = protivnik(self.na_potezu)
 
         self.selektovana_figura = (-2, -2)
         self.crtaj(self.tabla)

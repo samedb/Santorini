@@ -1,11 +1,10 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
-from igra import IgraCanvas
+from igra import IgraCanvas, TIPOVI_IGRACA
 
 LARGE_FONT= ("Verdana bold", 24)
 
-TIPOVI_IGRACA = ("Osoba", "AI easy", "AI medium", "AI hard")
 
 
 class Application(Tk):
@@ -99,8 +98,11 @@ class IgraFrame(Frame):
    #         igrac2 = kwarg.get("igrac2", None)
    #         Label(self, text="Igra frame!!!", font=LARGE_FONT).grid(row = 0, column = 0)
    #         Label(self, text=f"Ovde treba da bude igra\n {igrac1} vs {igrac2}").grid(row = 0, column = 3)
+        player1 = kwarg.get("igrac1", TIPOVI_IGRACA[0])
+        player2 = kwarg.get("igrac2", TIPOVI_IGRACA[0])
+        print(player1, " vs ", player2)
 
-        IgraCanvas(self).place(x = 150, y = 0)
+        IgraCanvas(self, player1, player2).place(x = 150, y = 0)
         Button(self, text="Nazad na pocetnu stranu", command=self.povratak_na_pocetnu).pack(side = BOTTOM, pady = 3)
 
     def povratak_na_pocetnu(self):
