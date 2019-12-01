@@ -72,6 +72,7 @@ class MiniMax(AI):
             if stablo.children[i].vrednost == stablo.vrednost:
                 return svi_potezi[i]
 
+    # todo bolje ime da stavim
     # rekurzivna funkcija koja kreira stablo dubine n, stablo se sastoji od Node2 objekata, i izvrsava minimax i izracuna vrednost svakog cvora u stablu
     def kreiraj_stablo(self, tabla, dubina, na_potezu, maximizing_player, potez):
         if dubina == 0:
