@@ -13,14 +13,14 @@ TIPOVI_IGRACA = ("Osoba", "AI easy", "AI medium", "AI hard")
 
 class IgraCanvas(Canvas):
 
-    def __init__(self, parent, igrac1, igrac2, naziv_fajla):
+    def __init__(self, parent, igrac1, igrac2, naziv_fajla, stampaj_vrednosti_svih_poteza):
         Canvas.__init__(self, parent)
         self.config(width = 500, height = 550) 
         self.bind("<Button-1>", self.mouse_click)
 
         #postavljanje tip igraca koji su prosledjeni kao parametri
-        self.plavi_AI = self.odaberi_AI(igrac1)
-        self.crveni_AI = self.odaberi_AI(igrac2)
+        self.plavi_AI = self.odaberi_AI(igrac1, stampaj_vrednosti_svih_poteza)
+        self.crveni_AI = self.odaberi_AI(igrac2, stampaj_vrednosti_svih_poteza)
 
         #inicijalizacije matrice
         self.tabla = Tabla()
@@ -67,18 +67,18 @@ class IgraCanvas(Canvas):
         self.f.close()
 
 
-    def odaberi_AI(self, tip_igraca):
+    def odaberi_AI(self, tip_igraca, stampaj_vrednosti_svih_poteza):
         if tip_igraca == TIPOVI_IGRACA[0]: #Osoba
             return None
         elif tip_igraca == TIPOVI_IGRACA[1]: #AI easy
-            return MiniMax()
+            return MiniMax(stampaj_vrednosti_svih_poteza)
         elif tip_igraca == TIPOVI_IGRACA[2]: #AI medium
-            return MiniMaxAlfaBeta()
+            return MiniMaxAlfaBeta(stampaj_vrednosti_svih_poteza)
         elif tip_igraca == TIPOVI_IGRACA[3]: #AI hard
-            return MiniMaxAlfaBeta() #todo da se uradi jos jedan klasa
+            return MiniMaxAlfaBeta(stampaj_vrednosti_svih_poteza) #todo da se uradi jos jedan klasa
     
 
-    #todo crtanje kasni jedan korak kad igraju AI vs Ai
+    #todo crtanje kasni jedan korak kad igraju AI vs AI
     def crtaj(self, tabla):
         self.delete("all")
         for i in range (0, 5):

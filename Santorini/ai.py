@@ -53,6 +53,10 @@ class Node:
 class AI(ABC):
 
     #todo u konstruktoru treba da otvori window gde ce da se prikazuju vrednosti mogucih poteza
+    # to cemo da izmenimo, nema vise novog windowa vec samo parametar konsturktora koji pokazuje da li treba da se pise u konzoli
+    def __init__(self, stampaj_vrednosti_svih_poteza):
+        self.stampaj_vrednosti_svih_poteza = stampaj_vrednosti_svih_poteza
+
 
     # glavna funkcija ovog modula, igra poziva ovu funkciju, prosledjuje jos stanje i algoritam koji treba da se koristi
     # a ona vraca sledeci potez
@@ -62,12 +66,21 @@ class AI(ABC):
 
 
 class MiniMax(AI):
+
+    def __init__(self, stampaj_vrednosti_svih_poteza):
+        super().__init__(stampaj_vrednosti_svih_poteza)
+
     def sledeci_potez(self, tabla, na_potezu):
         stablo = self.kreiraj_stablo(tabla, 3, na_potezu, True, None)
         svi_potezi = svi_moguci_potezi(tabla, na_potezu)
-        #for i in range(len(svi_potezi)):
-        #    print(svi_potezi[i], stablo.children[i].vrednost)
+
+        # stampaj vrednosti svih poteza
+        if self.stampaj_vrednosti_svih_poteza:
+            print(f"\n\n\nNa potezu je {na_potezu}, koristi se algoritam MiniMax i vrednsti svih mogucih poteza su:")
+            for i in range(len(svi_potezi)):
+                print(svi_potezi[i], stablo.children[i].vrednost)
         
+        # nadji najbolji potez i vrati ga
         for i in range(len(svi_potezi)):
             if stablo.children[i].vrednost == stablo.vrednost:
                 return svi_potezi[i]
@@ -110,6 +123,10 @@ class MiniMaxAlfaBeta(AI):
     dubina = 4 # konstanta, koliku dubinu treba da pretrazuje...idk, bolje mozda da ovo ide u konsturktor?
     na_potezu = IGRAC_CRVENI # ovo treba da pokazuje za koga se racuna staticka funkcija procene, i ne treba da bude const, vec da se zadaje u ctoru
     
+    def __init__(self, stampaj_vrednosti_svih_poteza):
+        super().__init__(stampaj_vrednosti_svih_poteza)
+
+
     def sledeci_potez(self, tabla, na_potezu):
         self.na_potezu = na_potezu
         return self.alfa_beta_pretraga(tabla, self.dubina, None)
@@ -118,6 +135,12 @@ class MiniMaxAlfaBeta(AI):
     def alfa_beta_pretraga(self, tabla, dubina, potez):
         self.lista_poteza.clear()
         v = self.max_value(tabla, dubina, potez, -1000, 1000)
+
+        # stampaj vrednosti svih poteza
+        if self.stampaj_vrednosti_svih_poteza:
+            print(f"\n\n\nNa potezu je {self.na_potezu}, koristi se algoritam MiniMax sa Alfa Beta odsecanjem i vrednsti svih mogucih poteza su:")
+            for p in self.lista_poteza:
+                print(p[1], p[0])
         
         for p in self.lista_poteza:
             if p[0] == v:
@@ -234,7 +257,7 @@ if __name__ == "__main__":
     ukupno = 0
     for i in range(10):
         start = time.time()
-        potez = MiniMax().sledeci_potez(tabla, IGRAC_PLAVI)
+        potez = MiniMax(False).sledeci_potez(tabla, IGRAC_PLAVI)
         print(potez)
         print("Vreme potrebno za izracunavanje: ", time.time() - start)
         ukupno += time.time() - start
@@ -244,7 +267,7 @@ if __name__ == "__main__":
     ukupno = 0
     for i in range(10):
         start = time.time()
-        potez = MiniMaxAlfaBeta().sledeci_potez(tabla, IGRAC_PLAVI)
+        potez = MiniMaxAlfaBeta(False).sledeci_potez(tabla, IGRAC_PLAVI)
         print(potez)
         print("Vreme potrebno za izracunavanje: ", time.time() - start)
         ukupno += time.time() - start

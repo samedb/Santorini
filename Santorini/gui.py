@@ -1,4 +1,4 @@
-from tkinter import Tk, Frame, Label, Button, sys, LEFT, BOTTOM, ttk, messagebox, filedialog
+from tkinter import Tk, Frame, Label, Button, sys, LEFT, BOTTOM, ttk, messagebox, filedialog, IntVar, Checkbutton
 from igra import IgraCanvas, TIPOVI_IGRACA
 from datetime import datetime
 
@@ -66,13 +66,15 @@ class OdabirTipaIgreFrame(Frame):
         self.naziv_fajla_labela = Label(self, text = "")
         self.naziv_fajla_labela.grid(row = 4, columnspan = 2)
 
-        objasnjenje_tezina = "Opis raznih nivoa vestacke inteligencije \nLupam \n• AI easy - minimax algoritam sa dubinom 5 \n• AI medium - minimax algoritam sa dubinom 10 uz alfa-beta odsecanje \n• AI hard - minimax algoritam sa dubinom 15 uz alfa-beta odsecanje"
-            
-        Label(self, text=objasnjenje_tezina, justify = LEFT, font = "Arial 16").grid(row = 5, columnspan = 2, pady = 50)
+        check_var = IntVar()
+        Checkbutton(self, text="Stampaj vrednosti svih mogucih poteza AI", variable=check_var).grid(row = 5, columnspan = 2)
 
-        Button(self, text="Nazad na pocetnu stranu", command=lambda: controller.show_frame(PocetniFrame), width = 20).grid(row = 6, column = 0)
+        objasnjenje_tezina = "Opis raznih nivoa vestacke inteligencije \nLupam \n• AI easy - minimax algoritam sa dubinom 5 \n• AI medium - minimax algoritam sa dubinom 10 uz alfa-beta odsecanje \n• AI hard - minimax algoritam sa dubinom 15 uz alfa-beta odsecanje"
+        Label(self, text=objasnjenje_tezina, justify = LEFT, font = "Arial 16").grid(row = 6, columnspan = 2, pady = 50)
+
+        Button(self, text="Nazad na pocetnu stranu", command=lambda: controller.show_frame(PocetniFrame), width = 20).grid(row = 7, column = 0)
         
-        Button(self, text="Pokreni igru", command=lambda: controller.show_frame(IgraFrame, igrac1 = cb1.get(), igrac2 = cb2.get(), naziv_fajla = self.naziv_fajla_labela["text"]), width = 20).grid(row = 6, column = 1)
+        Button(self, text="Pokreni igru", command=lambda: controller.show_frame(IgraFrame, igrac1 = cb1.get(), igrac2 = cb2.get(), naziv_fajla = self.naziv_fajla_labela["text"], stampaj_vrednosti_svih_poteza = check_var.get()), width = 20).grid(row = 7, column = 1)
 
     #Otvara openFileDialog, selektuje fajl i putanju pamti u naziv_fajla_labela
     def ucitaj_fajl(self):
@@ -85,22 +87,15 @@ class IgraFrame(Frame):
     def __init__(self, parent, controller, *args, **kwarg):
         Frame.__init__(self, parent)
         self.controller = controller
-   #     nastaviMec = kwarg.get("nastavi", None) != None
-   #     if nastaviMec:
-   #         Label(self, text="Igra frame!!!", font=LARGE_FONT).grid(row = 0, column = 0, columnspan = 3)
-   #         Label(self, text=f"nastavlja se neka igra: {kwarg.get('nastavi')}").grid(row = 0, column = 3)
-   #     else:
-   #         igrac1 = kwarg.get("igrac1", None)
-   #         igrac2 = kwarg.get("igrac2", None)
-   #         Label(self, text="Igra frame!!!", font=LARGE_FONT).grid(row = 0, column = 0)
-   #         Label(self, text=f"Ovde treba da bude igra\n {igrac1} vs {igrac2}").grid(row = 0, column = 3)
+
         igrac1 = kwarg.get("igrac1", TIPOVI_IGRACA[0])
         igrac2 = kwarg.get("igrac2", TIPOVI_IGRACA[0])
         naziv_fajla = kwarg.get("naziv_fajla", "")
+        stampanje_poteza = kwarg.get("stampaj_vrednosti_svih_poteza", "0")
         if naziv_fajla == "":
             naziv_fajla = self.kreiraj_fajl()
 
-        self.igraCanvas = IgraCanvas(self, igrac1, igrac2, naziv_fajla)
+        self.igraCanvas = IgraCanvas(self, igrac1, igrac2, naziv_fajla, stampanje_poteza == 1)
         self.igraCanvas.place(x = 150, y = 0)
         Button(self, text="Nazad na pocetnu stranu", command=self.povratak_na_pocetnu).pack(side = BOTTOM, pady = 3)
 
