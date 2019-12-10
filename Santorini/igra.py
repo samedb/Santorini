@@ -71,11 +71,11 @@ class IgraCanvas(Canvas):
         if tip_igraca == TIPOVI_IGRACA[0]: #Osoba
             return None
         elif tip_igraca == TIPOVI_IGRACA[1]: #AI easy
-            return MiniMax(stampaj_vrednosti_svih_poteza)
+            return MiniMax(stampaj_vrednosti_svih_poteza, 2)
         elif tip_igraca == TIPOVI_IGRACA[2]: #AI medium
-            return MiniMaxAlfaBeta(stampaj_vrednosti_svih_poteza)
+            return MiniMaxAlfaBeta(stampaj_vrednosti_svih_poteza, 3)
         elif tip_igraca == TIPOVI_IGRACA[3]: #AI hard
-            return MiniMaxAlfaBeta(stampaj_vrednosti_svih_poteza) #todo da se uradi jos jedan klasa
+            return MiniMaxAlfaBeta(stampaj_vrednosti_svih_poteza, 4) #todo da se uradi jos jedan klasa
     
 
     #todo crtanje kasni jedan korak kad igraju AI vs AI
