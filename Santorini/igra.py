@@ -182,7 +182,9 @@ class IgraCanvas(Canvas):
         return (self.na_potezu == IGRAC_PLAVI and self.plavi_AI != None) or (self.na_potezu == IGRAC_CRVENI and self.crveni_AI != None)
 
 
-    def AI_izvrsi_potez(self):
+    def AI_izvrsi_potez(self, pravi_pauzu: bool):
+        if self.game_state == GameState.KRAJ_IGRE:
+            return
         # minimalno trajanje poteza AI, da se ne bi momentalno izvrsio potez, potez moze da traje i duze ako treba
         PAUZA_IZMEDJU_POTEZA = 0.8 #sekunda
         pocetak = time.time()
@@ -193,7 +195,7 @@ class IgraCanvas(Canvas):
             potez = self.crveni_AI.sledeci_potez(self.tabla, self.na_potezu)
         vreme_potrebno_za_nalazenje_poteza = time.time() - pocetak
         # ako je bio previse "brz", onda ceka do isteka minimalnog vremena za jedan potez AI-a
-        if vreme_potrebno_za_nalazenje_poteza < PAUZA_IZMEDJU_POTEZA:
+        if pravi_pauzu and vreme_potrebno_za_nalazenje_poteza < PAUZA_IZMEDJU_POTEZA:
             time.sleep(PAUZA_IZMEDJU_POTEZA - vreme_potrebno_za_nalazenje_poteza)
 
         print("Na potezu je " + str(self.na_potezu) + " i on je odgirao sledeci potez: " + str(potez))
@@ -231,17 +233,20 @@ class IgraCanvas(Canvas):
 
         self.selektovana_figura = (-2, -2)
         self.crtaj(self.tabla)
+        self.after(200, self.crtaj, self.tabla)
 
         # ovde treba da proverava da li igra AI sad
         if self.AI_je_na_potezu():
 
             if self.game_state == GameState.SELEKTOVANJE_FIGURE:
-               self.AI_izvrsi_potez()
+               self.after(100, self.AI_izvrsi_potez, True) 
             elif self.game_state == GameState.POSTAVLJANJE_FIGURA:
                 self.postavi_figure_na_slucajno_izabrana_mesta()
 
             # veoma vazna stvar, kreira pauzu i omogucava GUI-u da se updateuje, inace blokira
-            self.after(200, self.zameni_igraca)
+            self.after(100, self.zameni_igraca)
+            # ovo treba da ide kod implemetiranja algoritma do kraja
+            #self.zameni_igraca()
 
 
     def sastavi_poruku(self):
@@ -253,16 +258,18 @@ class IgraCanvas(Canvas):
             return
         #proveri da li je kraj meca, tj da li ima mogucih poteza za igraca na potezu
         if not self.tabla.ima_mogucih_poteza(self.na_potezu):
-            messagebox.showinfo("Pobeda", f"Pobedio je {self.na_potezu.protivnik()} jer {self.na_potezu} nema mogucih poteza!")
             self.game_state = GameState.KRAJ_IGRE
             self.zatovori_fajl()
+            self.crtaj(self.tabla)
+            messagebox.showinfo("Pobeda", f"Pobedio je {self.na_potezu.protivnik()} jer {self.na_potezu} nema mogucih poteza!")
         
         if self.tabla.zauzeo_treci_sprat(self.na_potezu):
-            messagebox.showinfo("Pobeda", f"Pobedio je {self.na_potezu} jer je zauzeo polje sa nivoom 3!")
             self.game_state = GameState.KRAJ_IGRE
             if not self.AI_je_na_potezu():
                 self.f.write(str(self.trenutni_potez_osobe) + "\n")
             self.zatovori_fajl()
+            self.crtaj(self.tabla)
+            messagebox.showinfo("Pobeda", f"Pobedio je {self.na_potezu} jer je zauzeo polje sa nivoom 3!")
 
     def zatovori_fajl(self):
         self.f.close()

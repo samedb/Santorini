@@ -67,11 +67,13 @@ class AI(ABC):
 
 class MiniMax(AI):
 
-    def __init__(self, stampaj_vrednosti_svih_poteza):
+    def __init__(self, stampaj_vrednosti_svih_poteza,dubina = 2, funkcija_procene = staticka_funkcija_procene):
         super().__init__(stampaj_vrednosti_svih_poteza)
+        self.funkcija_procene = funkcija_procene
+        self.dubina = dubina
 
     def sledeci_potez(self, tabla, na_potezu):
-        stablo = self.kreiraj_stablo(tabla, 3, na_potezu, True, None)
+        stablo = self.kreiraj_stablo(tabla, self.dubina, na_potezu, True, None)
         svi_potezi = svi_moguci_potezi(tabla, na_potezu)
 
         # stampaj vrednosti svih poteza
@@ -85,11 +87,12 @@ class MiniMax(AI):
             if stablo.children[i].vrednost == stablo.vrednost:
                 return svi_potezi[i]
 
-    # todo bolje ime da stavim
+
+    # todo bolje ime da stavim, to obavezno
     # rekurzivna funkcija koja kreira stablo dubine n, stablo se sastoji od Node2 objekata, i izvrsava minimax i izracuna vrednost svakog cvora u stablu
     def kreiraj_stablo(self, tabla, dubina, na_potezu, maximizing_player, potez):
         if dubina == 0:
-            vrednost = staticka_funkcija_procene(tabla, potez, na_potezu)
+            vrednost = self.funkcija_procene(tabla, potez, na_potezu)
             return Node(vrednost)
         
         if maximizing_player:
@@ -99,7 +102,7 @@ class MiniMax(AI):
 
         # ako nema mogucih poteza vrati vrednost tog cvora
         if len(svi_potezi) == 0:
-            vrednost = staticka_funkcija_procene(tabla, potez, na_potezu)
+            vrednost = self.funkcija_procene(tabla, potez, na_potezu)
             return Node(vrednost)
         else:
             novi_node = Node()
@@ -120,11 +123,12 @@ class MiniMax(AI):
 
 class MiniMaxAlfaBeta(AI): 
     lista_poteza = []
-    dubina = 4 # konstanta, koliku dubinu treba da pretrazuje...idk, bolje mozda da ovo ide u konsturktor?
     na_potezu = IGRAC_CRVENI # ovo treba da pokazuje za koga se racuna staticka funkcija procene, i ne treba da bude const, vec da se zadaje u ctoru
     
-    def __init__(self, stampaj_vrednosti_svih_poteza):
+    def __init__(self, stampaj_vrednosti_svih_poteza,dubina = 3, funkcija_procene = staticka_funkcija_procene):
         super().__init__(stampaj_vrednosti_svih_poteza)
+        self.funkcija_procene = funkcija_procene
+        self.dubina = dubina
 
 
     def sledeci_potez(self, tabla, na_potezu):
@@ -148,7 +152,7 @@ class MiniMaxAlfaBeta(AI):
 
     def max_value(self, tabla, dubina, potez, alfa, beta):
         if dubina == 0:
-            vrednost = staticka_funkcija_procene(tabla, potez, self.na_potezu) #ova konstanta je samo privremena todo
+            vrednost = self.funkcija_procene(tabla, potez, self.na_potezu) #ova konstanta je samo privremena todo
             return vrednost
 
         v = -1000
@@ -156,7 +160,7 @@ class MiniMaxAlfaBeta(AI):
         svi_potezi = svi_moguci_potezi(tabla, self.na_potezu)
         # ako nema mogucih poteza vrati vrednost tog cvora
         if len(svi_potezi) == 0:
-            vrednost = staticka_funkcija_procene(tabla, potez, self.na_potezu)
+            vrednost = self.funkcija_procene(tabla, potez, self.na_potezu)
             return vrednost
         else:
             for p in svi_potezi:
@@ -177,7 +181,7 @@ class MiniMaxAlfaBeta(AI):
 
     def min_value(self, tabla, dubina, potez, alfa, beta):
         if dubina == 0:
-            vrednost = staticka_funkcija_procene(tabla, potez, self.na_potezu) #ova konstanta je samo privremena todo
+            vrednost = self.funkcija_procene(tabla, potez, self.na_potezu) #ova konstanta je samo privremena todo
             return vrednost
 
         v = 1000
@@ -185,7 +189,7 @@ class MiniMaxAlfaBeta(AI):
         svi_potezi = svi_moguci_potezi(tabla, protivnik(self.na_potezu))
         # ako nema mogucih poteza vrati vrednost tog cvora
         if len(svi_potezi) == 0:
-            vrednost = staticka_funkcija_procene(tabla, potez, self.na_potezu)
+            vrednost = self.funkcija_procene(tabla, potez, self.na_potezu)
             return vrednost
         else:
             for p in svi_potezi:

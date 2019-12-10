@@ -98,6 +98,7 @@ class IgraFrame(Frame):
         self.igraCanvas = IgraCanvas(self, igrac1, igrac2, naziv_fajla, stampanje_poteza == 1)
         self.igraCanvas.place(x = 150, y = 0)
         Button(self, text="Nazad na pocetnu stranu", command=self.povratak_na_pocetnu).pack(side = BOTTOM, pady = 3)
+        
 
     def povratak_na_pocetnu(self):
         odg = messagebox.askquestion("Nazad na pocetnu stranicu?", "Da li ste sigurni da zelite da prekinete igru i da se vratite na pocetnu stranicu?")
