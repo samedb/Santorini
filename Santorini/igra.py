@@ -116,7 +116,7 @@ class IgraCanvas(Canvas):
                     self.create_oval(x1 + 30, y1 + 30, x1 + 70, y1 + 70, fill = "red")
 
         self.create_text(250, 25, text = self.poruka, font = "Airal 12")
-        #self.update_idletasks() todo kandidat za izbacivanje
+        self.update_idletasks()
 
 
     def mouse_click(self, e):
@@ -169,7 +169,7 @@ class IgraCanvas(Canvas):
             self.trenutni_potez_osobe.yg = y
             self.f.write(str(self.trenutni_potez_osobe) + "\n") #zapamti u fajl potez
             self.game_state = GameState.SELEKTOVANJE_FIGURE
-            self.zameni_igraca()
+            self.after(1, self.zameni_igraca)
 
         self.sastavi_poruku()
         self.crtaj(self.tabla)
