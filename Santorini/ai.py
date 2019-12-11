@@ -7,6 +7,7 @@ from abc import ABC, abstractmethod
 
 
 # staticka funkcija procene neke tabele, za nju mi je potreban i potez kojim se doslo do te tabele
+# funkcija je data u zadataku
 def staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):
     if tabla.pobeda(na_potezu):
         #print("Pobeda")
@@ -25,6 +26,25 @@ def staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):
                 rastojanja -= tabla.rastojanje(i, j, potez.xg, potez.yg)
     l = tabla.matrica[potez.xg][potez.yg].broj_spratova * rastojanja
     return m + l
+
+def unapredjena_staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):
+    if tabla.pobeda(na_potezu):
+        #print("Pobeda")
+        return 100
+    if tabla.poraz(na_potezu):
+        #print("Poraz")
+        return -100
+
+    m = tabla.matrica[potez.x2][potez.y2].broj_spratova
+    rastojanja = 0
+    for i in range(5):
+        for j in range(5):
+            if tabla.matrica[i][j].igrac == na_potezu:
+                rastojanja += tabla.rastojanje(i, j, potez.xg, potez.yg)
+            elif tabla.matrica[i][j].igrac != na_potezu and tabla.matrica[i][j].igrac != None:  # ako je protivnik
+                rastojanja -= tabla.rastojanje(i, j, potez.xg, potez.yg)
+    l = tabla.matrica[potez.xg][potez.yg].broj_spratova * rastojanja
+    return 3 * m + l # za sad je samo ovo unapredjeno
 
 
 class Node:
@@ -47,15 +67,13 @@ class Node:
         return value
 
 
-#todo nasledjivanje nema svrhe u pythonu, mozda i ima ako hocu u novom prozoru da pokazujem vrednosti svih poteza
-
-#Abstraktna klasa za AI, koju ce da naslede svi razliciti algoritmi za easy, medium i hard
+#Abstraktna klasa za AI
 class AI(ABC):
 
-    #todo u konstruktoru treba da otvori window gde ce da se prikazuju vrednosti mogucih poteza
-    # to cemo da izmenimo, nema vise novog windowa vec samo parametar konsturktora koji pokazuje da li treba da se pise u konzoli
-    def __init__(self, stampaj_vrednosti_svih_poteza):
+    def __init__(self, stampaj_vrednosti_svih_poteza,dubina = 2, funkcija_procene = staticka_funkcija_procene):
         self.stampaj_vrednosti_svih_poteza = stampaj_vrednosti_svih_poteza
+        self.dubina = dubina
+        self.funkcija_procene = funkcija_procene
 
 
     # glavna funkcija ovog modula, igra poziva ovu funkciju, prosledjuje jos stanje i algoritam koji treba da se koristi
@@ -68,12 +86,10 @@ class AI(ABC):
 class MiniMax(AI):
 
     def __init__(self, stampaj_vrednosti_svih_poteza,dubina = 2, funkcija_procene = staticka_funkcija_procene):
-        super().__init__(stampaj_vrednosti_svih_poteza)
-        self.funkcija_procene = funkcija_procene
-        self.dubina = dubina
+        super().__init__(stampaj_vrednosti_svih_poteza, dubina, funkcija_procene)
 
     def sledeci_potez(self, tabla, na_potezu):
-        stablo = self.kreiraj_stablo(tabla, self.dubina, na_potezu, True, None)
+        stablo = self.minimax_pretraga(tabla, self.dubina, na_potezu, True, None)
         svi_potezi = svi_moguci_potezi(tabla, na_potezu)
 
         # stampaj vrednosti svih poteza
@@ -88,9 +104,8 @@ class MiniMax(AI):
                 return svi_potezi[i]
 
 
-    # todo bolje ime da stavim, to obavezno
-    # rekurzivna funkcija koja kreira stablo dubine n, stablo se sastoji od Node2 objekata, i izvrsava minimax i izracuna vrednost svakog cvora u stablu
-    def kreiraj_stablo(self, tabla, dubina, na_potezu, maximizing_player, potez):
+    # rekurzivna funkcija koja kreira stablo dubine n, stablo se sastoji od Node objekata, i izvrsava minimax i izracuna vrednost svakog cvora u stablu
+    def minimax_pretraga(self, tabla, dubina, na_potezu, maximizing_player, potez):
         if dubina == 0:
             vrednost = self.funkcija_procene(tabla, potez, na_potezu)
             return Node(vrednost)
@@ -110,7 +125,7 @@ class MiniMax(AI):
                 #nova_tabla = copy.deepcopy(tabla) deepcopy je ZLO
                 nova_tabla = Tabla(tabla)
                 nova_tabla.izvrsi_potez(p)
-                novi_node.children.append(self.kreiraj_stablo(nova_tabla, dubina - 1, na_potezu, not maximizing_player, p))
+                novi_node.children.append(self.minimax_pretraga(nova_tabla, dubina - 1, na_potezu, not maximizing_player, p))
 
         if maximizing_player:
             novi_node.vrednost = novi_node.max_child_vrednost()
@@ -123,12 +138,9 @@ class MiniMax(AI):
 
 class MiniMaxAlfaBeta(AI): 
     lista_poteza = []
-    na_potezu = IGRAC_CRVENI # ovo treba da pokazuje za koga se racuna staticka funkcija procene, i ne treba da bude const, vec da se zadaje u ctoru
-    
+
     def __init__(self, stampaj_vrednosti_svih_poteza,dubina = 3, funkcija_procene = staticka_funkcija_procene):
-        super().__init__(stampaj_vrednosti_svih_poteza)
-        self.funkcija_procene = funkcija_procene
-        self.dubina = dubina
+        super().__init__(stampaj_vrednosti_svih_poteza, dubina, funkcija_procene)
 
 
     def sledeci_potez(self, tabla, na_potezu):
@@ -152,7 +164,7 @@ class MiniMaxAlfaBeta(AI):
 
     def max_value(self, tabla, dubina, potez, alfa, beta):
         if dubina == 0:
-            vrednost = self.funkcija_procene(tabla, potez, self.na_potezu) #ova konstanta je samo privremena todo
+            vrednost = self.funkcija_procene(tabla, potez, self.na_potezu)
             return vrednost
 
         v = -1000
@@ -181,7 +193,7 @@ class MiniMaxAlfaBeta(AI):
 
     def min_value(self, tabla, dubina, potez, alfa, beta):
         if dubina == 0:
-            vrednost = self.funkcija_procene(tabla, potez, self.na_potezu) #ova konstanta je samo privremena todo
+            vrednost = self.funkcija_procene(tabla, potez, self.na_potezu)
             return vrednost
 
         v = 1000

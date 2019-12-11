@@ -3,7 +3,7 @@ from enum import Enum
 import time
 import random
 import os
-from ai import  MiniMax, MiniMaxAlfaBeta
+from ai import  MiniMax, MiniMaxAlfaBeta, staticka_funkcija_procene, unapredjena_staticka_funkcija_procene
 from tabla import Tabla, GameState, IGRAC_CRVENI, IGRAC_PLAVI, protivnik, Potez
 
 
@@ -73,14 +73,13 @@ class IgraCanvas(Canvas):
         if tip_igraca == TIPOVI_IGRACA[0]: #Osoba
             return None
         elif tip_igraca == TIPOVI_IGRACA[1]: #AI easy
-            return MiniMax(stampaj_vrednosti_svih_poteza, 2)
+            return MiniMax(stampaj_vrednosti_svih_poteza, 2, staticka_funkcija_procene)
         elif tip_igraca == TIPOVI_IGRACA[2]: #AI medium
-            return MiniMaxAlfaBeta(stampaj_vrednosti_svih_poteza, 3)
+            return MiniMaxAlfaBeta(stampaj_vrednosti_svih_poteza, 3, staticka_funkcija_procene)
         elif tip_igraca == TIPOVI_IGRACA[3]: #AI hard
-            return MiniMaxAlfaBeta(stampaj_vrednosti_svih_poteza, 4) #todo da se uradi jos jedan klasa
+            return MiniMaxAlfaBeta(stampaj_vrednosti_svih_poteza, 4, unapredjena_staticka_funkcija_procene) 
     
 
-    #todo crtanje kasni jedan korak kad igraju AI vs AI
     def crtaj(self, tabla):
         self.delete("all")
         for i in range (0, 5):
@@ -210,16 +209,20 @@ class IgraCanvas(Canvas):
 
     def postavi_figure_na_slucajno_izabrana_mesta(self):
         dozvoljena_polja = self.tabla.pronadji_dozvoljena_polja(self.game_state, -2, -2, self.na_potezu)
-        #todo ovo da se uradi malo bolje i da se izmesti u ai.py
+        # uzimamo 2 slucajna polja iz liste dozvoljenih
         random_polja = random.sample(range(len(dozvoljena_polja)), 2)
+        # nadjemo x i y koordinate tih polja
         x1, y1 = dozvoljena_polja[random_polja[0]][0], dozvoljena_polja[random_polja[0]][1]
         x2, y2 = dozvoljena_polja[random_polja[1]][0], dozvoljena_polja[random_polja[1]][1]
+        # i postavimo figure u tim poljima, i zapisemo sve to u fajlu
         self.tabla.postavi_figuru(x1, y1, self.na_potezu) 
         self.f.write(Potez.koordinate_u_string(x1, y1) + " ")
         self.tabla.postavi_figuru(x2, y2, self.na_potezu) 
         self.f.write(Potez.koordinate_u_string(x2, y2) + "\n")
+        # povecamo broj figura
         self.broj_figura += 2
 
+        # ako imamo 4 figure na tabli onda je faza postavljanja figura gotova i prelazimo ga igru tj. na selektovanje figure
         if self.broj_figura == 4:
             self.game_state = GameState.SELEKTOVANJE_FIGURE
 
@@ -247,11 +250,11 @@ class IgraCanvas(Canvas):
             elif self.game_state == GameState.POSTAVLJANJE_FIGURA:
                 self.postavi_figure_na_slucajno_izabrana_mesta()
 
-            # veoma vazna stvar, kreira pauzu i omogucava GUI-u da se updateuje, inace blokira
             if self.crtaj_svaki_korak:
+                # veoma vazna stvar, kreira pauzu i omogucava GUI-u da se updateuje, inace blokira
                 self.after(100, self.zameni_igraca)
             else:
-                # ovo treba da ide kod implemetiranja algoritma do kraja
+                # ovo treba da ide kod implemetiranja algoritma do kraja, koristim bug kao feature :D, blokiram gui namerno
                 self.zameni_igraca()
 
 
