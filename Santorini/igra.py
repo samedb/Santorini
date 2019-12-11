@@ -13,10 +13,12 @@ TIPOVI_IGRACA = ("Osoba", "AI easy", "AI medium", "AI hard")
 
 class IgraCanvas(Canvas):
 
-    def __init__(self, parent, igrac1, igrac2, naziv_fajla, stampaj_vrednosti_svih_poteza):
+    def __init__(self, parent, igrac1, igrac2, naziv_fajla, stampaj_vrednosti_svih_poteza, crtaj_svaki_korak = True):
         Canvas.__init__(self, parent)
         self.config(width = 500, height = 550) 
         self.bind("<Button-1>", self.mouse_click)
+        
+        self.crtaj_svaki_korak = crtaj_svaki_korak
 
         #postavljanje tip igraca koji su prosledjeni kao parametri
         self.plavi_AI = self.odaberi_AI(igrac1, stampaj_vrednosti_svih_poteza)
@@ -232,21 +234,26 @@ class IgraCanvas(Canvas):
             self.na_potezu = protivnik(self.na_potezu)
 
         self.selektovana_figura = (-2, -2)
-        self.crtaj(self.tabla)
-        self.after(200, self.crtaj, self.tabla)
+        self.after(100, self.crtaj, self.tabla)
 
         # ovde treba da proverava da li igra AI sad
         if self.AI_je_na_potezu():
 
+
             if self.game_state == GameState.SELEKTOVANJE_FIGURE:
-               self.after(100, self.AI_izvrsi_potez, True) 
+                pravi_pauzu_izmedju_poteza_AI = self.crtaj_svaki_korak
+                self.AI_izvrsi_potez(pravi_pauzu_izmedju_poteza_AI)
+
             elif self.game_state == GameState.POSTAVLJANJE_FIGURA:
                 self.postavi_figure_na_slucajno_izabrana_mesta()
 
             # veoma vazna stvar, kreira pauzu i omogucava GUI-u da se updateuje, inace blokira
-            self.after(100, self.zameni_igraca)
-            # ovo treba da ide kod implemetiranja algoritma do kraja
-            #self.zameni_igraca()
+            if self.crtaj_svaki_korak:
+                self.after(100, self.zameni_igraca)
+            else:
+                # ovo treba da ide kod implemetiranja algoritma do kraja
+                self.zameni_igraca()
+
 
 
     def sastavi_poruku(self):

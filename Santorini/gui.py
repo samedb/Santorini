@@ -66,15 +66,18 @@ class OdabirTipaIgreFrame(Frame):
         self.naziv_fajla_labela = Label(self, text = "")
         self.naziv_fajla_labela.grid(row = 4, columnspan = 2)
 
-        check_var = IntVar()
-        Checkbutton(self, text="Stampaj vrednosti svih mogucih poteza AI", variable=check_var).grid(row = 5, columnspan = 2)
+        stampaj_vrednosti_algoritma = IntVar()
+        Checkbutton(self, text="Stampaj vrednosti svih mogucih poteza AI", variable=stampaj_vrednosti_algoritma).grid(row = 5, columnspan = 2)
 
-        objasnjenje_tezina = "Opis raznih nivoa vestacke inteligencije \nLupam \n• AI easy - minimax algoritam sa dubinom 5 \n• AI medium - minimax algoritam sa dubinom 10 uz alfa-beta odsecanje \n• AI hard - minimax algoritam sa dubinom 15 uz alfa-beta odsecanje"
-        Label(self, text=objasnjenje_tezina, justify = LEFT, font = "Arial 16").grid(row = 6, columnspan = 2, pady = 50)
+        preskoci_crtanje_poteza = IntVar()
+        Checkbutton(self, text="Izvršavanje implementirane strategije do kraja", variable=preskoci_crtanje_poteza).grid(row = 6, columnspan = 2)
 
-        Button(self, text="Nazad na pocetnu stranu", command=lambda: controller.show_frame(PocetniFrame), width = 20).grid(row = 7, column = 0)
+        objasnjenje_tezina = "Opis raznih nivoa vestacke inteligencije \n• AI easy - minimax algoritam sa dubinom 2 \n• AI medium - minimax algoritam sa dubinom 3 uz alfa-beta odsecanje \n• AI hard - minimax algoritam sa dubinom 4 uz alfa-beta odsecanje"
+        Label(self, text=objasnjenje_tezina, justify = LEFT, font = "Arial 16").grid(row = 7, columnspan = 2, pady = 40)
+
+        Button(self, text="Nazad na pocetnu stranu", command=lambda: controller.show_frame(PocetniFrame), width = 20).grid(row = 8, column = 0)
         
-        Button(self, text="Pokreni igru", command=lambda: controller.show_frame(IgraFrame, igrac1 = cb1.get(), igrac2 = cb2.get(), naziv_fajla = self.naziv_fajla_labela["text"], stampaj_vrednosti_svih_poteza = check_var.get()), width = 20).grid(row = 7, column = 1)
+        Button(self, text="Pokreni igru", command=lambda: controller.show_frame(IgraFrame, igrac1 = cb1.get(), igrac2 = cb2.get(), naziv_fajla = self.naziv_fajla_labela["text"], stampaj_vrednosti_svih_poteza = stampaj_vrednosti_algoritma.get(), preskoci_crtanje_poteza = preskoci_crtanje_poteza.get()), width = 20).grid(row = 8, column = 1)
 
     #Otvara openFileDialog, selektuje fajl i putanju pamti u naziv_fajla_labela
     def ucitaj_fajl(self):
@@ -92,10 +95,11 @@ class IgraFrame(Frame):
         igrac2 = kwarg.get("igrac2", TIPOVI_IGRACA[0])
         naziv_fajla = kwarg.get("naziv_fajla", "")
         stampanje_poteza = kwarg.get("stampaj_vrednosti_svih_poteza", "0")
+        preskoci_crtanje_poteza = kwarg.get("preskoci_crtanje_poteza", "0")
         if naziv_fajla == "":
             naziv_fajla = self.kreiraj_fajl()
 
-        self.igraCanvas = IgraCanvas(self, igrac1, igrac2, naziv_fajla, stampanje_poteza == 1)
+        self.igraCanvas = IgraCanvas(self, igrac1, igrac2, naziv_fajla, stampanje_poteza == 1, preskoci_crtanje_poteza != 1)
         self.igraCanvas.place(x = 150, y = 0)
         Button(self, text="Nazad na pocetnu stranu", command=self.povratak_na_pocetnu).pack(side = BOTTOM, pady = 3)
         
@@ -151,7 +155,7 @@ if __name__ == "__main__":
     app = Application()
     app.mainloop()
 
-    #todo celava latinica
-    # todo combobox da bude readonly\
+    #TODO celava latinica
+    # TODO combobox da bude readonly\
 
 
