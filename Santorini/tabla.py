@@ -155,4 +155,4 @@ class Tabla():
     def rastojanje(self, x1, y1, x2, y2):
         dx = abs(x1 - x2)
         dy = abs(y1 - y2)
-        return abs(dx - dy)
+        return max(dx, dy)
