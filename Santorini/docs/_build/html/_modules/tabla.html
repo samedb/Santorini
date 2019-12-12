@@ -1,0 +1,363 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>tabla &mdash; Santorini 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Santorini
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Santorini</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Santorini</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>tabla</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for tabla</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">enum</span> <span class="k">import</span> <span class="n">Enum</span>
+
+<span class="n">IGRAC_PLAVI</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">IGRAC_CRVENI</span> <span class="o">=</span> <span class="mi">1</span>
+
+<div class="viewcode-block" id="protivnik"><a class="viewcode-back" href="../tabla.html#tabla.protivnik">[docs]</a><span class="k">def</span> <span class="nf">protivnik</span><span class="p">(</span><span class="n">igrac</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Vraca protivnika igraca kojeg prosledimo kao parametar</span>
+<span class="sd">    </span>
+<span class="sd">    :param igrac: Trenutni igrac</span>
+<span class="sd">    :type igrac: int</span>
+<span class="sd">    :return: Protivnik trenutnog igraca</span>
+<span class="sd">    :rtype: int</span>
+<span class="sd">    &quot;&quot;&quot;</span> 
+    <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">igrac</span></div>
+
+<div class="viewcode-block" id="GameState"><a class="viewcode-back" href="../tabla.html#tabla.GameState">[docs]</a><span class="k">class</span> <span class="nc">GameState</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;asdf asdf asdf </span>
+<span class="sd">    </span>
+<span class="sd">    :param Enum: [description]</span>
+<span class="sd">    :type Enum: [type]</span>
+<span class="sd">    &quot;&quot;&quot;</span>    
+    <span class="n">POSTAVLJANJE_FIGURA</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">SELEKTOVANJE_FIGURE</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">POMERANJE_FIGURE</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">GRADNJA</span> <span class="o">=</span> <span class="mi">3</span> 
+    <span class="n">KRAJ_IGRE</span> <span class="o">=</span> <span class="mi">4</span></div>
+
+<div class="viewcode-block" id="Potez"><a class="viewcode-back" href="../tabla.html#tabla.Potez">[docs]</a><span class="k">class</span> <span class="nc">Potez</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;sadf fdas dsf sad </span>
+<span class="sd">    </span>
+<span class="sd">    :return: [description]</span>
+<span class="sd">    :rtype: [type]</span>
+<span class="sd">    &quot;&quot;&quot;</span>    
+    <span class="c1"># x1,y1 su pocetna pozicija, x2, y2 su nova pozicija, a xg, yg su pozicija gradnje</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">xg</span><span class="p">,</span> <span class="n">yg</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x1</span> <span class="o">=</span> <span class="n">x1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y1</span> <span class="o">=</span> <span class="n">y1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x2</span> <span class="o">=</span> <span class="n">x2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y2</span> <span class="o">=</span> <span class="n">y2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xg</span> <span class="o">=</span> <span class="n">xg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">yg</span> <span class="o">=</span> <span class="n">yg</span>
+
+    <span class="c1"># staticka metoda koja prima string jednog poteza kako se upisuje u fajl i pretrvara u objekat klase Potez koji vraca</span>
+<div class="viewcode-block" id="Potez.iz_stringa"><a class="viewcode-back" href="../tabla.html#tabla.Potez.iz_stringa">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">iz_stringa</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">Potez</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">reci</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">x1</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">y1</span> <span class="o">=</span> <span class="n">Potez</span><span class="o">.</span><span class="n">string_u_koordinate</span><span class="p">(</span><span class="n">reci</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">x2</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">y2</span> <span class="o">=</span> <span class="n">Potez</span><span class="o">.</span><span class="n">string_u_koordinate</span><span class="p">(</span><span class="n">reci</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">xg</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">yg</span> <span class="o">=</span> <span class="n">Potez</span><span class="o">.</span><span class="n">string_u_koordinate</span><span class="p">(</span><span class="n">reci</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">p</span></div>
+
+    <span class="c1"># staticka metoda koja prima string jednog polja npr. A0 ili D3 i vraca njegove x i y koordinate</span>
+<div class="viewcode-block" id="Potez.string_u_koordinate"><a class="viewcode-back" href="../tabla.html#tabla.Potez.string_u_koordinate">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">string_u_koordinate</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">text</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="nb">ord</span><span class="p">(</span><span class="s2">&quot;A&quot;</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">text</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="nb">ord</span><span class="p">(</span><span class="s2">&quot;0&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span></div>
+
+    <span class="c1"># staticka metoda koja prima x i y koordinate i vraca string</span>
+<div class="viewcode-block" id="Potez.koordinate_u_string"><a class="viewcode-back" href="../tabla.html#tabla.Potez.koordinate_u_string">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">koordinate_u_string</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">f</span><span class="s2">&quot;{chr(x + 65)}</span><span class="si">{y}</span><span class="s2">&quot;</span></div>
+
+    <span class="c1"># preklopljenja funkcija str koja ispisuje Potez u formatu koji se trazi u zadatku npr. A0 A1 B2</span>
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">f</span><span class="s2">&quot;{chr(self.x1 + 65)}</span><span class="si">{self.y1}</span><span class="s2"> {chr(self.x2 + 65)}</span><span class="si">{self.y2}</span><span class="s2"> {chr(self.xg + 65)}</span><span class="si">{self.yg}</span><span class="s2">&quot;</span>
+
+    <span class="c1"># isto ovo gore</span>
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="Polje"><a class="viewcode-back" href="../tabla.html#tabla.Polje">[docs]</a><span class="k">class</span> <span class="nc">Polje</span><span class="p">():</span>
+    <span class="n">broj_spratova</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">igrac</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="Tabla"><a class="viewcode-back" href="../tabla.html#tabla.Tabla">[docs]</a><span class="k">class</span> <span class="nc">Tabla</span><span class="p">():</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tabla</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matrica</span> <span class="o">=</span> <span class="p">((</span><span class="n">Polje</span><span class="p">(),</span> <span class="n">Polje</span><span class="p">(),</span> <span class="n">Polje</span><span class="p">(),</span> <span class="n">Polje</span><span class="p">(),</span> <span class="n">Polje</span><span class="p">()),</span>
+                        <span class="p">(</span><span class="n">Polje</span><span class="p">(),</span> <span class="n">Polje</span><span class="p">(),</span> <span class="n">Polje</span><span class="p">(),</span> <span class="n">Polje</span><span class="p">(),</span> <span class="n">Polje</span><span class="p">()),</span>
+                        <span class="p">(</span><span class="n">Polje</span><span class="p">(),</span> <span class="n">Polje</span><span class="p">(),</span> <span class="n">Polje</span><span class="p">(),</span> <span class="n">Polje</span><span class="p">(),</span> <span class="n">Polje</span><span class="p">()),</span>
+                        <span class="p">(</span><span class="n">Polje</span><span class="p">(),</span> <span class="n">Polje</span><span class="p">(),</span> <span class="n">Polje</span><span class="p">(),</span> <span class="n">Polje</span><span class="p">(),</span> <span class="n">Polje</span><span class="p">()),</span>
+                        <span class="p">(</span><span class="n">Polje</span><span class="p">(),</span> <span class="n">Polje</span><span class="p">(),</span> <span class="n">Polje</span><span class="p">(),</span> <span class="n">Polje</span><span class="p">(),</span> <span class="n">Polje</span><span class="p">()))</span>
+        
+        <span class="c1"># kopiranje tabele koja se prosledi u konstruktoru, nesto kao copy konstruktor </span>
+        <span class="k">if</span> <span class="n">tabla</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span> <span class="o">=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span>
+                    <span class="k">if</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span>
+
+
+
+<div class="viewcode-block" id="Tabla.postavi_figuru"><a class="viewcode-back" href="../tabla.html#tabla.Tabla.postavi_figuru">[docs]</a>    <span class="k">def</span> <span class="nf">postavi_figuru</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">igrac</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">=</span> <span class="n">igrac</span></div>
+
+
+<div class="viewcode-block" id="Tabla.pomeri_figuru"><a class="viewcode-back" href="../tabla.html#tabla.Tabla.pomeri_figuru">[docs]</a>    <span class="k">def</span> <span class="nf">pomeri_figuru</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">):</span>
+        <span class="n">figura</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">x1</span><span class="p">][</span><span class="n">y1</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">x1</span><span class="p">][</span><span class="n">y1</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">x2</span><span class="p">][</span><span class="n">y2</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">=</span> <span class="n">figura</span></div>
+
+<div class="viewcode-block" id="Tabla.gradi"><a class="viewcode-back" href="../tabla.html#tabla.Tabla.gradi">[docs]</a>    <span class="k">def</span> <span class="nf">gradi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+    <span class="c1"># ovo leti napolje, a mozda i ostaje</span>
+<div class="viewcode-block" id="Tabla.izvrsi_potez"><a class="viewcode-back" href="../tabla.html#tabla.Tabla.izvrsi_potez">[docs]</a>    <span class="k">def</span> <span class="nf">izvrsi_potez</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">potez</span><span class="p">:</span> <span class="n">Potez</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pomeri_figuru</span><span class="p">(</span><span class="n">potez</span><span class="o">.</span><span class="n">x1</span><span class="p">,</span> <span class="n">potez</span><span class="o">.</span><span class="n">y1</span><span class="p">,</span> <span class="n">potez</span><span class="o">.</span><span class="n">x2</span><span class="p">,</span> <span class="n">potez</span><span class="o">.</span><span class="n">y2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gradi</span><span class="p">(</span><span class="n">potez</span><span class="o">.</span><span class="n">xg</span><span class="p">,</span> <span class="n">potez</span><span class="o">.</span><span class="n">yg</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Tabla.zauzeo_treci_sprat"><a class="viewcode-back" href="../tabla.html#tabla.Tabla.zauzeo_treci_sprat">[docs]</a>    <span class="k">def</span> <span class="nf">zauzeo_treci_sprat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">igrac</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">==</span> <span class="n">igrac</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="Tabla.ima_mogucih_poteza"><a class="viewcode-back" href="../tabla.html#tabla.Tabla.ima_mogucih_poteza">[docs]</a>    <span class="k">def</span> <span class="nf">ima_mogucih_poteza</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">igrac</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">==</span> <span class="n">igrac</span><span class="p">:</span>
+                    <span class="c1"># prodji kroz sva susedna polja i proveri da li moze na njih da predje, ako ne moze onda je izgubio </span>
+                    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">2</span><span class="p">):</span>
+                        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">2</span><span class="p">):</span>
+                            <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">j</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="mi">4</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:</span>
+                                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+    
+<div class="viewcode-block" id="Tabla.pobeda"><a class="viewcode-back" href="../tabla.html#tabla.Tabla.pobeda">[docs]</a>    <span class="k">def</span> <span class="nf">pobeda</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">na_potezu</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">zauzeo_treci_sprat</span><span class="p">(</span><span class="n">na_potezu</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ima_mogucih_poteza</span><span class="p">(</span><span class="n">protivnik</span><span class="p">(</span><span class="n">na_potezu</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Tabla.poraz"><a class="viewcode-back" href="../tabla.html#tabla.Tabla.poraz">[docs]</a>    <span class="k">def</span> <span class="nf">poraz</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">na_potezu</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">zauzeo_treci_sprat</span><span class="p">(</span><span class="n">protivnik</span><span class="p">(</span><span class="n">na_potezu</span><span class="p">))</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ima_mogucih_poteza</span><span class="p">(</span><span class="n">na_potezu</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Tabla.pronadji_dozvoljena_polja"><a class="viewcode-back" href="../tabla.html#tabla.Tabla.pronadji_dozvoljena_polja">[docs]</a>    <span class="k">def</span> <span class="nf">pronadji_dozvoljena_polja</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">game_state</span><span class="p">:</span> <span class="n">GameState</span><span class="p">,</span> <span class="n">x</span> <span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">igrac_na_potezu</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">dozvoljena_polja</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="n">game_state</span> <span class="o">==</span> <span class="n">GameState</span><span class="o">.</span><span class="n">POSTAVLJANJE_FIGURA</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">dozvoljena_polja</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">game_state</span> <span class="o">==</span> <span class="n">GameState</span><span class="o">.</span><span class="n">SELEKTOVANJE_FIGURE</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">==</span> <span class="n">igrac_na_potezu</span><span class="p">:</span>
+                        <span class="n">dozvoljena_polja</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">game_state</span> <span class="o">==</span> <span class="n">GameState</span><span class="o">.</span><span class="n">POMERANJE_FIGURE</span><span class="p">:</span>
+            <span class="c1"># moze da klikne i na svoju drugu figuru</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">==</span> <span class="n">igrac_na_potezu</span><span class="p">:</span>
+                        <span class="n">dozvoljena_polja</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span>
+            <span class="c1"># prodji kroz sva polja u neposrednoj blizini selektovane figure</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">2</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">2</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">j</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="mi">4</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span> <span class="o">+</span> <span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>
+                        <span class="n">dozvoljena_polja</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="n">game_state</span> <span class="o">==</span> <span class="n">GameState</span><span class="o">.</span><span class="n">GRADNJA</span><span class="p">:</span>
+            <span class="c1"># prodji kroz sva polja u neposrednoj blizini selektovane figure</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">2</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">2</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">j</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="mi">4</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">:</span>  
+                        <span class="n">dozvoljena_polja</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">dozvoljena_polja</span></div>
+        
+<div class="viewcode-block" id="Tabla.rastojanje"><a class="viewcode-back" href="../tabla.html#tabla.Tabla.rastojanje">[docs]</a>    <span class="k">def</span> <span class="nf">rastojanje</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">):</span>
+        <span class="n">dx</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x1</span> <span class="o">-</span> <span class="n">x2</span><span class="p">)</span>
+        <span class="n">dy</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">y1</span> <span class="o">-</span> <span class="n">y2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span> <span class="n">dy</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Samed Bejtovic
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,474 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>igra &mdash; Santorini 0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Santorini
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">Santorini</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Santorini</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>igra</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for igra</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">tkinter</span> <span class="k">import</span> <span class="n">Canvas</span><span class="p">,</span> <span class="n">messagebox</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="k">import</span> <span class="n">Enum</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">ai</span> <span class="k">import</span>  <span class="n">MiniMax</span><span class="p">,</span> <span class="n">MiniMaxAlfaBeta</span><span class="p">,</span> <span class="n">staticka_funkcija_procene</span><span class="p">,</span> <span class="n">unapredjena_staticka_funkcija_procene</span>
+<span class="kn">from</span> <span class="nn">tabla</span> <span class="k">import</span> <span class="n">Tabla</span><span class="p">,</span> <span class="n">GameState</span><span class="p">,</span> <span class="n">IGRAC_CRVENI</span><span class="p">,</span> <span class="n">IGRAC_PLAVI</span><span class="p">,</span> <span class="n">protivnik</span><span class="p">,</span> <span class="n">Potez</span>
+
+
+<span class="n">TIPOVI_IGRACA</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Osoba&quot;</span><span class="p">,</span> <span class="s2">&quot;AI easy&quot;</span><span class="p">,</span> <span class="s2">&quot;AI medium&quot;</span><span class="p">,</span> <span class="s2">&quot;AI hard&quot;</span><span class="p">)</span>
+
+<span class="c1"># zadatak ove klase je da crta Tablu i da prima inpute od korisnika, kao i da upravlja potezima AI-a</span>
+
+<div class="viewcode-block" id="IgraCanvas"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas">[docs]</a><span class="k">class</span> <span class="nc">IgraCanvas</span><span class="p">(</span><span class="n">Canvas</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">igrac1</span><span class="p">,</span> <span class="n">igrac2</span><span class="p">,</span> <span class="n">naziv_fajla</span><span class="p">,</span> <span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span> <span class="n">crtaj_svaki_korak</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="n">Canvas</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="n">width</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">550</span><span class="p">)</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s2">&quot;&lt;Button-1&gt;&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mouse_click</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">crtaj_svaki_korak</span> <span class="o">=</span> <span class="n">crtaj_svaki_korak</span>
+
+        <span class="c1">#postavljanje tip igraca koji su prosledjeni kao parametri</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plavi_AI</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">odaberi_AI</span><span class="p">(</span><span class="n">igrac1</span><span class="p">,</span> <span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">crveni_AI</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">odaberi_AI</span><span class="p">(</span><span class="n">igrac2</span><span class="p">,</span> <span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">)</span>
+
+        <span class="c1">#inicijalizacije matrice</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tabla</span> <span class="o">=</span> <span class="n">Tabla</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span> <span class="o">=</span> <span class="kc">None</span> <span class="c1"># da napisem dobar komentar za ovo</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">=</span> <span class="n">GameState</span><span class="o">.</span><span class="n">POSTAVLJANJE_FIGURA</span> <span class="c1"># u pocetku svi igraci postavljaju svoje figure na tablu</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">broj_figura</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># treba mi za prvu fazu gde se postavljaju figure</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sastavi_poruku</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">selektovana_figura</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+
+
+        <span class="c1">#otvaranje fajla, citanje i izvrsavanje poteza ako ih ima u njemu</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">procitaj_fajl_i_popuni_tabelu</span><span class="p">(</span><span class="n">naziv_fajla</span><span class="p">)</span>
+        <span class="c1">#otvaranje fajla za pisanje sad, svaki put kad se izvrsi neki potez on se upisuje u fajl</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">naziv_fajla</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">crtaj</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zameni_igraca</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="IgraCanvas.procitaj_fajl_i_popuni_tabelu"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas.procitaj_fajl_i_popuni_tabelu">[docs]</a>    <span class="k">def</span> <span class="nf">procitaj_fajl_i_popuni_tabelu</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">naziv_fajla</span><span class="p">):</span>
+        <span class="c1">#otvaranje fajla, citanje i izvrsavanje poteza ako ih ima u njemu</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">naziv_fajla</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+        <span class="n">lines</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)):</span>
+            <span class="c1">#prva dva reda su za postavljanje figura</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">Potez</span><span class="o">.</span><span class="n">string_u_koordinate</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="o">.</span><span class="n">postavi_figuru</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">potez</span> <span class="o">=</span> <span class="n">Potez</span><span class="o">.</span><span class="n">iz_stringa</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="o">.</span><span class="n">izvrsi_potez</span><span class="p">(</span><span class="n">potez</span><span class="p">)</span>
+
+        <span class="c1">#ako txt fajl ima vise od dva reda onda to znaci da su figure postavljenje i moze da se predje na sledecu fazu igre SELEKTOVANJE_FIGURE</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">=</span> <span class="n">GameState</span><span class="o">.</span><span class="n">SELEKTOVANJE_FIGURE</span>
+        <span class="c1"># broj linija takodje odredjuje ko je sad na potezu</span>
+        <span class="c1"># paran broj poteza znaci da je sad na potezu plavi(0), a neparan znaci da je crveni(1)</span>
+        <span class="c1"># i to se sve jos jednom zameni jer se ispod poziva funkcija zameni_igraca() koja menja igraca i zapocinje igru</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="IgraCanvas.odaberi_AI"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas.odaberi_AI">[docs]</a>    <span class="k">def</span> <span class="nf">odaberi_AI</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tip_igraca</span><span class="p">,</span> <span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">tip_igraca</span> <span class="o">==</span> <span class="n">TIPOVI_IGRACA</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="c1">#Osoba</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">elif</span> <span class="n">tip_igraca</span> <span class="o">==</span> <span class="n">TIPOVI_IGRACA</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="c1">#AI easy</span>
+            <span class="k">return</span> <span class="n">MiniMax</span><span class="p">(</span><span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">staticka_funkcija_procene</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">tip_igraca</span> <span class="o">==</span> <span class="n">TIPOVI_IGRACA</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="c1">#AI medium</span>
+            <span class="k">return</span> <span class="n">MiniMaxAlfaBeta</span><span class="p">(</span><span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">staticka_funkcija_procene</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">tip_igraca</span> <span class="o">==</span> <span class="n">TIPOVI_IGRACA</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="c1">#AI hard</span>
+            <span class="k">return</span> <span class="n">MiniMaxAlfaBeta</span><span class="p">(</span><span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">unapredjena_staticka_funkcija_procene</span><span class="p">)</span> </div>
+    
+
+<div class="viewcode-block" id="IgraCanvas.crtaj"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas.crtaj">[docs]</a>    <span class="k">def</span> <span class="nf">crtaj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tabla</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
+                <span class="c1">#izracunaj koordinate tog polja</span>
+                <span class="n">x1</span> <span class="o">=</span> <span class="n">i</span> <span class="o">*</span> <span class="mi">100</span>
+                <span class="n">y1</span> <span class="o">=</span> <span class="n">j</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">+</span> <span class="mi">50</span>
+                <span class="c1">#nacrtaj pozadinu</span>
+                <span class="c1"># ako je to polje na kojem se nalazi selektovana figura onda oboji zutom bojom</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">selektovana_figura</span> <span class="o">==</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">):</span> 
+                    <span class="n">boja</span> <span class="o">=</span> <span class="s2">&quot;yellow&quot;</span>
+                <span class="c1">#ako je to polje dozvoljeno u sledecem potezu onda zelenom bojom</span>
+                <span class="k">elif</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="ow">in</span> <span class="n">tabla</span><span class="o">.</span><span class="n">pronadji_dozvoljena_polja</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game_state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">selektovana_figura</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">selektovana_figura</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span><span class="p">):</span>
+                    <span class="n">boja</span> <span class="o">=</span> <span class="s2">&quot;green&quot;</span>
+                <span class="c1"># ako nije nista od toga onda siva boja</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">boja</span> <span class="o">=</span> <span class="s2">&quot;grey&quot;</span> 
+                <span class="bp">self</span><span class="o">.</span><span class="n">create_rectangle</span><span class="p">(</span><span class="n">x1</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">y1</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">x1</span> <span class="o">+</span> <span class="mi">98</span><span class="p">,</span> <span class="n">y1</span> <span class="o">+</span> <span class="mi">98</span><span class="p">,</span> <span class="n">fill</span> <span class="o">=</span> <span class="n">boja</span><span class="p">)</span>
+                <span class="c1">#nacrtaj spratove, spratovi se crtaju kao &quot;koncentricni&quot; kvadrati sve manjih dimenzija</span>
+                <span class="n">stepen</span> <span class="o">=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span>
+                <span class="k">if</span> <span class="n">stepen</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">create_rectangle</span><span class="p">(</span><span class="n">x1</span> <span class="o">+</span> <span class="mi">8</span><span class="p">,</span> <span class="n">y1</span> <span class="o">+</span> <span class="mi">8</span><span class="p">,</span> <span class="n">x1</span> <span class="o">+</span> <span class="mi">92</span><span class="p">,</span> <span class="n">y1</span> <span class="o">+</span> <span class="mi">92</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">stepen</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">create_rectangle</span><span class="p">(</span><span class="n">x1</span> <span class="o">+</span> <span class="mi">15</span><span class="p">,</span> <span class="n">y1</span> <span class="o">+</span> <span class="mi">15</span><span class="p">,</span> <span class="n">x1</span> <span class="o">+</span> <span class="mi">85</span><span class="p">,</span> <span class="n">y1</span> <span class="o">+</span> <span class="mi">85</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">stepen</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">create_rectangle</span><span class="p">(</span><span class="n">x1</span> <span class="o">+</span> <span class="mi">25</span><span class="p">,</span> <span class="n">y1</span> <span class="o">+</span> <span class="mi">25</span><span class="p">,</span> <span class="n">x1</span> <span class="o">+</span> <span class="mi">75</span><span class="p">,</span> <span class="n">y1</span> <span class="o">+</span> <span class="mi">75</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">stepen</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">create_oval</span><span class="p">(</span><span class="n">x1</span> <span class="o">+</span> <span class="mi">30</span><span class="p">,</span> <span class="n">y1</span> <span class="o">+</span> <span class="mi">30</span><span class="p">,</span> <span class="n">x1</span> <span class="o">+</span> <span class="mi">70</span><span class="p">,</span> <span class="n">y1</span> <span class="o">+</span> <span class="mi">70</span><span class="p">,</span> <span class="n">fill</span> <span class="o">=</span> <span class="s2">&quot;black&quot;</span><span class="p">)</span>
+                <span class="c1">#nacrtaj igraca</span>
+                <span class="k">if</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">==</span> <span class="n">IGRAC_PLAVI</span><span class="p">:</span> <span class="c1"># 0 znaci plavi igrac</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">create_oval</span><span class="p">(</span><span class="n">x1</span> <span class="o">+</span> <span class="mi">30</span><span class="p">,</span> <span class="n">y1</span> <span class="o">+</span> <span class="mi">30</span><span class="p">,</span> <span class="n">x1</span> <span class="o">+</span> <span class="mi">70</span><span class="p">,</span> <span class="n">y1</span> <span class="o">+</span> <span class="mi">70</span><span class="p">,</span> <span class="n">fill</span> <span class="o">=</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">==</span> <span class="n">IGRAC_CRVENI</span><span class="p">:</span> <span class="c1"># 1 znaci crveni igrac</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">create_oval</span><span class="p">(</span><span class="n">x1</span> <span class="o">+</span> <span class="mi">30</span><span class="p">,</span> <span class="n">y1</span> <span class="o">+</span> <span class="mi">30</span><span class="p">,</span> <span class="n">x1</span> <span class="o">+</span> <span class="mi">70</span><span class="p">,</span> <span class="n">y1</span> <span class="o">+</span> <span class="mi">70</span><span class="p">,</span> <span class="n">fill</span> <span class="o">=</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">create_text</span><span class="p">(</span><span class="mi">250</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">poruka</span><span class="p">,</span> <span class="n">font</span> <span class="o">=</span> <span class="s2">&quot;Airal 12&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_idletasks</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="IgraCanvas.mouse_click"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas.mouse_click">[docs]</a>    <span class="k">def</span> <span class="nf">mouse_click</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="c1">#print(e.x, e.y) # koordinate piksela na koji je klikuo mis u ovom canvasu</span>
+        <span class="c1">#ako je kliknuo vam table ili je kraj meca</span>
+        <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">y</span> <span class="o">&lt;</span> <span class="mi">50</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">==</span> <span class="n">GameState</span><span class="o">.</span><span class="n">KRAJ_IGRE</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="c1"># preracunavanje tih kooridnata u indekse polja tabele</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">x</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">e</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="mi">50</span><span class="p">)</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Polje koje je pritisnuto je: </span><span class="si">{x}</span><span class="s2">, </span><span class="si">{y}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">dozvoljena_polja</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="o">.</span><span class="n">pronadji_dozvoljena_polja</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game_state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">selektovana_figura</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">selektovana_figura</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dozvoljena polja: &quot;</span><span class="p">,</span> <span class="n">dozvoljena_polja</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dozvoljena_polja</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Neispravan potez!&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">==</span> <span class="n">GameState</span><span class="o">.</span><span class="n">POSTAVLJANJE_FIGURA</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="o">.</span><span class="n">postavi_figuru</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span><span class="p">)</span> 
+            <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">Potez</span><span class="o">.</span><span class="n">koordinate_u_string</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">broj_figura</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">broj_figura</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">zameni_igraca</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">broj_figura</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">=</span> <span class="n">GameState</span><span class="o">.</span><span class="n">SELEKTOVANJE_FIGURE</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">zameni_igraca</span><span class="p">()</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sad pocinje prava igra&quot;</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">==</span> <span class="n">GameState</span><span class="o">.</span><span class="n">SELEKTOVANJE_FIGURE</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">selektuj_figuru</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">=</span> <span class="n">GameState</span><span class="o">.</span><span class="n">POMERANJE_FIGURE</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">==</span> <span class="n">GameState</span><span class="o">.</span><span class="n">POMERANJE_FIGURE</span><span class="p">:</span>
+            <span class="c1">#ako klikne na istu figuru ili na svoju drugu figuru</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">selektuj_figuru</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">selektovana_figura</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="o">.</span><span class="n">pomeri_figuru</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">trenutni_potez_osobe</span> <span class="o">=</span> <span class="n">Potez</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">selektovana_figura</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">=</span> <span class="n">GameState</span><span class="o">.</span><span class="n">GRADNJA</span>
+            
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">==</span> <span class="n">GameState</span><span class="o">.</span><span class="n">GRADNJA</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="o">.</span><span class="n">gradi</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trenutni_potez_osobe</span><span class="o">.</span><span class="n">xg</span> <span class="o">=</span> <span class="n">x</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">trenutni_potez_osobe</span><span class="o">.</span><span class="n">yg</span> <span class="o">=</span> <span class="n">y</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trenutni_potez_osobe</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span> <span class="c1">#zapamti u fajl potez</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">=</span> <span class="n">GameState</span><span class="o">.</span><span class="n">SELEKTOVANJE_FIGURE</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">after</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">zameni_igraca</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">sastavi_poruku</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">crtaj</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">da_li_je_kraj</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="IgraCanvas.selektuj_figuru"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas.selektuj_figuru">[docs]</a>    <span class="k">def</span> <span class="nf">selektuj_figuru</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">selektovana_figura</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="IgraCanvas.AI_je_na_potezu"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas.AI_je_na_potezu">[docs]</a>    <span class="k">def</span> <span class="nf">AI_je_na_potezu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span> <span class="o">==</span> <span class="n">IGRAC_PLAVI</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">plavi_AI</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span> <span class="o">==</span> <span class="n">IGRAC_CRVENI</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">crveni_AI</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="IgraCanvas.AI_izvrsi_potez"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas.AI_izvrsi_potez">[docs]</a>    <span class="k">def</span> <span class="nf">AI_izvrsi_potez</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pravi_pauzu</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">==</span> <span class="n">GameState</span><span class="o">.</span><span class="n">KRAJ_IGRE</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="c1"># minimalno trajanje poteza AI, da se ne bi momentalno izvrsio potez, potez moze da traje i duze ako treba</span>
+        <span class="n">PAUZA_IZMEDJU_POTEZA</span> <span class="o">=</span> <span class="mf">0.8</span> <span class="c1">#sekunda</span>
+        <span class="n">pocetak</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="c1">#AI odredi sledeci potez </span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span> <span class="o">==</span> <span class="n">IGRAC_PLAVI</span><span class="p">:</span>
+            <span class="n">potez</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plavi_AI</span><span class="o">.</span><span class="n">sledeci_potez</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span> <span class="o">==</span> <span class="n">IGRAC_CRVENI</span><span class="p">:</span>
+            <span class="n">potez</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">crveni_AI</span><span class="o">.</span><span class="n">sledeci_potez</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span><span class="p">)</span>
+        <span class="n">vreme_potrebno_za_nalazenje_poteza</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">pocetak</span>
+        <span class="c1"># ako je bio previse &quot;brz&quot;, onda ceka do isteka minimalnog vremena za jedan potez AI-a</span>
+        <span class="k">if</span> <span class="n">pravi_pauzu</span> <span class="ow">and</span> <span class="n">vreme_potrebno_za_nalazenje_poteza</span> <span class="o">&lt;</span> <span class="n">PAUZA_IZMEDJU_POTEZA</span><span class="p">:</span>
+            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">PAUZA_IZMEDJU_POTEZA</span> <span class="o">-</span> <span class="n">vreme_potrebno_za_nalazenje_poteza</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Na potezu je &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; i on je odgirao sledeci potez: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">potez</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="o">.</span><span class="n">izvrsi_potez</span><span class="p">(</span><span class="n">potez</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">potez</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">=</span> <span class="n">GameState</span><span class="o">.</span><span class="n">SELEKTOVANJE_FIGURE</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">da_li_je_kraj</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="IgraCanvas.postavi_figure_na_slucajno_izabrana_mesta"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas.postavi_figure_na_slucajno_izabrana_mesta">[docs]</a>    <span class="k">def</span> <span class="nf">postavi_figure_na_slucajno_izabrana_mesta</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">dozvoljena_polja</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="o">.</span><span class="n">pronadji_dozvoljena_polja</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game_state</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span><span class="p">)</span>
+        <span class="c1"># uzimamo 2 slucajna polja iz liste dozvoljenih</span>
+        <span class="n">random_polja</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dozvoljena_polja</span><span class="p">)),</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="c1"># nadjemo x i y koordinate tih polja</span>
+        <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">dozvoljena_polja</span><span class="p">[</span><span class="n">random_polja</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="mi">0</span><span class="p">],</span> <span class="n">dozvoljena_polja</span><span class="p">[</span><span class="n">random_polja</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">dozvoljena_polja</span><span class="p">[</span><span class="n">random_polja</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="mi">0</span><span class="p">],</span> <span class="n">dozvoljena_polja</span><span class="p">[</span><span class="n">random_polja</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># i postavimo figure u tim poljima, i zapisemo sve to u fajlu</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="o">.</span><span class="n">postavi_figuru</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span><span class="p">)</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">Potez</span><span class="o">.</span><span class="n">koordinate_u_string</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="o">.</span><span class="n">postavi_figuru</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span><span class="p">)</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">Potez</span><span class="o">.</span><span class="n">koordinate_u_string</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># povecamo broj figura</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">broj_figura</span> <span class="o">+=</span> <span class="mi">2</span>
+
+        <span class="c1"># ako imamo 4 figure na tabli onda je faza postavljanja figura gotova i prelazimo ga igru tj. na selektovanje figure</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">broj_figura</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">=</span> <span class="n">GameState</span><span class="o">.</span><span class="n">SELEKTOVANJE_FIGURE</span></div>
+
+
+<div class="viewcode-block" id="IgraCanvas.zameni_igraca"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas.zameni_igraca">[docs]</a>    <span class="k">def</span> <span class="nf">zameni_igraca</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">==</span> <span class="n">GameState</span><span class="o">.</span><span class="n">KRAJ_IGRE</span><span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span> <span class="o">=</span> <span class="n">IGRAC_PLAVI</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span> <span class="o">=</span> <span class="n">protivnik</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">selektovana_figura</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">after</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">crtaj</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="p">)</span>
+
+        <span class="c1"># ovde treba da proverava da li igra AI sad</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">AI_je_na_potezu</span><span class="p">():</span>
+
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">==</span> <span class="n">GameState</span><span class="o">.</span><span class="n">SELEKTOVANJE_FIGURE</span><span class="p">:</span>
+                <span class="n">pravi_pauzu_izmedju_poteza_AI</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">crtaj_svaki_korak</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">AI_izvrsi_potez</span><span class="p">(</span><span class="n">pravi_pauzu_izmedju_poteza_AI</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">==</span> <span class="n">GameState</span><span class="o">.</span><span class="n">POSTAVLJANJE_FIGURA</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">postavi_figure_na_slucajno_izabrana_mesta</span><span class="p">()</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">crtaj_svaki_korak</span><span class="p">:</span>
+                <span class="c1"># veoma vazna stvar, kreira pauzu i omogucava GUI-u da se updateuje, inace blokira</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">after</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">zameni_igraca</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># ovo treba da ide kod implemetiranja algoritma do kraja, koristim bug kao feature :D, blokiram gui namerno</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">zameni_igraca</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="IgraCanvas.sastavi_poruku"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas.sastavi_poruku">[docs]</a>    <span class="k">def</span> <span class="nf">sastavi_poruku</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">poruka</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;Na potezu je </span><span class="si">{self.na_potezu}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">a gamestate je </span><span class="si">{self.game_state}</span><span class="s2">&quot;</span></div>
+
+
+<div class="viewcode-block" id="IgraCanvas.da_li_je_kraj"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas.da_li_je_kraj">[docs]</a>    <span class="k">def</span> <span class="nf">da_li_je_kraj</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">==</span> <span class="n">GameState</span><span class="o">.</span><span class="n">POSTAVLJANJE_FIGURA</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="c1">#proveri da li je kraj meca, tj da li ima mogucih poteza za igraca na potezu</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="o">.</span><span class="n">ima_mogucih_poteza</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">=</span> <span class="n">GameState</span><span class="o">.</span><span class="n">KRAJ_IGRE</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">zatovori_fajl</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">crtaj</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="p">)</span>
+            <span class="n">messagebox</span><span class="o">.</span><span class="n">showinfo</span><span class="p">(</span><span class="s2">&quot;Pobeda&quot;</span><span class="p">,</span> <span class="n">f</span><span class="s2">&quot;Pobedio je {self.na_potezu.protivnik()} jer </span><span class="si">{self.na_potezu}</span><span class="s2"> nema mogucih poteza!&quot;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="o">.</span><span class="n">zauzeo_treci_sprat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">=</span> <span class="n">GameState</span><span class="o">.</span><span class="n">KRAJ_IGRE</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">AI_je_na_potezu</span><span class="p">():</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trenutni_potez_osobe</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">zatovori_fajl</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">crtaj</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="p">)</span>
+            <span class="n">messagebox</span><span class="o">.</span><span class="n">showinfo</span><span class="p">(</span><span class="s2">&quot;Pobeda&quot;</span><span class="p">,</span> <span class="n">f</span><span class="s2">&quot;Pobedio je </span><span class="si">{self.na_potezu}</span><span class="s2"> jer je zauzeo polje sa nivoom 3!&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="IgraCanvas.zatovori_fajl"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas.zatovori_fajl">[docs]</a>    <span class="k">def</span> <span class="nf">zatovori_fajl</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
+    
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Samed Bejtovic
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
