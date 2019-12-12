@@ -144,16 +144,24 @@
            <div itemprop="articleBody">
             
   <h1>Source code for gui</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">tkinter</span> <span class="k">import</span> <span class="n">Tk</span><span class="p">,</span> <span class="n">Frame</span><span class="p">,</span> <span class="n">Label</span><span class="p">,</span> <span class="n">Button</span><span class="p">,</span> <span class="n">sys</span><span class="p">,</span> <span class="n">LEFT</span><span class="p">,</span> <span class="n">BOTTOM</span><span class="p">,</span> <span class="n">ttk</span><span class="p">,</span> <span class="n">messagebox</span><span class="p">,</span> <span class="n">filedialog</span><span class="p">,</span> <span class="n">IntVar</span><span class="p">,</span> <span class="n">Checkbutton</span>
+<span></span><span class="sd">&quot;&quot;&quot;Modul gui je prvi modul ove aplikacije, on zadrzi sve Frame-ove i odgovoran je za otvaranje prozora i navigaciju izmedju Frame-ova.</span>
+<span class="sd">Za graficki korisnicki interfejs (gui) ove aplikacije upotrebljena je tkinter biblioteka.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">tkinter</span> <span class="k">import</span> <span class="n">Tk</span><span class="p">,</span> <span class="n">Frame</span><span class="p">,</span> <span class="n">Label</span><span class="p">,</span> <span class="n">Button</span><span class="p">,</span> <span class="n">sys</span><span class="p">,</span> <span class="n">LEFT</span><span class="p">,</span> <span class="n">BOTTOM</span><span class="p">,</span> <span class="n">ttk</span><span class="p">,</span> <span class="n">messagebox</span><span class="p">,</span> <span class="n">filedialog</span><span class="p">,</span> <span class="n">IntVar</span><span class="p">,</span> <span class="n">Checkbutton</span>
 <span class="kn">from</span> <span class="nn">igra</span> <span class="k">import</span> <span class="n">IgraCanvas</span><span class="p">,</span> <span class="n">TIPOVI_IGRACA</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
 
+<span class="c1"># konstanta, koristi se na vise mesta u ovom modulu</span>
 <span class="n">LARGE_FONT</span><span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Verdana bold&quot;</span><span class="p">,</span> <span class="mi">24</span><span class="p">)</span>
 
+
 <div class="viewcode-block" id="Application"><a class="viewcode-back" href="../gui.html#gui.Application">[docs]</a><span class="k">class</span> <span class="nc">Application</span><span class="p">(</span><span class="n">Tk</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Glavni prozor aplikacije, fiksne velicine 800x600, sadrzi container u kome se kasnije smenjuju razni Frame-ovi&quot;&quot;&quot;</span>    
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-
+<div class="viewcode-block" id="Application.__init__"><a class="viewcode-back" href="../gui.html#gui.Application.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Konstruktor klase Application, postavlja naslov, velicinu i default font prozora. Kreira container i postavlja ga u prozoru. </span>
+<span class="sd">        Preko tog containera ce se kasnije smenjivati razni Frame-ovi. Na kraju poziva funkciju show_frame i postavlja PocetniFrame u containeru</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
         <span class="n">Tk</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
         <span class="n">Tk</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Santorini&quot;</span><span class="p">)</span>
@@ -166,10 +174,15 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">grid_rowconfigure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">container</span><span class="o">.</span><span class="n">grid_columnconfigure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">show_frame</span><span class="p">(</span><span class="n">PocetniFrame</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">show_frame</span><span class="p">(</span><span class="n">PocetniFrame</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Application.show_frame"><a class="viewcode-back" href="../gui.html#gui.Application.show_frame">[docs]</a>    <span class="k">def</span> <span class="nf">show_frame</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">cont</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwarg</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Instancira frame koji dobije kao parametar i postavlja ga u container.</span>
+<span class="sd">        </span>
+<span class="sd">        :param cont: Frame koji treba prikazati u containeru</span>
+<span class="sd">        :type cont: Frame</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
         <span class="n">frame</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">frame</span> <span class="o">=</span> <span class="n">cont</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">container</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwarg</span><span class="p">)</span>
         <span class="n">frame</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="s2">&quot;nsew&quot;</span><span class="p">)</span> 
@@ -177,20 +190,41 @@
 
 
 <div class="viewcode-block" id="PocetniFrame"><a class="viewcode-back" href="../gui.html#gui.PocetniFrame">[docs]</a><span class="k">class</span> <span class="nc">PocetniFrame</span><span class="p">(</span><span class="n">Frame</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Frame koji se prikazuje pri pokretanju aplikacije, sadrzi meni za dalju navigaciju&quot;&quot;&quot;</span>    
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">controller</span><span class="p">):</span>
+<div class="viewcode-block" id="PocetniFrame.__init__"><a class="viewcode-back" href="../gui.html#gui.PocetniFrame.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">controller</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Konstruktor klase PocetniFrame koji inicijalizuje atribute klase i formira Navigacioni meni, sadrzi naslov i tri buttona: Igra, Pravila i Izlaz</span>
+<span class="sd">        </span>
+<span class="sd">        :param parent: Roditeljski Frame u kome ce se nalaziti PocetniFrame</span>
+<span class="sd">        :type parent: Frame</span>
+<span class="sd">        :param controller: Referenca na root, na Application koji upravlja time koji ce se frame prikazivati u njegovom containeru</span>
+<span class="sd">        :type controller: Tk</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
         <span class="n">Frame</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parent</span><span class="p">)</span>
         <span class="n">label</span> <span class="o">=</span> <span class="n">Label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Santorini</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">font</span><span class="o">=</span><span class="n">LARGE_FONT</span><span class="p">)</span>
         <span class="n">label</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">pady</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span><span class="n">padx</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 
         <span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Igra&quot;</span><span class="p">,</span>    <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">controller</span><span class="o">.</span><span class="n">show_frame</span><span class="p">(</span><span class="n">OdabirTipaIgreFrame</span><span class="p">),</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">25</span><span class="p">)</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">pady</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
         <span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Pravila&quot;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">controller</span><span class="o">.</span><span class="n">show_frame</span><span class="p">(</span><span class="n">PravilaFrame</span><span class="p">),</span>        <span class="n">width</span> <span class="o">=</span> <span class="mi">25</span><span class="p">)</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">pady</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
-        <span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Izlaz&quot;</span><span class="p">,</span>   <span class="n">command</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">,</span>                                           <span class="n">width</span> <span class="o">=</span> <span class="mi">25</span><span class="p">)</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">pady</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span></div>
+        <span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Izlaz&quot;</span><span class="p">,</span>   <span class="n">command</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">,</span>                                           <span class="n">width</span> <span class="o">=</span> <span class="mi">25</span><span class="p">)</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">pady</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="c1">#ugasi aplikaciju</span></div></div>
 
 
 <div class="viewcode-block" id="OdabirTipaIgreFrame"><a class="viewcode-back" href="../gui.html#gui.OdabirTipaIgreFrame">[docs]</a><span class="k">class</span> <span class="nc">OdabirTipaIgreFrame</span><span class="p">(</span><span class="n">Frame</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Kada u glavnom meniju odaberemo Igra to nas vodi do ovog Frame-a, ovde se biraju tipovi korisnika (Osoba ili AI) i tezina AI (easy, medium, hard).</span>
+<span class="sd">    Osim toga nudi opcije za ispisivanje vrednosti AI algoritma kod svakog poteza, kao i mogucnost izvrsavanja implementirane strategije do kraja</span>
+<span class="sd">    Sadrzi i kraci opis razlicitih nivoa tezine vestacke inteligencije</span>
+<span class="sd">    &quot;&quot;&quot;</span>   
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">controller</span><span class="p">):</span>
+<div class="viewcode-block" id="OdabirTipaIgreFrame.__init__"><a class="viewcode-back" href="../gui.html#gui.OdabirTipaIgreFrame.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">controller</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Konstruktor klase OdabirTipaIgreFrame koji inicijalizuje atribute klase i formira Frame, sadrzi naslov , combobox-ove za odabir tipa igraca i tezine,</span>
+<span class="sd">        Checkbuttone za ispisivanje vrednosti AI algoritma kod svakog poteza i izvrsavanja implementirane strategije do kraja.</span>
+<span class="sd">        Ispod toga ide opis razlicitih nivoa tezine i buttoni za povratak na pocetnu stranu i pokretanje igre.</span>
+<span class="sd">        </span>
+<span class="sd">        :param parent: Roditeljski Frame u kome ce se nalaziti OdabirTipaIgreFrame</span>
+<span class="sd">        :type parent: Frame</span>
+<span class="sd">        :param controller: Referenca na root, na Application koji upravlja time koji ce se frame prikazivati u njegovom containeru</span>
+<span class="sd">        :type controller: Tk</span>
+<span class="sd">        &quot;&quot;&quot;</span>  
         <span class="n">Frame</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span>
         <span class="n">Label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Odabir tipa i tezine igre&quot;</span><span class="p">,</span> <span class="n">font</span><span class="o">=</span><span class="n">LARGE_FONT</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">columnspan</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">sticky</span> <span class="o">=</span> <span class="s2">&quot;n&quot;</span><span class="p">,</span> <span class="n">pady</span> <span class="o">=</span> <span class="mi">30</span><span class="p">)</span>
 
@@ -223,17 +257,29 @@
 
         <span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Nazad na pocetnu stranu&quot;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">controller</span><span class="o">.</span><span class="n">show_frame</span><span class="p">(</span><span class="n">PocetniFrame</span><span class="p">),</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span> <span class="n">column</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
         
-        <span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Pokreni igru&quot;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">controller</span><span class="o">.</span><span class="n">show_frame</span><span class="p">(</span><span class="n">IgraFrame</span><span class="p">,</span> <span class="n">igrac1</span> <span class="o">=</span> <span class="n">cb1</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span> <span class="n">igrac2</span> <span class="o">=</span> <span class="n">cb2</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span> <span class="n">naziv_fajla</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">naziv_fajla_labela</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">],</span> <span class="n">stampaj_vrednosti_svih_poteza</span> <span class="o">=</span> <span class="n">stampaj_vrednosti_algoritma</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span> <span class="n">preskoci_crtanje_poteza</span> <span class="o">=</span> <span class="n">preskoci_crtanje_poteza</span><span class="o">.</span><span class="n">get</span><span class="p">()),</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span> <span class="n">column</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># informacije o tipovima igraca, nazivu fajla u kome se pise ili cita stanje igre itd. prosledjujem IgraFrame-u preko kwargs, koje on onda u konstruktoru procita</span>
+        <span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Pokreni igru&quot;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">controller</span><span class="o">.</span><span class="n">show_frame</span><span class="p">(</span><span class="n">IgraFrame</span><span class="p">,</span> <span class="n">igrac1</span> <span class="o">=</span> <span class="n">cb1</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span> <span class="n">igrac2</span> <span class="o">=</span> <span class="n">cb2</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span> <span class="n">naziv_fajla</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">naziv_fajla_labela</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">],</span> <span class="n">stampaj_vrednosti_svih_poteza</span> <span class="o">=</span> <span class="n">stampaj_vrednosti_algoritma</span><span class="o">.</span><span class="n">get</span><span class="p">(),</span> <span class="n">preskoci_crtanje_poteza</span> <span class="o">=</span> <span class="n">preskoci_crtanje_poteza</span><span class="o">.</span><span class="n">get</span><span class="p">()),</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span> <span class="n">column</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span></div>
 
     <span class="c1">#Otvara openFileDialog, selektuje fajl i putanju pamti u naziv_fajla_labela</span>
 <div class="viewcode-block" id="OdabirTipaIgreFrame.ucitaj_fajl"><a class="viewcode-back" href="../gui.html#gui.OdabirTipaIgreFrame.ucitaj_fajl">[docs]</a>    <span class="k">def</span> <span class="nf">ucitaj_fajl</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Funkcija koja otvara openFileDialog, preko koga se bira neki fajl sa potezima za igru santorini da bi smo mogli da nastavimo.</span>
+<span class="sd">        Putanju do tog fajla se postavlja kao tekst labele naziv_fajla_labela i tako je cuva za kasnije jer mi je potrebna u IgraFrame-u.</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
         <span class="bp">self</span><span class="o">.</span><span class="n">naziv_fajla_labela</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">filedialog</span><span class="o">.</span><span class="n">askopenfilename</span><span class="p">(</span><span class="n">initialdir</span> <span class="o">=</span> <span class="s2">&quot;Igre/&quot;</span><span class="p">,</span><span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Select file&quot;</span><span class="p">,</span><span class="n">filetypes</span> <span class="o">=</span> <span class="p">((</span><span class="s2">&quot;txt files&quot;</span><span class="p">,</span><span class="s2">&quot;*.txt&quot;</span><span class="p">),(</span><span class="s2">&quot;all files&quot;</span><span class="p">,</span><span class="s2">&quot;*.*&quot;</span><span class="p">)))</span></div></div>
 
-<div class="viewcode-block" id="IgraFrame"><a class="viewcode-back" href="../gui.html#gui.IgraFrame">[docs]</a><span class="k">class</span> <span class="nc">IgraFrame</span><span class="p">(</span><span class="n">Frame</span><span class="p">):</span>
-    <span class="n">x_offset</span> <span class="o">=</span> <span class="mi">150</span>
-    <span class="n">y_offset</span> <span class="o">=</span> <span class="mi">50</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">controller</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwarg</span><span class="p">):</span>
+<div class="viewcode-block" id="IgraFrame"><a class="viewcode-back" href="../gui.html#gui.IgraFrame">[docs]</a><span class="k">class</span> <span class="nc">IgraFrame</span><span class="p">(</span><span class="n">Frame</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Frame u kome se nalazi IgraCanvas tj. u kome se igra Santorini, osim igre sadrzi i button za povratak na pocetnu stranu.&quot;&quot;&quot;</span>   
+
+<div class="viewcode-block" id="IgraFrame.__init__"><a class="viewcode-back" href="../gui.html#gui.IgraFrame.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">controller</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwarg</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Konstruktor klase Igra koji inicijalizuje atribute klase i formira IgraFrame, sadrzi IgraCanvas i button za povratak na pocetnu stranicu.</span>
+<span class="sd">        Prima kwargs od OdabirTipaIgreFrame da bi znao koji igraci igraju, koji je fajl za poteze i ostala podesavanja, koja dalje prosledjuje IgraCanvas-u</span>
+<span class="sd">        </span>
+<span class="sd">        :param parent: Roditeljski Frame u kome ce se nalaziti IgraFrame</span>
+<span class="sd">        :type parent: Frame</span>
+<span class="sd">        :param controller: Referenca na root, na Application koji upravlja time koji ce se frame prikazivati u njegovom containeru</span>
+<span class="sd">        :type controller: Tk</span>
+<span class="sd">        &quot;&quot;&quot;</span>  
         <span class="n">Frame</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">controller</span> <span class="o">=</span> <span class="n">controller</span>
 
@@ -247,17 +293,23 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">igraCanvas</span> <span class="o">=</span> <span class="n">IgraCanvas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">igrac1</span><span class="p">,</span> <span class="n">igrac2</span><span class="p">,</span> <span class="n">naziv_fajla</span><span class="p">,</span> <span class="n">stampanje_poteza</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="n">preskoci_crtanje_poteza</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">igraCanvas</span><span class="o">.</span><span class="n">place</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="mi">150</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Nazad na pocetnu stranu&quot;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">povratak_na_pocetnu</span><span class="p">)</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">side</span> <span class="o">=</span> <span class="n">BOTTOM</span><span class="p">,</span> <span class="n">pady</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Nazad na pocetnu stranu&quot;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">povratak_na_pocetnu</span><span class="p">)</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">side</span> <span class="o">=</span> <span class="n">BOTTOM</span><span class="p">,</span> <span class="n">pady</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span></div>
         
 
 <div class="viewcode-block" id="IgraFrame.povratak_na_pocetnu"><a class="viewcode-back" href="../gui.html#gui.IgraFrame.povratak_na_pocetnu">[docs]</a>    <span class="k">def</span> <span class="nf">povratak_na_pocetnu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Funkcija koja prikazuje dijalog, ako se pritisne yes onda se zatvara fajl i vraca se na PocetniFrame/pocetnu stranicu&quot;&quot;&quot;</span>        
         <span class="n">odg</span> <span class="o">=</span> <span class="n">messagebox</span><span class="o">.</span><span class="n">askquestion</span><span class="p">(</span><span class="s2">&quot;Nazad na pocetnu stranicu?&quot;</span><span class="p">,</span> <span class="s2">&quot;Da li ste sigurni da zelite da prekinete igru i da se vratite na pocetnu stranicu?&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">odg</span> <span class="o">==</span> <span class="s2">&quot;yes&quot;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">igraCanvas</span><span class="o">.</span><span class="n">zatovori_fajl</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">controller</span><span class="o">.</span><span class="n">show_frame</span><span class="p">(</span><span class="n">PocetniFrame</span><span class="p">)</span></div>
     
+
 <div class="viewcode-block" id="IgraFrame.kreiraj_fajl"><a class="viewcode-back" href="../gui.html#gui.IgraFrame.kreiraj_fajl">[docs]</a>    <span class="k">def</span> <span class="nf">kreiraj_fajl</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1">#kreiraj fajl koji u imenu nosi trenutno vreme</span>
+        <span class="sd">&quot;&quot;&quot;Kreira fajl u folderu igre koji nosi naziv u formatu Santorini &lt;trenutni datum i vreme&gt;.txt i vraca ga</span>
+<span class="sd">        </span>
+<span class="sd">        :return: Putanja do novo-otvorenog fajla</span>
+<span class="sd">        :rtype: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
         <span class="n">naziv_fajla</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;Igre/Santorini {datetime.now().strftime(&#39;</span><span class="si">%d</span><span class="s2">-%m-%Y %H-%M-%S&#39;)}.txt&quot;</span>
         <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">naziv_fajla</span><span class="p">,</span> <span class="s2">&quot;w+&quot;</span><span class="p">)</span>
         <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -265,8 +317,9 @@
 
 
 <div class="viewcode-block" id="PravilaFrame"><a class="viewcode-back" href="../gui.html#gui.PravilaFrame">[docs]</a><span class="k">class</span> <span class="nc">PravilaFrame</span><span class="p">(</span><span class="n">Frame</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Frame koji prikazuje pravila igre Santorini&quot;&quot;&quot;</span>   
 
-    <span class="n">pravila</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+    <span class="n">__pravila_igre__</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">        •  Igra se igra na tabli 5x5, koja se inicijalno sastoji iz 25 praznih polja. Igru igraju </span>
 <span class="s2">        dva igrača, koji povlače poteze naizmenično. Na početku igre, prvi, a zatim i drugi igrač</span>
 <span class="s2">        postavljaju svoje figure na bilo koje od slobodnih polja. Nakon postavljanja figura, igrači</span>
@@ -289,20 +342,28 @@
 <span class="s2">            •   kada igrač koji je na potezu ne može da odigra potez prema pravilima igre –</span>
 <span class="s2">                pobednik je igrač koji nije na potezu.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">controller</span><span class="p">):</span>
+<div class="viewcode-block" id="PravilaFrame.__init__"><a class="viewcode-back" href="../gui.html#gui.PravilaFrame.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">controller</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Konstruktor klase PravilaFrame koji inicijalizuje atribute klase i formira Frame, sadrzi pravila igre Santorini i button za povratak na pocetnu stranicu</span>
+<span class="sd">        </span>
+<span class="sd">        :param parent: Roditeljski Frame u kome ce se nalaziti PravilaFrame</span>
+<span class="sd">        :type parent: Frame</span>
+<span class="sd">        :param controller: Referenca na root, na Application koji upravlja time koji ce se frame prikazivuati u njegovom containeru</span>
+<span class="sd">        :type controller: Tk</span>
+<span class="sd">        &quot;&quot;&quot;</span>  
         <span class="n">Frame</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span>
         <span class="n">Label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Pravila igre Santorini&quot;</span><span class="p">,</span> <span class="n">font</span><span class="o">=</span><span class="n">LARGE_FONT</span><span class="p">)</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">pady</span> <span class="o">=</span> <span class="mi">20</span><span class="p">)</span>
-        <span class="n">Label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pravila</span><span class="p">,</span> <span class="n">font</span> <span class="o">=</span> <span class="s2">&quot;Arial 13&quot;</span><span class="p">,</span> <span class="n">justify</span> <span class="o">=</span> <span class="n">LEFT</span><span class="p">)</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">pady</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
-        <span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Nazad na pocetnu stranu&quot;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">controller</span><span class="o">.</span><span class="n">show_frame</span><span class="p">(</span><span class="n">PocetniFrame</span><span class="p">))</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">side</span> <span class="o">=</span> <span class="n">BOTTOM</span><span class="p">,</span> <span class="n">pady</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span></div>
+        <span class="n">Label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__pravila_igre__</span><span class="p">,</span> <span class="n">font</span> <span class="o">=</span> <span class="s2">&quot;Arial 13&quot;</span><span class="p">,</span> <span class="n">justify</span> <span class="o">=</span> <span class="n">LEFT</span><span class="p">)</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">pady</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Nazad na pocetnu stranu&quot;</span><span class="p">,</span> <span class="n">command</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">controller</span><span class="o">.</span><span class="n">show_frame</span><span class="p">(</span><span class="n">PocetniFrame</span><span class="p">))</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">side</span> <span class="o">=</span> <span class="n">BOTTOM</span><span class="p">,</span> <span class="n">pady</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span></div></div>
 
 
 
+<span class="c1"># pokretanje aplikacije</span>
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="n">app</span> <span class="o">=</span> <span class="n">Application</span><span class="p">()</span>
     <span class="n">app</span><span class="o">.</span><span class="n">mainloop</span><span class="p">()</span>
 
-    <span class="c1">#TODO celava latinica</span>
-    <span class="c1"># TODO combobox da bude readonly\</span>
+<span class="c1">#TODO celava latinica</span>
+<span class="c1">#TODO combobox da bude readonly\</span>
 
 
 </pre></div>

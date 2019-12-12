@@ -157,14 +157,30 @@
             
   <div class="section" id="module-gui">
 <span id="gui-module"></span><h1>gui module<a class="headerlink" href="#module-gui" title="Permalink to this headline">¶</a></h1>
+<p>Modul gui je prvi modul ove aplikacije, on zadrzi sve Frame-ove i odgovoran je za otvaranje prozora i navigaciju izmedju Frame-ova.
+Za graficki korisnicki interfejs (gui) ove aplikacije upotrebljena je tkinter biblioteka.</p>
 <dl class="class">
 <dt id="gui.Application">
 <em class="property">class </em><code class="sig-prename descclassname">gui.</code><code class="sig-name descname">Application</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gui.html#Application"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gui.Application" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tkinter.Tk</span></code></p>
+<p>Glavni prozor aplikacije, fiksne velicine 800x600, sadrzi container u kome se kasnije smenjuju razni Frame-ovi</p>
+<dl class="method">
+<dt id="gui.Application.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gui.html#Application.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gui.Application.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Konstruktor klase Application, postavlja naslov, velicinu i default font prozora. Kreira container i postavlja ga u prozoru. 
+Preko tog containera ce se kasnije smenjivati razni Frame-ovi. Na kraju poziva funkciju show_frame i postavlja PocetniFrame u containeru</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="gui.Application.show_frame">
 <code class="sig-name descname">show_frame</code><span class="sig-paren">(</span><em class="sig-param">cont</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwarg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gui.html#Application.show_frame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gui.Application.show_frame" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Instancira frame koji dobije kao parametar i postavlja ga u container.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>cont</strong> (<em>Frame</em>) – Frame koji treba prikazati u containeru</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -172,25 +188,41 @@
 <dt id="gui.IgraFrame">
 <em class="property">class </em><code class="sig-prename descclassname">gui.</code><code class="sig-name descname">IgraFrame</code><span class="sig-paren">(</span><em class="sig-param">parent</em>, <em class="sig-param">controller</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwarg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gui.html#IgraFrame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gui.IgraFrame" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tkinter.Frame</span></code></p>
+<p>Frame u kome se nalazi IgraCanvas tj. u kome se igra Santorini, osim igre sadrzi i button za povratak na pocetnu stranu.</p>
+<dl class="method">
+<dt id="gui.IgraFrame.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">parent</em>, <em class="sig-param">controller</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwarg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gui.html#IgraFrame.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gui.IgraFrame.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Konstruktor klase Igra koji inicijalizuje atribute klase i formira IgraFrame, sadrzi IgraCanvas i button za povratak na pocetnu stranicu.
+Prima kwargs od OdabirTipaIgreFrame da bi znao koji igraci igraju, koji je fajl za poteze i ostala podesavanja, koja dalje prosledjuje IgraCanvas-u</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parent</strong> (<em>Frame</em>) – Roditeljski Frame u kome ce se nalaziti IgraFrame</p></li>
+<li><p><strong>controller</strong> (<em>Tk</em>) – Referenca na root, na Application koji upravlja time koji ce se frame prikazivati u njegovom containeru</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="method">
 <dt id="gui.IgraFrame.kreiraj_fajl">
 <code class="sig-name descname">kreiraj_fajl</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gui.html#IgraFrame.kreiraj_fajl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gui.IgraFrame.kreiraj_fajl" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Kreira fajl u folderu igre koji nosi naziv u formatu Santorini &lt;trenutni datum i vreme&gt;.txt i vraca ga</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Putanja do novo-otvorenog fajla</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="gui.IgraFrame.povratak_na_pocetnu">
 <code class="sig-name descname">povratak_na_pocetnu</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gui.html#IgraFrame.povratak_na_pocetnu"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gui.IgraFrame.povratak_na_pocetnu" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="gui.IgraFrame.x_offset">
-<code class="sig-name descname">x_offset</code><em class="property"> = 150</em><a class="headerlink" href="#gui.IgraFrame.x_offset" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="gui.IgraFrame.y_offset">
-<code class="sig-name descname">y_offset</code><em class="property"> = 50</em><a class="headerlink" href="#gui.IgraFrame.y_offset" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Funkcija koja prikazuje dijalog, ako se pritisne yes onda se zatvara fajl i vraca se na PocetniFrame/pocetnu stranicu</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -198,10 +230,31 @@
 <dt id="gui.OdabirTipaIgreFrame">
 <em class="property">class </em><code class="sig-prename descclassname">gui.</code><code class="sig-name descname">OdabirTipaIgreFrame</code><span class="sig-paren">(</span><em class="sig-param">parent</em>, <em class="sig-param">controller</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gui.html#OdabirTipaIgreFrame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gui.OdabirTipaIgreFrame" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tkinter.Frame</span></code></p>
+<p>Kada u glavnom meniju odaberemo Igra to nas vodi do ovog Frame-a, ovde se biraju tipovi korisnika (Osoba ili AI) i tezina AI (easy, medium, hard).
+Osim toga nudi opcije za ispisivanje vrednosti AI algoritma kod svakog poteza, kao i mogucnost izvrsavanja implementirane strategije do kraja
+Sadrzi i kraci opis razlicitih nivoa tezine vestacke inteligencije</p>
+<dl class="method">
+<dt id="gui.OdabirTipaIgreFrame.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">parent</em>, <em class="sig-param">controller</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gui.html#OdabirTipaIgreFrame.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gui.OdabirTipaIgreFrame.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Konstruktor klase OdabirTipaIgreFrame koji inicijalizuje atribute klase i formira Frame, sadrzi naslov , combobox-ove za odabir tipa igraca i tezine,
+Checkbuttone za ispisivanje vrednosti AI algoritma kod svakog poteza i izvrsavanja implementirane strategije do kraja.
+Ispod toga ide opis razlicitih nivoa tezine i buttoni za povratak na pocetnu stranu i pokretanje igre.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parent</strong> (<em>Frame</em>) – Roditeljski Frame u kome ce se nalaziti OdabirTipaIgreFrame</p></li>
+<li><p><strong>controller</strong> (<em>Tk</em>) – Referenca na root, na Application koji upravlja time koji ce se frame prikazivati u njegovom containeru</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="method">
 <dt id="gui.OdabirTipaIgreFrame.ucitaj_fajl">
 <code class="sig-name descname">ucitaj_fajl</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/gui.html#OdabirTipaIgreFrame.ucitaj_fajl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gui.OdabirTipaIgreFrame.ucitaj_fajl" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Funkcija koja otvara openFileDialog, preko koga se bira neki fajl sa potezima za igru santorini da bi smo mogli da nastavimo.
+Putanju do tog fajla se postavlja kao tekst labele naziv_fajla_labela i tako je cuva za kasnije jer mi je potrebna u IgraFrame-u.</p>
+</dd></dl>
 
 </dd></dl>
 
@@ -209,16 +262,41 @@
 <dt id="gui.PocetniFrame">
 <em class="property">class </em><code class="sig-prename descclassname">gui.</code><code class="sig-name descname">PocetniFrame</code><span class="sig-paren">(</span><em class="sig-param">parent</em>, <em class="sig-param">controller</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gui.html#PocetniFrame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gui.PocetniFrame" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tkinter.Frame</span></code></p>
+<p>Frame koji se prikazuje pri pokretanju aplikacije, sadrzi meni za dalju navigaciju</p>
+<dl class="method">
+<dt id="gui.PocetniFrame.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">parent</em>, <em class="sig-param">controller</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gui.html#PocetniFrame.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gui.PocetniFrame.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Konstruktor klase PocetniFrame koji inicijalizuje atribute klase i formira Navigacioni meni, sadrzi naslov i tri buttona: Igra, Pravila i Izlaz</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parent</strong> (<em>Frame</em>) – Roditeljski Frame u kome ce se nalaziti PocetniFrame</p></li>
+<li><p><strong>controller</strong> (<em>Tk</em>) – Referenca na root, na Application koji upravlja time koji ce se frame prikazivati u njegovom containeru</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="class">
 <dt id="gui.PravilaFrame">
 <em class="property">class </em><code class="sig-prename descclassname">gui.</code><code class="sig-name descname">PravilaFrame</code><span class="sig-paren">(</span><em class="sig-param">parent</em>, <em class="sig-param">controller</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gui.html#PravilaFrame"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gui.PravilaFrame" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tkinter.Frame</span></code></p>
-<dl class="attribute">
-<dt id="gui.PravilaFrame.pravila">
-<code class="sig-name descname">pravila</code><em class="property"> = '\n        •  Igra se igra na tabli 5x5, koja se inicijalno sastoji iz 25 praznih polja. Igru igraju \n        dva igrača, koji povlače poteze naizmenično. Na početku igre, prvi, a zatim i drugi igrač\n        postavljaju svoje figure na bilo koje od slobodnih polja. Nakon postavljanja figura, igrači\n        naizmenično igraju povlačeći poteze.\n\n        •  Potez igrača se sastoji iz pomeranja figure i gradnje. Najpre se jedna odabrana figura\n        pomera na neko od slobodnih susednih polja (uključujući dijagonalne susede, pri čemu\n        odredišno polje mora biti najviše jednu pločicu iznad izvorišnog polja. Ukoliko igrač ne\n        može da pomeri nijednu od svojih figura prema ovim pravilima, gubi igru.\n\n        •  Drugi deo poteza je gradnja. Ova faza podrazumeva dodavanje pločice na jedno od\n        slobodnih polja susednih odredišnom polju pomerene figure (uključujući dijagonalne\n        susede). Pločica koja se dodaje na polje nivoa 3 je kružna kupola. Polja nivoa 4 (3 pločice\n        i kružna kupola na vrhu) su „blokirana“ u nastavku igra. Nije dozvoljeno postavljanje figura\n        na takva polja, niti dalja izgradnja nad tim poljima.\n\n        •  Igra se može završiti na dva načina:\n            •   kada igrač koji je na potezu pomeri jednu od figura na polje nivoa 3 (izgrađene tri\n                pločice na tom polju) – pobednik je igrač koji je pomerio svoju figuru na polje nivoa 3;\n            •   kada igrač koji je na potezu ne može da odigra potez prema pravilima igre –\n                pobednik je igrač koji nije na potezu.'</em><a class="headerlink" href="#gui.PravilaFrame.pravila" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<p>Frame koji prikazuje pravila igre Santorini</p>
+<dl class="method">
+<dt id="gui.PravilaFrame.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">parent</em>, <em class="sig-param">controller</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/gui.html#PravilaFrame.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#gui.PravilaFrame.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Konstruktor klase PravilaFrame koji inicijalizuje atribute klase i formira Frame, sadrzi pravila igre Santorini i button za povratak na pocetnu stranicu</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parent</strong> (<em>Frame</em>) – Roditeljski Frame u kome ce se nalaziti PravilaFrame</p></li>
+<li><p><strong>controller</strong> (<em>Tk</em>) – Referenca na root, na Application koji upravlja time koji ce se frame prikazivuati u njegovom containeru</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 

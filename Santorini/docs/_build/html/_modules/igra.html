@@ -159,7 +159,7 @@
 
 <div class="viewcode-block" id="IgraCanvas"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas">[docs]</a><span class="k">class</span> <span class="nc">IgraCanvas</span><span class="p">(</span><span class="n">Canvas</span><span class="p">):</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">igrac1</span><span class="p">,</span> <span class="n">igrac2</span><span class="p">,</span> <span class="n">naziv_fajla</span><span class="p">,</span> <span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span> <span class="n">crtaj_svaki_korak</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="IgraCanvas.__init__"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">igrac1</span><span class="p">,</span> <span class="n">igrac2</span><span class="p">,</span> <span class="n">naziv_fajla</span><span class="p">,</span> <span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span> <span class="n">crtaj_svaki_korak</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
         <span class="n">Canvas</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="n">width</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">550</span><span class="p">)</span> 
         <span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s2">&quot;&lt;Button-1&gt;&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mouse_click</span><span class="p">)</span>
@@ -185,7 +185,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">naziv_fajla</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">crtaj</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">zameni_igraca</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">zameni_igraca</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="IgraCanvas.procitaj_fajl_i_popuni_tabelu"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas.procitaj_fajl_i_popuni_tabelu">[docs]</a>    <span class="k">def</span> <span class="nf">procitaj_fajl_i_popuni_tabelu</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">naziv_fajla</span><span class="p">):</span>
