@@ -197,7 +197,7 @@ class PravilaFrame(Frame):
                 pobednik je igrač koji nije na potezu."""
 
     def __init__(self, parent, controller):
-        """Konstruktor klase PravilaFrame koji inicijalizuje atribute klase i formira Frame, sadrzi pravila igre Santorini i button za povratak na pocetnu stranicu
+        """Konstruktor klase PravilaFrame koji inicijalizuje atribute klase i formira Frame, sadrzi labelu sa pravilima igre Santorini i button za povratak na pocetnu stranicu
         
         :param parent: Roditeljski Frame u kome ce se nalaziti PravilaFrame
         :type parent: Frame
