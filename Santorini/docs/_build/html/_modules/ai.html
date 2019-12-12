@@ -473,9 +473,21 @@
 <span class="sd">        &quot;&quot;&quot;</span>     
         <span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span> <span class="o">=</span> <span class="n">na_potezu</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">alfa_beta_pretraga</span><span class="p">(</span><span class="n">tabla</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dubina</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+   
 
-
+    <span class="c1">#TODO da napisem komentare za ovo cudo i za ove funkcije ispod</span>
 <div class="viewcode-block" id="MiniMaxAlfaBeta.alfa_beta_pretraga"><a class="viewcode-back" href="../ai.html#ai.MiniMaxAlfaBeta.alfa_beta_pretraga">[docs]</a>    <span class="k">def</span> <span class="nf">alfa_beta_pretraga</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tabla</span><span class="p">,</span> <span class="n">dubina</span><span class="p">,</span> <span class="n">potez</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Ovaj algoritam je uradjen po ugledu na psudo kod za alfa-beta pretragu iz knjige. Figure 5.7.</span>
+<span class="sd">        </span>
+<span class="sd">        :param tabla: Tabla nad kojom treba izvrsavati poteze ili za koju treba racunati staticku funkciju procene</span>
+<span class="sd">        :type tabla: Tabla</span>
+<span class="sd">        :param dubina: Dubina razvijanja stabla</span>
+<span class="sd">        :type dubina: int</span>
+<span class="sd">        :param potez: Potez koji je doveo do ovog stanja</span>
+<span class="sd">        :type potez: Potez</span>
+<span class="sd">        :return: Potez koji treba da se izvrsi</span>
+<span class="sd">        :rtype: Potezs</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
         <span class="bp">self</span><span class="o">.</span><span class="n">lista_poteza</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_value</span><span class="p">(</span><span class="n">tabla</span><span class="p">,</span> <span class="n">dubina</span><span class="p">,</span> <span class="n">potez</span><span class="p">,</span> <span class="o">-</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
 

@@ -282,7 +282,23 @@ Ovo je abstraktna funkcija tako da je moraju implementirati sve klase koje nasle
 <dl class="method">
 <dt id="ai.MiniMaxAlfaBeta.alfa_beta_pretraga">
 <code class="sig-name descname">alfa_beta_pretraga</code><span class="sig-paren">(</span><em class="sig-param">tabla</em>, <em class="sig-param">dubina</em>, <em class="sig-param">potez</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ai.html#MiniMaxAlfaBeta.alfa_beta_pretraga"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ai.MiniMaxAlfaBeta.alfa_beta_pretraga" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Ovaj algoritam je uradjen po ugledu na psudo kod za alfa-beta pretragu iz knjige. Figure 5.7.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tabla</strong> (<a class="reference internal" href="tabla.html#tabla.Tabla" title="tabla.Tabla"><em>Tabla</em></a>) – Tabla nad kojom treba izvrsavati poteze ili za koju treba racunati staticku funkciju procene</p></li>
+<li><p><strong>dubina</strong> (<em>int</em>) – Dubina razvijanja stabla</p></li>
+<li><p><strong>potez</strong> (<a class="reference internal" href="tabla.html#tabla.Potez" title="tabla.Potez"><em>Potez</em></a>) – Potez koji je doveo do ovog stanja</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Potez koji treba da se izvrsi</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>Potezs</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="ai.MiniMaxAlfaBeta.lista_poteza">
