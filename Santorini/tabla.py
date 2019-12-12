@@ -4,9 +4,21 @@ IGRAC_PLAVI = 0
 IGRAC_CRVENI = 1
 
 def protivnik(igrac):
+    """Vraca protivnika igraca kojeg prosledimo kao parametar
+    
+    :param igrac: Trenutni igrac
+    :type igrac: int
+    :return: Protivnik trenutnog igraca
+    :rtype: int
+    """ 
     return 1 - igrac
 
 class GameState(Enum):
+    """asdf asdf asdf 
+    
+    :param Enum: [description]
+    :type Enum: [type]
+    """    
     POSTAVLJANJE_FIGURA = 0
     SELEKTOVANJE_FIGURE = 1
     POMERANJE_FIGURE = 2
@@ -14,6 +26,11 @@ class GameState(Enum):
     KRAJ_IGRE = 4
 
 class Potez():
+    """sadf fdas dsf sad 
+    
+    :return: [description]
+    :rtype: [type]
+    """    
     # x1,y1 su pocetna pozicija, x2, y2 su nova pozicija, a xg, yg su pozicija gradnje
     def __init__(self, x1, y1, x2, y2, xg, yg):
         self.x1 = x1
