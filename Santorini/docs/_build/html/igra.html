@@ -161,65 +161,150 @@
 <dt id="igra.IgraCanvas">
 <em class="property">class </em><code class="sig-prename descclassname">igra.</code><code class="sig-name descname">IgraCanvas</code><span class="sig-paren">(</span><em class="sig-param">parent</em>, <em class="sig-param">igrac1</em>, <em class="sig-param">igrac2</em>, <em class="sig-param">naziv_fajla</em>, <em class="sig-param">stampaj_vrednosti_svih_poteza</em>, <em class="sig-param">crtaj_svaki_korak=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/igra.html#IgraCanvas"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#igra.IgraCanvas" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">tkinter.Canvas</span></code></p>
+<p>Klasa ciji je zadatak da crta Tablu, da vodi racuna o GameStatu, trenutnom igracu, dozvoljenim potezima i AI. Prima inpute od korisnika
+i izvrsava odgovarajuce akcije.</p>
 <dl class="method">
 <dt id="igra.IgraCanvas.AI_izvrsi_potez">
 <code class="sig-name descname">AI_izvrsi_potez</code><span class="sig-paren">(</span><em class="sig-param">pravi_pauzu: bool</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/igra.html#IgraCanvas.AI_izvrsi_potez"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#igra.IgraCanvas.AI_izvrsi_potez" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Funkcija koja poziva AI koji je trenutno na potezu, prosledjuje mu trenutno stanje table i dobija novi potez
+Taj potez onda izvrsava nad tablom i to crta. Ova funkcija moze da pravi pauzu da potezi AI ne bi bili previse brzi</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>pravi_pauzu</strong> (<em>bool</em>) – Da li treba praviti pauzu za potez AI da se on ne bi previse brzo izvrsio</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="igra.IgraCanvas.AI_je_na_potezu">
 <code class="sig-name descname">AI_je_na_potezu</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/igra.html#IgraCanvas.AI_je_na_potezu"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#igra.IgraCanvas.AI_je_na_potezu" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Proverava da li je AI na potezu</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>True ako je AI na potezu, inace false</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="igra.IgraCanvas.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">parent</em>, <em class="sig-param">igrac1</em>, <em class="sig-param">igrac2</em>, <em class="sig-param">naziv_fajla</em>, <em class="sig-param">stampaj_vrednosti_svih_poteza</em>, <em class="sig-param">crtaj_svaki_korak=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/igra.html#IgraCanvas.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#igra.IgraCanvas.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Konstruktor klase IgraCanvas, inicijalizuje potrebne atribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Canvas</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p></li>
+<li><p><strong>parent</strong> (<em>Widget</em>) – Roditeljski widget u kojem se crta IgraCanvas</p></li>
+<li><p><strong>igrac1</strong> (<em>str</em>) – Tip prvog igraca</p></li>
+<li><p><strong>igrac2</strong> (<em>str</em>) – Tip drugog igraca</p></li>
+<li><p><strong>naziv_fajla</strong> (<em>str</em>) – Putanja do falja iz kojeg se citaju potezi ili u kojem se upisuju potezi</p></li>
+<li><p><strong>stampaj_vrednosti_svih_poteza</strong> (<em>bool</em>) – Da li treba stampati vrednosti svih mogucih poteza za AI</p></li>
+<li><p><strong>crtaj_svaki_korak</strong> (<em>bool</em><em>, </em><em>optional</em>) – Kad igraju AI vs AI da li treba prikazivati svaki potez ili samo rezultat njihovog meca, defaults to True</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="igra.IgraCanvas.crtaj">
-<code class="sig-name descname">crtaj</code><span class="sig-paren">(</span><em class="sig-param">tabla</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/igra.html#IgraCanvas.crtaj"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#igra.IgraCanvas.crtaj" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="sig-name descname">crtaj</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/igra.html#IgraCanvas.crtaj"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#igra.IgraCanvas.crtaj" title="Permalink to this definition">¶</a></dt>
+<dd><p>Funkcija koja crta stanje table na Canvas-u uzimajuci u obzir i dozvoljena polja koja se crtaju zelenom bojom, i selektovanu figuru
+cije polje ima zutu boju pozadine.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="igra.IgraCanvas.da_li_je_kraj">
 <code class="sig-name descname">da_li_je_kraj</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/igra.html#IgraCanvas.da_li_je_kraj"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#igra.IgraCanvas.da_li_je_kraj" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Proverava da li je kra igre, u zavisnosti od toga da li je neko dostigao 3 nivo ili neko nema mogucih poteza prikazuje 
+odgovarajucu poruku, gamestat postavlja na KRAJ_IGRE i prikazuje messagebox sa porukom o pobedniku</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="igra.IgraCanvas.mouse_click">
 <code class="sig-name descname">mouse_click</code><span class="sig-paren">(</span><em class="sig-param">e</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/igra.html#IgraCanvas.mouse_click"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#igra.IgraCanvas.mouse_click" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Funkcija koja upravlja inputom korisnika, prima x i y koordinate mouse click eventa, praracunava ih u polje table i izvrsava
+neku akciju (pomeranje, gradnja…) ako je ona moguca</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>e</strong> (<em>idk</em>) – Mouse click event</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="igra.IgraCanvas.odaberi_AI">
 <code class="sig-name descname">odaberi_AI</code><span class="sig-paren">(</span><em class="sig-param">tip_igraca</em>, <em class="sig-param">stampaj_vrednosti_svih_poteza</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/igra.html#IgraCanvas.odaberi_AI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#igra.IgraCanvas.odaberi_AI" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Funkcija koja bira odgovarajuci tip AI-ja u zavisnosti od tipa igraca, instancira objekat odgovarajuce klase sa atributom
+za stampanje svih koraka, dubinom i odabranom statickom funkcijom procene i vraca taj objekat</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tip_igraca</strong> (<em>str</em>) – Tip igraca na osnovu kojeg se bira AI ili se ostavlja Osoba</p></li>
+<li><p><strong>stampaj_vrednosti_svih_poteza</strong> (<em>bool</em>) – Da li treba stampati vrednosti svih mogucih koraka AI-ja</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Objekat odgovarajuce klase AI-ja</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="ai.html#ai.AI" title="ai.AI">AI</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="igra.IgraCanvas.postavi_figure_na_slucajno_izabrana_mesta">
 <code class="sig-name descname">postavi_figure_na_slucajno_izabrana_mesta</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/igra.html#IgraCanvas.postavi_figure_na_slucajno_izabrana_mesta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#igra.IgraCanvas.postavi_figure_na_slucajno_izabrana_mesta" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Postavlja dve figure na slucajno izabrana slobodna polja u tabli, ovo se koristi u pocetnoj fazi igre za AI</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="igra.IgraCanvas.procitaj_fajl_i_popuni_tabelu">
 <code class="sig-name descname">procitaj_fajl_i_popuni_tabelu</code><span class="sig-paren">(</span><em class="sig-param">naziv_fajla</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/igra.html#IgraCanvas.procitaj_fajl_i_popuni_tabelu"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#igra.IgraCanvas.procitaj_fajl_i_popuni_tabelu" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Funkcija koda otvara fajl, cita njegov sadrzaj, parsuje naredbe/poteze u tom fajlu i izvrsava ih nad trenutnom tablom.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>naziv_fajla</strong> (<em>str</em>) – Putanja do fajla</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="igra.IgraCanvas.sastavi_poruku">
 <code class="sig-name descname">sastavi_poruku</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/igra.html#IgraCanvas.sastavi_poruku"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#igra.IgraCanvas.sastavi_poruku" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Sastavlja poruku o trenutnom stanju igre i igracu koji je na potezu</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="igra.IgraCanvas.selektuj_figuru">
 <code class="sig-name descname">selektuj_figuru</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/igra.html#IgraCanvas.selektuj_figuru"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#igra.IgraCanvas.selektuj_figuru" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Postavlja koordinate selektovane figure na x i y</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>int</em>) – x koordinata selektovane figure</p></li>
+<li><p><strong>y</strong> (<em>int</em>) – y koordinata selektovane figure</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="igra.IgraCanvas.zameni_igraca">
 <code class="sig-name descname">zameni_igraca</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/igra.html#IgraCanvas.zameni_igraca"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#igra.IgraCanvas.zameni_igraca" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Funkcija menja trenutnog igraca, prebacuje kontrolu protivniku.
+Ako je AI na potezu onda izvrsava njegov potez i ponovo menja igraca.
+Ako igraju AI vs Ai onda je ovo rekurzivna funkcija koja menja igrace i izvrsava njihove poteze sve dok neko od njih ne pobedi.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="igra.IgraCanvas.zatovori_fajl">
 <code class="sig-name descname">zatovori_fajl</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/igra.html#IgraCanvas.zatovori_fajl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#igra.IgraCanvas.zatovori_fajl" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Zatvara fajl self.f</p>
+</dd></dl>
 
 </dd></dl>
 

@@ -155,11 +155,29 @@
 
 <span class="n">TIPOVI_IGRACA</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;Osoba&quot;</span><span class="p">,</span> <span class="s2">&quot;AI easy&quot;</span><span class="p">,</span> <span class="s2">&quot;AI medium&quot;</span><span class="p">,</span> <span class="s2">&quot;AI hard&quot;</span><span class="p">)</span>
 
-<span class="c1"># zadatak ove klase je da crta Tablu i da prima inpute od korisnika, kao i da upravlja potezima AI-a</span>
 
 <div class="viewcode-block" id="IgraCanvas"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas">[docs]</a><span class="k">class</span> <span class="nc">IgraCanvas</span><span class="p">(</span><span class="n">Canvas</span><span class="p">):</span>
-
+    <span class="sd">&quot;&quot;&quot;Klasa ciji je zadatak da crta Tablu, da vodi racuna o GameStatu, trenutnom igracu, dozvoljenim potezima i AI. Prima inpute od korisnika</span>
+<span class="sd">    i izvrsava odgovarajuce akcije.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="IgraCanvas.__init__"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">igrac1</span><span class="p">,</span> <span class="n">igrac2</span><span class="p">,</span> <span class="n">naziv_fajla</span><span class="p">,</span> <span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span> <span class="n">crtaj_svaki_korak</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Konstruktor klase IgraCanvas, inicijalizuje potrebne atribute.</span>
+<span class="sd">        </span>
+<span class="sd">        :param Canvas: [description]</span>
+<span class="sd">        :type Canvas: [type]</span>
+<span class="sd">        :param parent: Roditeljski widget u kojem se crta IgraCanvas</span>
+<span class="sd">        :type parent: Widget</span>
+<span class="sd">        :param igrac1: Tip prvog igraca</span>
+<span class="sd">        :type igrac1: str</span>
+<span class="sd">        :param igrac2: Tip drugog igraca</span>
+<span class="sd">        :type igrac2: str</span>
+<span class="sd">        :param naziv_fajla: Putanja do falja iz kojeg se citaju potezi ili u kojem se upisuju potezi</span>
+<span class="sd">        :type naziv_fajla: str</span>
+<span class="sd">        :param stampaj_vrednosti_svih_poteza: Da li treba stampati vrednosti svih mogucih poteza za AI</span>
+<span class="sd">        :type stampaj_vrednosti_svih_poteza: bool</span>
+<span class="sd">        :param crtaj_svaki_korak: Kad igraju AI vs AI da li treba prikazivati svaki potez ili samo rezultat njihovog meca, defaults to True</span>
+<span class="sd">        :type crtaj_svaki_korak: bool, optional</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
         <span class="n">Canvas</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="n">width</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">550</span><span class="p">)</span> 
         <span class="bp">self</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s2">&quot;&lt;Button-1&gt;&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mouse_click</span><span class="p">)</span>
@@ -184,12 +202,17 @@
         <span class="c1">#otvaranje fajla za pisanje sad, svaki put kad se izvrsi neki potez on se upisuje u fajl</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">naziv_fajla</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">crtaj</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">crtaj</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">zameni_igraca</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="IgraCanvas.procitaj_fajl_i_popuni_tabelu"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas.procitaj_fajl_i_popuni_tabelu">[docs]</a>    <span class="k">def</span> <span class="nf">procitaj_fajl_i_popuni_tabelu</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">naziv_fajla</span><span class="p">):</span>
-        <span class="c1">#otvaranje fajla, citanje i izvrsavanje poteza ako ih ima u njemu</span>
+        <span class="sd">&quot;&quot;&quot;Funkcija koda otvara fajl, cita njegov sadrzaj, parsuje naredbe/poteze u tom fajlu i izvrsava ih nad trenutnom tablom.</span>
+<span class="sd">        </span>
+<span class="sd">        :param naziv_fajla: Putanja do fajla </span>
+<span class="sd">        :type naziv_fajla: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
+        <span class="c1">#otvaranje fajla</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">naziv_fajla</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
         <span class="n">lines</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
 
@@ -200,6 +223,7 @@
                 <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
                     <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">Potez</span><span class="o">.</span><span class="n">string_u_koordinate</span><span class="p">(</span><span class="n">l</span><span class="p">)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="o">.</span><span class="n">postavi_figuru</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+            <span class="c1"># ostalo su obicni potezi</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">potez</span> <span class="o">=</span> <span class="n">Potez</span><span class="o">.</span><span class="n">iz_stringa</span><span class="p">(</span><span class="n">lines</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="o">.</span><span class="n">izvrsi_potez</span><span class="p">(</span><span class="n">potez</span><span class="p">)</span>
@@ -216,6 +240,16 @@
 
 
 <div class="viewcode-block" id="IgraCanvas.odaberi_AI"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas.odaberi_AI">[docs]</a>    <span class="k">def</span> <span class="nf">odaberi_AI</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tip_igraca</span><span class="p">,</span> <span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Funkcija koja bira odgovarajuci tip AI-ja u zavisnosti od tipa igraca, instancira objekat odgovarajuce klase sa atributom</span>
+<span class="sd">        za stampanje svih koraka, dubinom i odabranom statickom funkcijom procene i vraca taj objekat</span>
+<span class="sd">        </span>
+<span class="sd">        :param tip_igraca: Tip igraca na osnovu kojeg se bira AI ili se ostavlja Osoba</span>
+<span class="sd">        :type tip_igraca: str</span>
+<span class="sd">        :param stampaj_vrednosti_svih_poteza: Da li treba stampati vrednosti svih mogucih koraka AI-ja</span>
+<span class="sd">        :type stampaj_vrednosti_svih_poteza: bool</span>
+<span class="sd">        :return: Objekat odgovarajuce klase AI-ja</span>
+<span class="sd">        :rtype: AI</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
         <span class="k">if</span> <span class="n">tip_igraca</span> <span class="o">==</span> <span class="n">TIPOVI_IGRACA</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="c1">#Osoba</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">elif</span> <span class="n">tip_igraca</span> <span class="o">==</span> <span class="n">TIPOVI_IGRACA</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="c1">#AI easy</span>
@@ -226,7 +260,10 @@
             <span class="k">return</span> <span class="n">MiniMaxAlfaBeta</span><span class="p">(</span><span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">unapredjena_staticka_funkcija_procene</span><span class="p">)</span> </div>
     
 
-<div class="viewcode-block" id="IgraCanvas.crtaj"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas.crtaj">[docs]</a>    <span class="k">def</span> <span class="nf">crtaj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tabla</span><span class="p">):</span>
+<div class="viewcode-block" id="IgraCanvas.crtaj"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas.crtaj">[docs]</a>    <span class="k">def</span> <span class="nf">crtaj</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Funkcija koja crta stanje table na Canvas-u uzimajuci u obzir i dozvoljena polja koja se crtaju zelenom bojom, i selektovanu figuru</span>
+<span class="sd">        cije polje ima zutu boju pozadine.&quot;&quot;&quot;</span> 
+
         <span class="bp">self</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">):</span>
@@ -238,14 +275,14 @@
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">selektovana_figura</span> <span class="o">==</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">):</span> 
                     <span class="n">boja</span> <span class="o">=</span> <span class="s2">&quot;yellow&quot;</span>
                 <span class="c1">#ako je to polje dozvoljeno u sledecem potezu onda zelenom bojom</span>
-                <span class="k">elif</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="ow">in</span> <span class="n">tabla</span><span class="o">.</span><span class="n">pronadji_dozvoljena_polja</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game_state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">selektovana_figura</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">selektovana_figura</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span><span class="p">):</span>
+                <span class="k">elif</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="o">.</span><span class="n">pronadji_dozvoljena_polja</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game_state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">selektovana_figura</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">selektovana_figura</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span><span class="p">):</span>
                     <span class="n">boja</span> <span class="o">=</span> <span class="s2">&quot;green&quot;</span>
                 <span class="c1"># ako nije nista od toga onda siva boja</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">boja</span> <span class="o">=</span> <span class="s2">&quot;grey&quot;</span> 
                 <span class="bp">self</span><span class="o">.</span><span class="n">create_rectangle</span><span class="p">(</span><span class="n">x1</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">y1</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">x1</span> <span class="o">+</span> <span class="mi">98</span><span class="p">,</span> <span class="n">y1</span> <span class="o">+</span> <span class="mi">98</span><span class="p">,</span> <span class="n">fill</span> <span class="o">=</span> <span class="n">boja</span><span class="p">)</span>
                 <span class="c1">#nacrtaj spratove, spratovi se crtaju kao &quot;koncentricni&quot; kvadrati sve manjih dimenzija</span>
-                <span class="n">stepen</span> <span class="o">=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span>
+                <span class="n">stepen</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span>
                 <span class="k">if</span> <span class="n">stepen</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">create_rectangle</span><span class="p">(</span><span class="n">x1</span> <span class="o">+</span> <span class="mi">8</span><span class="p">,</span> <span class="n">y1</span> <span class="o">+</span> <span class="mi">8</span><span class="p">,</span> <span class="n">x1</span> <span class="o">+</span> <span class="mi">92</span><span class="p">,</span> <span class="n">y1</span> <span class="o">+</span> <span class="mi">92</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">stepen</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
@@ -255,9 +292,9 @@
                 <span class="k">if</span> <span class="n">stepen</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">create_oval</span><span class="p">(</span><span class="n">x1</span> <span class="o">+</span> <span class="mi">30</span><span class="p">,</span> <span class="n">y1</span> <span class="o">+</span> <span class="mi">30</span><span class="p">,</span> <span class="n">x1</span> <span class="o">+</span> <span class="mi">70</span><span class="p">,</span> <span class="n">y1</span> <span class="o">+</span> <span class="mi">70</span><span class="p">,</span> <span class="n">fill</span> <span class="o">=</span> <span class="s2">&quot;black&quot;</span><span class="p">)</span>
                 <span class="c1">#nacrtaj igraca</span>
-                <span class="k">if</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">==</span> <span class="n">IGRAC_PLAVI</span><span class="p">:</span> <span class="c1"># 0 znaci plavi igrac</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">==</span> <span class="n">IGRAC_PLAVI</span><span class="p">:</span> <span class="c1"># 0 znaci plavi igrac</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">create_oval</span><span class="p">(</span><span class="n">x1</span> <span class="o">+</span> <span class="mi">30</span><span class="p">,</span> <span class="n">y1</span> <span class="o">+</span> <span class="mi">30</span><span class="p">,</span> <span class="n">x1</span> <span class="o">+</span> <span class="mi">70</span><span class="p">,</span> <span class="n">y1</span> <span class="o">+</span> <span class="mi">70</span><span class="p">,</span> <span class="n">fill</span> <span class="o">=</span> <span class="s2">&quot;blue&quot;</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">==</span> <span class="n">IGRAC_CRVENI</span><span class="p">:</span> <span class="c1"># 1 znaci crveni igrac</span>
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">==</span> <span class="n">IGRAC_CRVENI</span><span class="p">:</span> <span class="c1"># 1 znaci crveni igrac</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">create_oval</span><span class="p">(</span><span class="n">x1</span> <span class="o">+</span> <span class="mi">30</span><span class="p">,</span> <span class="n">y1</span> <span class="o">+</span> <span class="mi">30</span><span class="p">,</span> <span class="n">x1</span> <span class="o">+</span> <span class="mi">70</span><span class="p">,</span> <span class="n">y1</span> <span class="o">+</span> <span class="mi">70</span><span class="p">,</span> <span class="n">fill</span> <span class="o">=</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">create_text</span><span class="p">(</span><span class="mi">250</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">poruka</span><span class="p">,</span> <span class="n">font</span> <span class="o">=</span> <span class="s2">&quot;Airal 12&quot;</span><span class="p">)</span>
@@ -265,6 +302,12 @@
 
 
 <div class="viewcode-block" id="IgraCanvas.mouse_click"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas.mouse_click">[docs]</a>    <span class="k">def</span> <span class="nf">mouse_click</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Funkcija koja upravlja inputom korisnika, prima x i y koordinate mouse click eventa, praracunava ih u polje table i izvrsava</span>
+<span class="sd">        neku akciju (pomeranje, gradnja...) ako je ona moguca</span>
+<span class="sd">        </span>
+<span class="sd">        :param e: Mouse click event</span>
+<span class="sd">        :type e: idk</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
         <span class="c1">#print(e.x, e.y) # koordinate piksela na koji je klikuo mis u ovom canvasu</span>
         <span class="c1">#ako je kliknuo vam table ili je kraj meca</span>
         <span class="k">if</span> <span class="n">e</span><span class="o">.</span><span class="n">y</span> <span class="o">&lt;</span> <span class="mi">50</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">==</span> <span class="n">GameState</span><span class="o">.</span><span class="n">KRAJ_IGRE</span><span class="p">:</span>
@@ -274,12 +317,15 @@
         <span class="n">y</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">e</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="mi">50</span><span class="p">)</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Polje koje je pritisnuto je: </span><span class="si">{x}</span><span class="s2">, </span><span class="si">{y}</span><span class="s2">&quot;</span><span class="p">)</span>
 
+        <span class="c1"># nalazenje svih dozvoljenih polja</span>
         <span class="n">dozvoljena_polja</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="o">.</span><span class="n">pronadji_dozvoljena_polja</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game_state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">selektovana_figura</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">selektovana_figura</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dozvoljena polja: &quot;</span><span class="p">,</span> <span class="n">dozvoljena_polja</span><span class="p">)</span>
+        <span class="c1"># ako pritisnuto polje ne pripada dozvoljenim poljima onda se prikazuje greska i zavrsava ova funkcija</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dozvoljena_polja</span><span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Neispravan potez!&quot;</span><span class="p">)</span>
             <span class="k">return</span>
 
+        <span class="c1"># u zavisnosti od gamestate-a vrse se razlicite akcije, postavlje figure, pomeranje, gradnja</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">==</span> <span class="n">GameState</span><span class="o">.</span><span class="n">POSTAVLJANJE_FIGURA</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="o">.</span><span class="n">postavi_figuru</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span><span class="p">)</span> 
             <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">Potez</span><span class="o">.</span><span class="n">koordinate_u_string</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
@@ -317,23 +363,41 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">after</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">zameni_igraca</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">sastavi_poruku</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">crtaj</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">crtaj</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">da_li_je_kraj</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="IgraCanvas.selektuj_figuru"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas.selektuj_figuru">[docs]</a>    <span class="k">def</span> <span class="nf">selektuj_figuru</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Postavlja koordinate selektovane figure na x i y</span>
+<span class="sd">        </span>
+<span class="sd">        :param x: x koordinata selektovane figure</span>
+<span class="sd">        :type x: int</span>
+<span class="sd">        :param y: y koordinata selektovane figure</span>
+<span class="sd">        :type y: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
         <span class="bp">self</span><span class="o">.</span><span class="n">selektovana_figura</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="IgraCanvas.AI_je_na_potezu"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas.AI_je_na_potezu">[docs]</a>    <span class="k">def</span> <span class="nf">AI_je_na_potezu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Proverava da li je AI na potezu</span>
+<span class="sd">        </span>
+<span class="sd">        :return: True ako je AI na potezu, inace false</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
         <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span> <span class="o">==</span> <span class="n">IGRAC_PLAVI</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">plavi_AI</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span> <span class="o">==</span> <span class="n">IGRAC_CRVENI</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">crveni_AI</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="IgraCanvas.AI_izvrsi_potez"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas.AI_izvrsi_potez">[docs]</a>    <span class="k">def</span> <span class="nf">AI_izvrsi_potez</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pravi_pauzu</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Funkcija koja poziva AI koji je trenutno na potezu, prosledjuje mu trenutno stanje table i dobija novi potez</span>
+<span class="sd">        Taj potez onda izvrsava nad tablom i to crta. Ova funkcija moze da pravi pauzu da potezi AI ne bi bili previse brzi</span>
+<span class="sd">        </span>
+<span class="sd">        :param pravi_pauzu: Da li treba praviti pauzu za potez AI da se on ne bi previse brzo izvrsio</span>
+<span class="sd">        :type pravi_pauzu: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">==</span> <span class="n">GameState</span><span class="o">.</span><span class="n">KRAJ_IGRE</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="c1"># minimalno trajanje poteza AI, da se ne bi momentalno izvrsio potez, potez moze da traje i duze ako treba</span>
-        <span class="n">PAUZA_IZMEDJU_POTEZA</span> <span class="o">=</span> <span class="mf">0.8</span> <span class="c1">#sekunda</span>
+        <span class="n">PAUZA_IZMEDJU_POTEZA</span> <span class="o">=</span> <span class="mf">0.8</span> <span class="c1">#sekundi</span>
         <span class="n">pocetak</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
         <span class="c1">#AI odredi sledeci potez </span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span> <span class="o">==</span> <span class="n">IGRAC_PLAVI</span><span class="p">:</span>
@@ -354,6 +418,8 @@
 
 
 <div class="viewcode-block" id="IgraCanvas.postavi_figure_na_slucajno_izabrana_mesta"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas.postavi_figure_na_slucajno_izabrana_mesta">[docs]</a>    <span class="k">def</span> <span class="nf">postavi_figure_na_slucajno_izabrana_mesta</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Postavlja dve figure na slucajno izabrana slobodna polja u tabli, ovo se koristi u pocetnoj fazi igre za AI</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
         <span class="n">dozvoljena_polja</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="o">.</span><span class="n">pronadji_dozvoljena_polja</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">game_state</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span><span class="p">)</span>
         <span class="c1"># uzimamo 2 slucajna polja iz liste dozvoljenih</span>
         <span class="n">random_polja</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dozvoljena_polja</span><span class="p">)),</span> <span class="mi">2</span><span class="p">)</span>
@@ -374,6 +440,10 @@
 
 
 <div class="viewcode-block" id="IgraCanvas.zameni_igraca"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas.zameni_igraca">[docs]</a>    <span class="k">def</span> <span class="nf">zameni_igraca</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Funkcija menja trenutnog igraca, prebacuje kontrolu protivniku.</span>
+<span class="sd">        Ako je AI na potezu onda izvrsava njegov potez i ponovo menja igraca.</span>
+<span class="sd">        Ako igraju AI vs Ai onda je ovo rekurzivna funkcija koja menja igrace i izvrsava njihove poteze sve dok neko od njih ne pobedi.</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">==</span> <span class="n">GameState</span><span class="o">.</span><span class="n">KRAJ_IGRE</span><span class="p">:</span>
             <span class="k">return</span>
 
@@ -383,7 +453,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span> <span class="o">=</span> <span class="n">protivnik</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">selektovana_figura</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">after</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">crtaj</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">after</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">crtaj</span><span class="p">)</span>
 
         <span class="c1"># ovde treba da proverava da li igra AI sad</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">AI_je_na_potezu</span><span class="p">():</span>
@@ -406,17 +476,24 @@
 
 
 <div class="viewcode-block" id="IgraCanvas.sastavi_poruku"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas.sastavi_poruku">[docs]</a>    <span class="k">def</span> <span class="nf">sastavi_poruku</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">poruka</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;Na potezu je </span><span class="si">{self.na_potezu}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">a gamestate je </span><span class="si">{self.game_state}</span><span class="s2">&quot;</span></div>
+        <span class="sd">&quot;&quot;&quot;Sastavlja poruku o trenutnom stanju igre i igracu koji je na potezu&quot;&quot;&quot;</span>
+        <span class="n">igrac</span> <span class="o">=</span> <span class="s2">&quot;PLAVI&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">igrac</span> <span class="o">=</span> <span class="s2">&quot;CRVENI&quot;</span>        
+        <span class="bp">self</span><span class="o">.</span><span class="n">poruka</span> <span class="o">=</span> <span class="n">f</span><span class="s2">&quot;Na potezu je </span><span class="si">{igrac}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">a gamestate je </span><span class="si">{self.game_state}</span><span class="s2">&quot;</span></div>
 
 
 <div class="viewcode-block" id="IgraCanvas.da_li_je_kraj"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas.da_li_je_kraj">[docs]</a>    <span class="k">def</span> <span class="nf">da_li_je_kraj</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Proverava da li je kra igre, u zavisnosti od toga da li je neko dostigao 3 nivo ili neko nema mogucih poteza prikazuje </span>
+<span class="sd">        odgovarajucu poruku, gamestat postavlja na KRAJ_IGRE i prikazuje messagebox sa porukom o pobedniku</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">==</span> <span class="n">GameState</span><span class="o">.</span><span class="n">POSTAVLJANJE_FIGURA</span><span class="p">:</span>
             <span class="k">return</span>
         <span class="c1">#proveri da li je kraj meca, tj da li ima mogucih poteza za igraca na potezu</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="o">.</span><span class="n">ima_mogucih_poteza</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">=</span> <span class="n">GameState</span><span class="o">.</span><span class="n">KRAJ_IGRE</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">zatovori_fajl</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">crtaj</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">crtaj</span><span class="p">()</span>
             <span class="n">messagebox</span><span class="o">.</span><span class="n">showinfo</span><span class="p">(</span><span class="s2">&quot;Pobeda&quot;</span><span class="p">,</span> <span class="n">f</span><span class="s2">&quot;Pobedio je {self.na_potezu.protivnik()} jer </span><span class="si">{self.na_potezu}</span><span class="s2"> nema mogucih poteza!&quot;</span><span class="p">)</span>
         
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="o">.</span><span class="n">zauzeo_treci_sprat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span><span class="p">):</span>
@@ -424,10 +501,11 @@
             <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">AI_je_na_potezu</span><span class="p">():</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trenutni_potez_osobe</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">zatovori_fajl</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">crtaj</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">crtaj</span><span class="p">()</span>
             <span class="n">messagebox</span><span class="o">.</span><span class="n">showinfo</span><span class="p">(</span><span class="s2">&quot;Pobeda&quot;</span><span class="p">,</span> <span class="n">f</span><span class="s2">&quot;Pobedio je </span><span class="si">{self.na_potezu}</span><span class="s2"> jer je zauzeo polje sa nivoom 3!&quot;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="IgraCanvas.zatovori_fajl"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas.zatovori_fajl">[docs]</a>    <span class="k">def</span> <span class="nf">zatovori_fajl</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Zatvara fajl self.f&quot;&quot;&quot;</span>        
         <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
     
 </pre></div>

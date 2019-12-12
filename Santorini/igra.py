@@ -9,11 +9,29 @@ from tabla import Tabla, GameState, IGRAC_CRVENI, IGRAC_PLAVI, protivnik, Potez
 
 TIPOVI_IGRACA = ("Osoba", "AI easy", "AI medium", "AI hard")
 
-# zadatak ove klase je da crta Tablu i da prima inpute od korisnika, kao i da upravlja potezima AI-a
 
 class IgraCanvas(Canvas):
-
+    """Klasa ciji je zadatak da crta Tablu, da vodi racuna o GameStatu, trenutnom igracu, dozvoljenim potezima i AI. Prima inpute od korisnika
+    i izvrsava odgovarajuce akcije.
+    """
     def __init__(self, parent, igrac1, igrac2, naziv_fajla, stampaj_vrednosti_svih_poteza, crtaj_svaki_korak = True):
+        """Konstruktor klase IgraCanvas, inicijalizuje potrebne atribute.
+        
+        :param Canvas: [description]
+        :type Canvas: [type]
+        :param parent: Roditeljski widget u kojem se crta IgraCanvas
+        :type parent: Widget
+        :param igrac1: Tip prvog igraca
+        :type igrac1: str
+        :param igrac2: Tip drugog igraca
+        :type igrac2: str
+        :param naziv_fajla: Putanja do falja iz kojeg se citaju potezi ili u kojem se upisuju potezi
+        :type naziv_fajla: str
+        :param stampaj_vrednosti_svih_poteza: Da li treba stampati vrednosti svih mogucih poteza za AI
+        :type stampaj_vrednosti_svih_poteza: bool
+        :param crtaj_svaki_korak: Kad igraju AI vs AI da li treba prikazivati svaki potez ili samo rezultat njihovog meca, defaults to True
+        :type crtaj_svaki_korak: bool, optional
+        """        
         Canvas.__init__(self, parent)
         self.config(width = 500, height = 550) 
         self.bind("<Button-1>", self.mouse_click)
@@ -38,12 +56,17 @@ class IgraCanvas(Canvas):
         #otvaranje fajla za pisanje sad, svaki put kad se izvrsi neki potez on se upisuje u fajl
         self.f = open(naziv_fajla, "a")
 
-        self.crtaj(self.tabla)
+        self.crtaj()
         self.zameni_igraca()
 
 
     def procitaj_fajl_i_popuni_tabelu(self, naziv_fajla):
-        #otvaranje fajla, citanje i izvrsavanje poteza ako ih ima u njemu
+        """Funkcija koda otvara fajl, cita njegov sadrzaj, parsuje naredbe/poteze u tom fajlu i izvrsava ih nad trenutnom tablom.
+        
+        :param naziv_fajla: Putanja do fajla 
+        :type naziv_fajla: str
+        """        
+        #otvaranje fajla
         self.f = open(naziv_fajla, "r")
         lines = self.f.readlines()
 
@@ -54,6 +77,7 @@ class IgraCanvas(Canvas):
                 for l in line:
                     x, y = Potez.string_u_koordinate(l)
                     self.tabla.postavi_figuru(x, y, i)
+            # ostalo su obicni potezi
             else:
                 potez = Potez.iz_stringa(lines[i])
                 self.tabla.izvrsi_potez(potez)
@@ -70,6 +94,16 @@ class IgraCanvas(Canvas):
 
 
     def odaberi_AI(self, tip_igraca, stampaj_vrednosti_svih_poteza):
+        """Funkcija koja bira odgovarajuci tip AI-ja u zavisnosti od tipa igraca, instancira objekat odgovarajuce klase sa atributom
+        za stampanje svih koraka, dubinom i odabranom statickom funkcijom procene i vraca taj objekat
+        
+        :param tip_igraca: Tip igraca na osnovu kojeg se bira AI ili se ostavlja Osoba
+        :type tip_igraca: str
+        :param stampaj_vrednosti_svih_poteza: Da li treba stampati vrednosti svih mogucih koraka AI-ja
+        :type stampaj_vrednosti_svih_poteza: bool
+        :return: Objekat odgovarajuce klase AI-ja
+        :rtype: AI
+        """        
         if tip_igraca == TIPOVI_IGRACA[0]: #Osoba
             return None
         elif tip_igraca == TIPOVI_IGRACA[1]: #AI easy
@@ -80,7 +114,10 @@ class IgraCanvas(Canvas):
             return MiniMaxAlfaBeta(stampaj_vrednosti_svih_poteza, 4, unapredjena_staticka_funkcija_procene) 
     
 
-    def crtaj(self, tabla):
+    def crtaj(self):
+        """Funkcija koja crta stanje table na Canvas-u uzimajuci u obzir i dozvoljena polja koja se crtaju zelenom bojom, i selektovanu figuru
+        cije polje ima zutu boju pozadine.""" 
+
         self.delete("all")
         for i in range (0, 5):
             for j in range(0, 5):
@@ -92,14 +129,14 @@ class IgraCanvas(Canvas):
                 if self.selektovana_figura == (i, j): 
                     boja = "yellow"
                 #ako je to polje dozvoljeno u sledecem potezu onda zelenom bojom
-                elif (i, j) in tabla.pronadji_dozvoljena_polja(self.game_state, self.selektovana_figura[0], self.selektovana_figura[1], self.na_potezu):
+                elif (i, j) in self.tabla.pronadji_dozvoljena_polja(self.game_state, self.selektovana_figura[0], self.selektovana_figura[1], self.na_potezu):
                     boja = "green"
                 # ako nije nista od toga onda siva boja
                 else:
                     boja = "grey" 
                 self.create_rectangle(x1 + 2, y1 + 2, x1 + 98, y1 + 98, fill = boja)
                 #nacrtaj spratove, spratovi se crtaju kao "koncentricni" kvadrati sve manjih dimenzija
-                stepen = tabla.matrica[i][j].broj_spratova
+                stepen = self.tabla.matrica[i][j].broj_spratova
                 if stepen >= 1:
                     self.create_rectangle(x1 + 8, y1 + 8, x1 + 92, y1 + 92, width = 3)
                 if stepen >= 2:
@@ -109,9 +146,9 @@ class IgraCanvas(Canvas):
                 if stepen >= 4:
                     self.create_oval(x1 + 30, y1 + 30, x1 + 70, y1 + 70, fill = "black")
                 #nacrtaj igraca
-                if tabla.matrica[i][j].igrac == IGRAC_PLAVI: # 0 znaci plavi igrac
+                if self.tabla.matrica[i][j].igrac == IGRAC_PLAVI: # 0 znaci plavi igrac
                     self.create_oval(x1 + 30, y1 + 30, x1 + 70, y1 + 70, fill = "blue")
-                elif tabla.matrica[i][j].igrac == IGRAC_CRVENI: # 1 znaci crveni igrac
+                elif self.tabla.matrica[i][j].igrac == IGRAC_CRVENI: # 1 znaci crveni igrac
                     self.create_oval(x1 + 30, y1 + 30, x1 + 70, y1 + 70, fill = "red")
 
         self.create_text(250, 25, text = self.poruka, font = "Airal 12")
@@ -119,6 +156,12 @@ class IgraCanvas(Canvas):
 
 
     def mouse_click(self, e):
+        """Funkcija koja upravlja inputom korisnika, prima x i y koordinate mouse click eventa, praracunava ih u polje table i izvrsava
+        neku akciju (pomeranje, gradnja...) ako je ona moguca
+        
+        :param e: Mouse click event
+        :type e: idk
+        """        
         #print(e.x, e.y) # koordinate piksela na koji je klikuo mis u ovom canvasu
         #ako je kliknuo vam table ili je kraj meca
         if e.y < 50 or self.game_state == GameState.KRAJ_IGRE:
@@ -128,12 +171,15 @@ class IgraCanvas(Canvas):
         y = int((e.y - 50) / 100)
         print(f"Polje koje je pritisnuto je: {x}, {y}")
 
+        # nalazenje svih dozvoljenih polja
         dozvoljena_polja = self.tabla.pronadji_dozvoljena_polja(self.game_state, self.selektovana_figura[0], self.selektovana_figura[1], self.na_potezu)
         print("Dozvoljena polja: ", dozvoljena_polja)
+        # ako pritisnuto polje ne pripada dozvoljenim poljima onda se prikazuje greska i zavrsava ova funkcija
         if (x, y) not in dozvoljena_polja:
             print("Neispravan potez!")
             return
 
+        # u zavisnosti od gamestate-a vrse se razlicite akcije, postavlje figure, pomeranje, gradnja
         if self.game_state == GameState.POSTAVLJANJE_FIGURA:
             self.tabla.postavi_figuru(x, y, self.na_potezu) 
             self.f.write(Potez.koordinate_u_string(x, y) + " ")
@@ -171,23 +217,41 @@ class IgraCanvas(Canvas):
             self.after(1, self.zameni_igraca)
 
         self.sastavi_poruku()
-        self.crtaj(self.tabla)
+        self.crtaj()
         self.da_li_je_kraj()
 
 
     def selektuj_figuru(self, x, y):
+        """Postavlja koordinate selektovane figure na x i y
+        
+        :param x: x koordinata selektovane figure
+        :type x: int
+        :param y: y koordinata selektovane figure
+        :type y: int
+        """        
         self.selektovana_figura = (x, y)
 
 
     def AI_je_na_potezu(self):
+        """Proverava da li je AI na potezu
+        
+        :return: True ako je AI na potezu, inace false
+        :rtype: bool
+        """        
         return (self.na_potezu == IGRAC_PLAVI and self.plavi_AI != None) or (self.na_potezu == IGRAC_CRVENI and self.crveni_AI != None)
 
 
     def AI_izvrsi_potez(self, pravi_pauzu: bool):
+        """Funkcija koja poziva AI koji je trenutno na potezu, prosledjuje mu trenutno stanje table i dobija novi potez
+        Taj potez onda izvrsava nad tablom i to crta. Ova funkcija moze da pravi pauzu da potezi AI ne bi bili previse brzi
+        
+        :param pravi_pauzu: Da li treba praviti pauzu za potez AI da se on ne bi previse brzo izvrsio
+        :type pravi_pauzu: bool
+        """        
         if self.game_state == GameState.KRAJ_IGRE:
             return
         # minimalno trajanje poteza AI, da se ne bi momentalno izvrsio potez, potez moze da traje i duze ako treba
-        PAUZA_IZMEDJU_POTEZA = 0.8 #sekunda
+        PAUZA_IZMEDJU_POTEZA = 0.8 #sekundi
         pocetak = time.time()
         #AI odredi sledeci potez 
         if self.na_potezu == IGRAC_PLAVI:
@@ -208,6 +272,8 @@ class IgraCanvas(Canvas):
 
 
     def postavi_figure_na_slucajno_izabrana_mesta(self):
+        """Postavlja dve figure na slucajno izabrana slobodna polja u tabli, ovo se koristi u pocetnoj fazi igre za AI
+        """        
         dozvoljena_polja = self.tabla.pronadji_dozvoljena_polja(self.game_state, -2, -2, self.na_potezu)
         # uzimamo 2 slucajna polja iz liste dozvoljenih
         random_polja = random.sample(range(len(dozvoljena_polja)), 2)
@@ -228,6 +294,10 @@ class IgraCanvas(Canvas):
 
 
     def zameni_igraca(self):
+        """Funkcija menja trenutnog igraca, prebacuje kontrolu protivniku.
+        Ako je AI na potezu onda izvrsava njegov potez i ponovo menja igraca.
+        Ako igraju AI vs Ai onda je ovo rekurzivna funkcija koja menja igrace i izvrsava njihove poteze sve dok neko od njih ne pobedi.
+        """        
         if self.game_state == GameState.KRAJ_IGRE:
             return
 
@@ -237,7 +307,7 @@ class IgraCanvas(Canvas):
             self.na_potezu = protivnik(self.na_potezu)
 
         self.selektovana_figura = (-2, -2)
-        self.after(100, self.crtaj, self.tabla)
+        self.after(100, self.crtaj)
 
         # ovde treba da proverava da li igra AI sad
         if self.AI_je_na_potezu():
@@ -260,17 +330,24 @@ class IgraCanvas(Canvas):
 
 
     def sastavi_poruku(self):
-        self.poruka = f"Na potezu je {self.na_potezu} \na gamestate je {self.game_state}"
+        """Sastavlja poruku o trenutnom stanju igre i igracu koji je na potezu"""
+        igrac = "PLAVI"
+        if self.na_potezu == 1:
+            igrac = "CRVENI"        
+        self.poruka = f"Na potezu je {igrac} \na gamestate je {self.game_state}"
 
 
     def da_li_je_kraj(self):
+        """Proverava da li je kra igre, u zavisnosti od toga da li je neko dostigao 3 nivo ili neko nema mogucih poteza prikazuje 
+        odgovarajucu poruku, gamestat postavlja na KRAJ_IGRE i prikazuje messagebox sa porukom o pobedniku
+        """        
         if self.game_state == GameState.POSTAVLJANJE_FIGURA:
             return
         #proveri da li je kraj meca, tj da li ima mogucih poteza za igraca na potezu
         if not self.tabla.ima_mogucih_poteza(self.na_potezu):
             self.game_state = GameState.KRAJ_IGRE
             self.zatovori_fajl()
-            self.crtaj(self.tabla)
+            self.crtaj()
             messagebox.showinfo("Pobeda", f"Pobedio je {self.na_potezu.protivnik()} jer {self.na_potezu} nema mogucih poteza!")
         
         if self.tabla.zauzeo_treci_sprat(self.na_potezu):
@@ -278,9 +355,10 @@ class IgraCanvas(Canvas):
             if not self.AI_je_na_potezu():
                 self.f.write(str(self.trenutni_potez_osobe) + "\n")
             self.zatovori_fajl()
-            self.crtaj(self.tabla)
+            self.crtaj()
             messagebox.showinfo("Pobeda", f"Pobedio je {self.na_potezu} jer je zauzeo polje sa nivoom 3!")
 
     def zatovori_fajl(self):
+        """Zatvara fajl self.f"""        
         self.f.close()
     

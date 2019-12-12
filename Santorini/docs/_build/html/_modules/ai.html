@@ -144,7 +144,11 @@
            <div itemprop="articleBody">
             
   <h1>Source code for ai</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">tabla</span> <span class="k">import</span> <span class="n">Tabla</span><span class="p">,</span> <span class="n">IGRAC_CRVENI</span><span class="p">,</span> <span class="n">IGRAC_PLAVI</span><span class="p">,</span> <span class="n">protivnik</span><span class="p">,</span> <span class="n">Potez</span>
+<span></span><span class="sd">&quot;&quot;&quot;Modul ai je odgovoran za vestacku inteligenciju igre Santorini, sadrzi klase koje implementiraju minimax i minimax + alfa-beta,</span>
+<span class="sd">funkcije za staticku procenu stanja itd. Sve sto ima veze za AI ove igre nalazi se ovde.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">tabla</span> <span class="k">import</span> <span class="n">Tabla</span><span class="p">,</span> <span class="n">IGRAC_CRVENI</span><span class="p">,</span> <span class="n">IGRAC_PLAVI</span><span class="p">,</span> <span class="n">protivnik</span><span class="p">,</span> <span class="n">Potez</span>
 <span class="kn">import</span> <span class="nn">math</span>
 <span class="kn">import</span> <span class="nn">random</span>
 <span class="kn">import</span> <span class="nn">copy</span>
@@ -152,9 +156,21 @@
 <span class="kn">from</span> <span class="nn">abc</span> <span class="k">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
 
 
-<span class="c1"># staticka funkcija procene neke tabele, za nju mi je potreban i potez kojim se doslo do te tabele</span>
-<span class="c1"># funkcija je data u zadataku</span>
 <div class="viewcode-block" id="staticka_funkcija_procene"><a class="viewcode-back" href="../ai.html#ai.staticka_funkcija_procene">[docs]</a><span class="k">def</span> <span class="nf">staticka_funkcija_procene</span><span class="p">(</span><span class="n">tabla</span><span class="p">:</span> <span class="n">Tabla</span><span class="p">,</span> <span class="n">potez</span><span class="p">:</span> <span class="n">Potez</span><span class="p">,</span> <span class="n">na_potezu</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Ovo je jednostavna staticka funkcija procene f,koja se računa kao 𝑓 = 𝑛 + 𝑚, gde je 𝑛 broj pločica odredišnog</span>
+<span class="sd">    polja, a 𝑚 broj nivoa na koje se dodaje plocica poomnozen razlikom rastojanja sopstvenih i protivnickih igraca od tog polja.</span>
+<span class="sd">    Da bi se ova funkcija izracunala pored stanja/table potreban mi je i potez koji dovodi to tog novog stanja kao i igrac koji </span>
+<span class="sd">    je trenutno na potezu.  </span>
+<span class="sd">    </span>
+<span class="sd">    :param tabla: Tabla/stanje za koju treba izracunati staticku funkciju procene</span>
+<span class="sd">    :type tabla: Tabla</span>
+<span class="sd">    :param potez: Potez koji je doveo to tog stanja</span>
+<span class="sd">    :type potez: Potez</span>
+<span class="sd">    :param na_potezu: Igrac za kojeg se racuna staticka funkcija procene</span>
+<span class="sd">    :type na_potezu: int</span>
+<span class="sd">    :return: Vrednost staticke funkcije procene</span>
+<span class="sd">    :rtype: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>    
     <span class="k">if</span> <span class="n">tabla</span><span class="o">.</span><span class="n">pobeda</span><span class="p">(</span><span class="n">na_potezu</span><span class="p">):</span>
         <span class="c1">#print(&quot;Pobeda&quot;)</span>
         <span class="k">return</span> <span class="mi">100</span>
@@ -173,7 +189,24 @@
     <span class="n">l</span> <span class="o">=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">potez</span><span class="o">.</span><span class="n">xg</span><span class="p">][</span><span class="n">potez</span><span class="o">.</span><span class="n">yg</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span> <span class="o">*</span> <span class="n">rastojanja</span>
     <span class="k">return</span> <span class="n">m</span> <span class="o">+</span> <span class="n">l</span></div>
 
+
+
+<span class="c1">#TODO ako je odredisno polje vece od trenutnog onda + nesto, + sprat odredisnog polja * 2, idk tako nesto</span>
 <div class="viewcode-block" id="unapredjena_staticka_funkcija_procene"><a class="viewcode-back" href="../ai.html#ai.unapredjena_staticka_funkcija_procene">[docs]</a><span class="k">def</span> <span class="nf">unapredjena_staticka_funkcija_procene</span><span class="p">(</span><span class="n">tabla</span><span class="p">:</span> <span class="n">Tabla</span><span class="p">,</span> <span class="n">potez</span><span class="p">:</span> <span class="n">Potez</span><span class="p">,</span> <span class="n">na_potezu</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Ovo je jednostavna staticka funkcija procene f,koja se računa kao 𝑓 = 𝑛 + 𝑚, gde je 𝑛 broj pločica odredišnog</span>
+<span class="sd">    polja, a 𝑚 broj nivoa na koje se dodaje plocica poomnozen razlikom rastojanja sopstvenih i protivnickih igraca od tog polja.</span>
+<span class="sd">    Da bi se ova funkcija izracunala pored stanja/table potreban mi je i potez koji dovodi to tog novog stanja kao i igrac koji </span>
+<span class="sd">    je trenutno na potezu.  </span>
+<span class="sd">    </span>
+<span class="sd">    :param tabla: Tabla/stanje za koju treba izracunati staticku funkciju procene</span>
+<span class="sd">    :type tabla: Tabla</span>
+<span class="sd">    :param potez: Potez koji je doveo to tog stanja</span>
+<span class="sd">    :type potez: Potez</span>
+<span class="sd">    :param na_potezu: Igrac za kojeg se racuna staticka funkcija procene</span>
+<span class="sd">    :type na_potezu: int</span>
+<span class="sd">    :return: Vrednost staticke funkcije procene</span>
+<span class="sd">    :rtype: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>    
     <span class="k">if</span> <span class="n">tabla</span><span class="o">.</span><span class="n">pobeda</span><span class="p">(</span><span class="n">na_potezu</span><span class="p">):</span>
         <span class="c1">#print(&quot;Pobeda&quot;)</span>
         <span class="k">return</span> <span class="mi">100</span>
@@ -193,12 +226,80 @@
     <span class="k">return</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">m</span> <span class="o">+</span> <span class="n">l</span> <span class="c1"># za sad je samo ovo unapredjeno</span></div>
 
 
+<div class="viewcode-block" id="svi_moguci_potezi"><a class="viewcode-back" href="../ai.html#ai.svi_moguci_potezi">[docs]</a><span class="k">def</span> <span class="nf">svi_moguci_potezi</span><span class="p">(</span><span class="n">tabla</span><span class="p">,</span> <span class="n">na_potezu</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Funkcija koja za datu tablu/stanje i igraca vraca sve moguce poteze koje on iz tog stanja moze da izvrsi.</span>
+<span class="sd">    Prvo obilazi celu tablu i nalazi figure koje pripadaju igracu, onda obilazi sva susedna polja tih figura </span>
+<span class="sd">    i nalazi ona na koja igrac moze da se krece, onda iz tih polja obilazi ponovo sva susedna i nalazi polja na </span>
+<span class="sd">    kojima moze da gradi. Svaki validni potez se dodaje u listu poteza moguci_potezi i tu listu ova funkcija vraca.  </span>
+<span class="sd">    </span>
+<span class="sd">    :param tabla: Stanje igre, stanje table ili vrednost polja u matrici, svejedno  </span>
+<span class="sd">    :type tabla: Tabla</span>
+<span class="sd">    :param na_potezu: Igrac za kojeg nalazimo dozvoljene poteze</span>
+<span class="sd">    :type na_potezu: int</span>
+<span class="sd">    :return: Lista dozvoljenih poteza</span>
+<span class="sd">    :rtype: list</span>
+<span class="sd">    &quot;&quot;&quot;</span>    
+    <span class="c1"># lista mogucih stanja</span>
+    <span class="n">moguci_potezi</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># ako je igra vec zavrsena u datom stanju onda nista, nema vise poteza, i vracam prazan niz</span>
+    <span class="c1"># igra je zavrsena ako jedan od igraca dostigne 3 nivo</span>
+    <span class="k">if</span> <span class="n">tabla</span><span class="o">.</span><span class="n">zauzeo_treci_sprat</span><span class="p">(</span><span class="n">na_potezu</span><span class="p">)</span> <span class="ow">or</span> <span class="n">tabla</span><span class="o">.</span><span class="n">zauzeo_treci_sprat</span><span class="p">(</span><span class="n">protivnik</span><span class="p">(</span><span class="n">na_potezu</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="n">moguci_potezi</span>
+
+    <span class="c1"># pronadji dve figure koje pripadaju trenutnom igracu</span>
+    <span class="n">broj_pronadjenih_figura</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">broj_pronadjenih_figura</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">==</span> <span class="n">na_potezu</span><span class="p">:</span>
+                <span class="n">broj_pronadjenih_figura</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="c1"># prodji kroz sva njegova susedna polja</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">):</span>
+                    <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">2</span><span class="p">):</span>
+                        <span class="c1"># proveri da li je novo polje unutar matrice, da li je slobodno i da nije &quot;previsoko&quot;</span>
+                        <span class="n">unutar_matrice</span> <span class="o">=</span> <span class="n">k</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">k</span> <span class="o">&lt;=</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">l</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">l</span> <span class="o">&lt;=</span> <span class="mi">4</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">unutar_matrice</span><span class="p">:</span>
+                            <span class="k">continue</span>
+                        <span class="n">novo_polje</span> <span class="o">=</span> <span class="n">k</span> <span class="o">!=</span> <span class="n">i</span> <span class="ow">or</span> <span class="n">l</span> <span class="o">!=</span> <span class="n">j</span>  <span class="c1"># da li se polje razlikuje od onog u kome se sad nalazi</span>
+                        <span class="n">slobodno_polje</span> <span class="o">=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">l</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">==</span> <span class="kc">None</span>
+                        <span class="n">odgovara_broj_spratova</span> <span class="o">=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&gt;=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">l</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span>
+                        <span class="k">if</span> <span class="n">unutar_matrice</span> <span class="ow">and</span> <span class="n">novo_polje</span> <span class="ow">and</span> <span class="n">slobodno_polje</span> <span class="ow">and</span> <span class="n">odgovara_broj_spratova</span><span class="p">:</span>
+                            <span class="c1"># kad imamo sva polja u koja mozemo da idemo sad treba iz njih da nadjemo sva polja u koja mozemo da gradimo</span>
+                            <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">2</span><span class="p">):</span>
+                                <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">l</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">l</span> <span class="o">+</span> <span class="mi">2</span><span class="p">):</span>
+                                    <span class="c1"># isto proveravamo da li je ovo polje unutar matrice, da li je slobodno i da li je broj spratova &lt; 4</span>
+                                    <span class="n">unutar_matrice</span> <span class="o">=</span> <span class="n">m</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">m</span> <span class="o">&lt;=</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">n</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">4</span>
+                                    <span class="k">if</span> <span class="ow">not</span> <span class="n">unutar_matrice</span><span class="p">:</span>
+                                        <span class="k">continue</span>
+                                    <span class="n">novo_polje</span> <span class="o">=</span> <span class="n">m</span> <span class="o">!=</span> <span class="n">k</span> <span class="ow">or</span> <span class="n">n</span> <span class="o">!=</span> <span class="n">l</span>
+                                    <span class="n">slobodno_polje</span> <span class="o">=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">m</span><span class="p">][</span><span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">==</span> <span class="kc">None</span>
+                                    <span class="n">moze_da_se_gradi</span> <span class="o">=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">m</span><span class="p">][</span><span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span> <span class="o">&lt;</span> <span class="mi">4</span>
+                                    <span class="k">if</span> <span class="n">unutar_matrice</span> <span class="ow">and</span> <span class="n">novo_polje</span> <span class="ow">and</span> <span class="n">slobodno_polje</span> <span class="ow">and</span> <span class="n">moze_da_se_gradi</span><span class="p">:</span>
+                                        <span class="n">moguci_potezi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Potez</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">moguci_potezi</span></div>
+
+
 <div class="viewcode-block" id="Node"><a class="viewcode-back" href="../ai.html#ai.Node">[docs]</a><span class="k">class</span> <span class="nc">Node</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vrednost</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">children</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Klasa Node prestavlja jedan cvor u stablu, kao atribute ima vrednost i children(listu potomaka).&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Node.__init__"><a class="viewcode-back" href="../ai.html#ai.Node.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vrednost</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">children</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Konstruktor koji postavlja vrednosti atributa klase.</span>
+<span class="sd">        </span>
+<span class="sd">        :param vrednost: Vrednost ovog cvora, defaults to 0</span>
+<span class="sd">        :type vrednost: int, optional</span>
+<span class="sd">        :param children: Lista potomaka cvora, defaults to None</span>
+<span class="sd">        :type children: lista, optional</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
         <span class="bp">self</span><span class="o">.</span><span class="n">vrednost</span> <span class="o">=</span> <span class="n">vrednost</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="n">children</span> <span class="ow">or</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="n">children</span> <span class="ow">or</span> <span class="p">[]</span></div>
     
 <div class="viewcode-block" id="Node.max_child_vrednost"><a class="viewcode-back" href="../ai.html#ai.Node.max_child_vrednost">[docs]</a>    <span class="k">def</span> <span class="nf">max_child_vrednost</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Medju children(potomcima) ovog cvora nalazi onaj cvor koji ima najvecu vrednost i vraca njegovu vrednost.</span>
+<span class="sd">        </span>
+<span class="sd">        :return: Najveca vrednost medju potomcima ovog cvora</span>
+<span class="sd">        :rtype: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
         <span class="n">value</span> <span class="o">=</span> <span class="o">-</span><span class="n">math</span><span class="o">.</span><span class="n">inf</span>
         <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">vrednost</span> <span class="o">&gt;</span> <span class="n">value</span><span class="p">):</span>
@@ -206,6 +307,11 @@
         <span class="k">return</span> <span class="n">value</span></div>
 
 <div class="viewcode-block" id="Node.min_child_vrednost"><a class="viewcode-back" href="../ai.html#ai.Node.min_child_vrednost">[docs]</a>    <span class="k">def</span> <span class="nf">min_child_vrednost</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Medju children(potomcima) ovog cvora nalazi onaj cvor koji ima najmanju vrednost i vraca njegovu vrednost.</span>
+<span class="sd">        </span>
+<span class="sd">        :return: Najmanja vrednost medju potomcima ovog cvora</span>
+<span class="sd">        :rtype: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
         <span class="n">value</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">inf</span>
         <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">vrednost</span> <span class="o">&lt;</span> <span class="n">value</span><span class="p">):</span>
@@ -215,27 +321,65 @@
 
 <span class="c1">#Abstraktna klasa za AI</span>
 <div class="viewcode-block" id="AI"><a class="viewcode-back" href="../ai.html#ai.AI">[docs]</a><span class="k">class</span> <span class="nc">AI</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Abstraktna klasa koju nasledjuju sve klase koje implementiraju neku vrstu vestacke inteligencije.</span>
+<span class="sd">    Od atributa ima dubinu, funkciju koja racuna staticku vrednost i bool da li treba stampati vrednosti svih mogucih poteza AI algoritma .</span>
+<span class="sd">    &quot;&quot;&quot;</span>    
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span><span class="n">dubina</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">funkcija_procene</span> <span class="o">=</span> <span class="n">staticka_funkcija_procene</span><span class="p">):</span>
+<div class="viewcode-block" id="AI.__init__"><a class="viewcode-back" href="../ai.html#ai.AI.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span><span class="n">dubina</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">funkcija_procene</span> <span class="o">=</span> <span class="n">staticka_funkcija_procene</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Konsturtor sa parametrima koji postavlja vredsnoti atributa klase</span>
+<span class="sd">        </span>
+<span class="sd">        :param stampaj_vrednosti_svih_poteza: Da li treba stampati vrednost svakom moguceg poteza AI</span>
+<span class="sd">        :type stampaj_vrednosti_svih_poteza: bool</span>
+<span class="sd">        :param dubina: Dubina do koje treba pretrazivati stablo igre, defaults to 2</span>
+<span class="sd">        :type dubina: int, optional</span>
+<span class="sd">        :param funkcija_procene: Funkcija sa kojom se racuna staticka vrednost, defaults to staticka_funkcija_procene</span>
+<span class="sd">        :type funkcija_procene: function, optional</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
         <span class="bp">self</span><span class="o">.</span><span class="n">stampaj_vrednosti_svih_poteza</span> <span class="o">=</span> <span class="n">stampaj_vrednosti_svih_poteza</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dubina</span> <span class="o">=</span> <span class="n">dubina</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">funkcija_procene</span> <span class="o">=</span> <span class="n">funkcija_procene</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">funkcija_procene</span> <span class="o">=</span> <span class="n">funkcija_procene</span></div>
 
 
-    <span class="c1"># glavna funkcija ovog modula, igra poziva ovu funkciju, prosledjuje jos stanje i algoritam koji treba da se koristi</span>
-    <span class="c1"># a ona vraca sledeci potez</span>
 <div class="viewcode-block" id="AI.sledeci_potez"><a class="viewcode-back" href="../ai.html#ai.AI.sledeci_potez">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">sledeci_potez</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tabla</span><span class="p">,</span> <span class="n">na_potezu</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Glavna funkcija ovog modula, igra poziva ovu funkcija, prosledjuje joj stanje i igraca a ova funkija vraca sledeci potez.</span>
+<span class="sd">        Ovo je abstraktna funkcija tako da je moraju implementirati sve klase koje nasledjuju AI.</span>
+<span class="sd">        </span>
+<span class="sd">        :param tabla: Tabla za koju treba naci sledeci potez</span>
+<span class="sd">        :type tabla: Tabla</span>
+<span class="sd">        :param na_potezu: Igrac koji je na potezu i za kojeg treba naci sledeci potez</span>
+<span class="sd">        :type na_potezu: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>        
         <span class="k">pass</span></div></div>
 
 
 <div class="viewcode-block" id="MiniMax"><a class="viewcode-back" href="../ai.html#ai.MiniMax">[docs]</a><span class="k">class</span> <span class="nc">MiniMax</span><span class="p">(</span><span class="n">AI</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Klasa koja nasledjuje AI i implementira obicni MiniMax algoritam&quot;&quot;&quot;</span>    
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span><span class="n">dubina</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">funkcija_procene</span> <span class="o">=</span> <span class="n">staticka_funkcija_procene</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span> <span class="n">dubina</span><span class="p">,</span> <span class="n">funkcija_procene</span><span class="p">)</span>
+<div class="viewcode-block" id="MiniMax.__init__"><a class="viewcode-back" href="../ai.html#ai.MiniMax.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span><span class="n">dubina</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">funkcija_procene</span> <span class="o">=</span> <span class="n">staticka_funkcija_procene</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Konsturtor sa parametrima koji postavlja vredsnoti atributa klase</span>
+<span class="sd">        </span>
+<span class="sd">        :param stampaj_vrednosti_svih_poteza: Da li treba stampati vrednost svakom moguceg poteza AI</span>
+<span class="sd">        :type stampaj_vrednosti_svih_poteza: bool</span>
+<span class="sd">        :param dubina: Dubina do koje treba pretrazivati stablo igre, defaults to 2</span>
+<span class="sd">        :type dubina: int, optional</span>
+<span class="sd">        :param funkcija_procene: Funkcija sa kojom se racuna staticka vrednost, defaults to staticka_funkcija_procene</span>
+<span class="sd">        :type funkcija_procene: function, optional</span>
+<span class="sd">        &quot;&quot;&quot;</span>          
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span> <span class="n">dubina</span><span class="p">,</span> <span class="n">funkcija_procene</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="MiniMax.sledeci_potez"><a class="viewcode-back" href="../ai.html#ai.MiniMax.sledeci_potez">[docs]</a>    <span class="k">def</span> <span class="nf">sledeci_potez</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tabla</span><span class="p">,</span> <span class="n">na_potezu</span><span class="p">):</span>
-        <span class="n">stablo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">minimax_pretraga</span><span class="p">(</span><span class="n">tabla</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dubina</span><span class="p">,</span> <span class="n">na_potezu</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;Igra poziva ovu funkcija, prosledjuje joj stanje i igraca a ova funkija vraca sledeci potez.</span>
+<span class="sd">        Ovo je abstraktna funkcija tako da je moraju implementirati sve klase koje nasledjuju AI.</span>
+<span class="sd">        </span>
+<span class="sd">        :param tabla: Tabla za koju treba naci sledeci potez</span>
+<span class="sd">        :type tabla: Tabla</span>
+<span class="sd">        :param na_potezu: Igrac koji je na potezu i za kojeg treba naci sledeci potez</span>
+<span class="sd">        :type na_potezu: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>     
+
+        <span class="c1"># moglo bi ovo i prostije da se odradi ali se u zadatku trazi da se stampaju vrednosti svih mogucih poteza pa moram da ga iskomplikujem malo   </span>
+        <span class="n">stablo</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kreiraj_stablo_i_izvrsi_minimax</span><span class="p">(</span><span class="n">tabla</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dubina</span><span class="p">,</span> <span class="n">na_potezu</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
         <span class="n">svi_potezi</span> <span class="o">=</span> <span class="n">svi_moguci_potezi</span><span class="p">(</span><span class="n">tabla</span><span class="p">,</span> <span class="n">na_potezu</span><span class="p">)</span>
 
         <span class="c1"># stampaj vrednosti svih poteza</span>
@@ -250,29 +394,48 @@
                 <span class="k">return</span> <span class="n">svi_potezi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span></div>
 
 
-    <span class="c1"># rekurzivna funkcija koja kreira stablo dubine n, stablo se sastoji od Node objekata, i izvrsava minimax i izracuna vrednost svakog cvora u stablu</span>
-<div class="viewcode-block" id="MiniMax.minimax_pretraga"><a class="viewcode-back" href="../ai.html#ai.MiniMax.minimax_pretraga">[docs]</a>    <span class="k">def</span> <span class="nf">minimax_pretraga</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tabla</span><span class="p">,</span> <span class="n">dubina</span><span class="p">,</span> <span class="n">na_potezu</span><span class="p">,</span> <span class="n">maximizing_player</span><span class="p">,</span> <span class="n">potez</span><span class="p">):</span>
+<div class="viewcode-block" id="MiniMax.kreiraj_stablo_i_izvrsi_minimax"><a class="viewcode-back" href="../ai.html#ai.MiniMax.kreiraj_stablo_i_izvrsi_minimax">[docs]</a>    <span class="k">def</span> <span class="nf">kreiraj_stablo_i_izvrsi_minimax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tabla</span><span class="p">,</span> <span class="n">dubina</span><span class="p">,</span> <span class="n">na_potezu</span><span class="p">,</span> <span class="n">maximizing_player</span><span class="p">,</span> <span class="n">potez</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Rekurzivna funkcija koja kreira stablo dubine n, stablo se sastoji od Node objekata, tj. za svaki cvor se pamti samo vrednost tog</span>
+<span class="sd">        cvora i njegovi potomci, nad tim stablom se izvrsava minimax i popuni se vrednost svih cvorova u stablu. Ovaj algoritam je uradjen po </span>
+<span class="sd">        ugledu na psudo kod minimax algoritma sa moodle-a</span>
+<span class="sd">        </span>
+<span class="sd">        :param tabla: Tabla nad kojom treba izvrsavati poteze ili za koju treba racunati staticku funkciju procene</span>
+<span class="sd">        :type tabla: Tabla</span>
+<span class="sd">        :param dubina: Dubina razvijanja stabla</span>
+<span class="sd">        :type dubina: int</span>
+<span class="sd">        :param na_potezu: Igrac za kojeg se racuna staticka funkcija procene</span>
+<span class="sd">        :type na_potezu: int</span>
+<span class="sd">        :param maximizing_player: Da li treba uzimati max ili min vrednost od potomaka</span>
+<span class="sd">        :type maximizing_player: bool</span>
+<span class="sd">        :param potez: Potez koji je doveo do ovog stanja</span>
+<span class="sd">        :type potez: Potez</span>
+<span class="sd">        :return: Stablo dubine n koje se sastoji od Node objekata, nad kojim je izvrsen minimax i pronadjena vrednost svakog cvora</span>
+<span class="sd">        :rtype: Node</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># ako ne treba dalje razvijati stablo vracamo staticku funkciju procene        </span>
         <span class="k">if</span> <span class="n">dubina</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">vrednost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">funkcija_procene</span><span class="p">(</span><span class="n">tabla</span><span class="p">,</span> <span class="n">potez</span><span class="p">,</span> <span class="n">na_potezu</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">Node</span><span class="p">(</span><span class="n">vrednost</span><span class="p">)</span>
         
+        <span class="c1"># pronalazimo sve moguce poteze iz ovog stabla u zavisnosti od toga koji igrac povlaci sad potez</span>
         <span class="k">if</span> <span class="n">maximizing_player</span><span class="p">:</span>
             <span class="n">svi_potezi</span> <span class="o">=</span> <span class="n">svi_moguci_potezi</span><span class="p">(</span><span class="n">tabla</span><span class="p">,</span> <span class="n">na_potezu</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">svi_potezi</span> <span class="o">=</span> <span class="n">svi_moguci_potezi</span><span class="p">(</span><span class="n">tabla</span><span class="p">,</span> <span class="n">protivnik</span><span class="p">(</span><span class="n">na_potezu</span><span class="p">))</span>
 
-        <span class="c1"># ako nema mogucih poteza vrati vrednost tog cvora</span>
+        <span class="c1"># ako nema mogucih poteza vrati vrednost tog cvora vracamo staticku funkciju procene</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">svi_potezi</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">vrednost</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">funkcija_procene</span><span class="p">(</span><span class="n">tabla</span><span class="p">,</span> <span class="n">potez</span><span class="p">,</span> <span class="n">na_potezu</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">Node</span><span class="p">(</span><span class="n">vrednost</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
+        <span class="k">else</span><span class="p">:</span> <span class="c1"># inace kreiraj novi node i dodaj mu vrednosti svih mogucih sledecih poteza kao children</span>
             <span class="n">novi_node</span> <span class="o">=</span> <span class="n">Node</span><span class="p">()</span>
             <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">svi_potezi</span><span class="p">:</span>
                 <span class="c1">#nova_tabla = copy.deepcopy(tabla) deepcopy je ZLO</span>
                 <span class="n">nova_tabla</span> <span class="o">=</span> <span class="n">Tabla</span><span class="p">(</span><span class="n">tabla</span><span class="p">)</span>
                 <span class="n">nova_tabla</span><span class="o">.</span><span class="n">izvrsi_potez</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
-                <span class="n">novi_node</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">minimax_pretraga</span><span class="p">(</span><span class="n">nova_tabla</span><span class="p">,</span> <span class="n">dubina</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">na_potezu</span><span class="p">,</span> <span class="ow">not</span> <span class="n">maximizing_player</span><span class="p">,</span> <span class="n">p</span><span class="p">))</span>
+                <span class="n">novi_node</span><span class="o">.</span><span class="n">children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kreiraj_stablo_i_izvrsi_minimax</span><span class="p">(</span><span class="n">nova_tabla</span><span class="p">,</span> <span class="n">dubina</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">na_potezu</span><span class="p">,</span> <span class="ow">not</span> <span class="n">maximizing_player</span><span class="p">,</span> <span class="n">p</span><span class="p">))</span>
 
+        <span class="c1"># nalazimo minimalnu ili maksimalu vrednost medju potomcima cvora i postavljamo je za vrednost tog cvora</span>
         <span class="k">if</span> <span class="n">maximizing_player</span><span class="p">:</span>
             <span class="n">novi_node</span><span class="o">.</span><span class="n">vrednost</span> <span class="o">=</span> <span class="n">novi_node</span><span class="o">.</span><span class="n">max_child_vrednost</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
@@ -283,13 +446,31 @@
     
 
 <div class="viewcode-block" id="MiniMaxAlfaBeta"><a class="viewcode-back" href="../ai.html#ai.MiniMaxAlfaBeta">[docs]</a><span class="k">class</span> <span class="nc">MiniMaxAlfaBeta</span><span class="p">(</span><span class="n">AI</span><span class="p">):</span> 
+    <span class="sd">&quot;&quot;&quot;Klasa koja nasledjuje AI i implementira MiniMax algoritam sa alfa-beta odsecanjem&quot;&quot;&quot;</span> 
     <span class="n">lista_poteza</span> <span class="o">=</span> <span class="p">[]</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span><span class="n">dubina</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">funkcija_procene</span> <span class="o">=</span> <span class="n">staticka_funkcija_procene</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span> <span class="n">dubina</span><span class="p">,</span> <span class="n">funkcija_procene</span><span class="p">)</span>
+<div class="viewcode-block" id="MiniMaxAlfaBeta.__init__"><a class="viewcode-back" href="../ai.html#ai.MiniMaxAlfaBeta.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span><span class="n">dubina</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">funkcija_procene</span> <span class="o">=</span> <span class="n">staticka_funkcija_procene</span><span class="p">):</span>    
+        <span class="sd">&quot;&quot;&quot;Konsturtor sa parametrima koji postavlja vredsnoti atributa klase</span>
+<span class="sd">        </span>
+<span class="sd">        :param stampaj_vrednosti_svih_poteza: Da li treba stampati vrednost svakom moguceg poteza AI</span>
+<span class="sd">        :type stampaj_vrednosti_svih_poteza: bool</span>
+<span class="sd">        :param dubina: Dubina do koje treba pretrazivati stablo igre, defaults to 3</span>
+<span class="sd">        :type dubina: int, optional</span>
+<span class="sd">        :param funkcija_procene: Funkcija sa kojom se racuna staticka vrednost, defaults to staticka_funkcija_procene</span>
+<span class="sd">        :type funkcija_procene: function, optional</span>
+<span class="sd">        &quot;&quot;&quot;</span>  
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span> <span class="n">dubina</span><span class="p">,</span> <span class="n">funkcija_procene</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="MiniMaxAlfaBeta.sledeci_potez"><a class="viewcode-back" href="../ai.html#ai.MiniMaxAlfaBeta.sledeci_potez">[docs]</a>    <span class="k">def</span> <span class="nf">sledeci_potez</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tabla</span><span class="p">,</span> <span class="n">na_potezu</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Igra poziva ovu funkcija, prosledjuje joj stanje i igraca a ova funkija vraca sledeci potez.</span>
+<span class="sd">        Ovo je abstraktna funkcija tako da je moraju implementirati sve klase koje nasledjuju AI.</span>
+<span class="sd">        </span>
+<span class="sd">        :param tabla: Tabla za koju treba naci sledeci potez</span>
+<span class="sd">        :type tabla: Tabla</span>
+<span class="sd">        :param na_potezu: Igrac koji je na potezu i za kojeg treba naci sledeci potez</span>
+<span class="sd">        :type na_potezu: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>     
         <span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span> <span class="o">=</span> <span class="n">na_potezu</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">alfa_beta_pretraga</span><span class="p">(</span><span class="n">tabla</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dubina</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
 
@@ -360,51 +541,6 @@
                     <span class="k">return</span> <span class="n">v</span>
                 <span class="n">beta</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">v</span></div></div>
-
-
-<span class="c1"># vraca listu svih mogucih validnih poteza iz prosledjene table</span>
-<div class="viewcode-block" id="svi_moguci_potezi"><a class="viewcode-back" href="../ai.html#ai.svi_moguci_potezi">[docs]</a><span class="k">def</span> <span class="nf">svi_moguci_potezi</span><span class="p">(</span><span class="n">tabla</span><span class="p">,</span> <span class="n">na_potezu</span><span class="p">):</span>
-    <span class="c1"># lista mogucih stanja</span>
-    <span class="n">moguci_potezi</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="c1"># ako je igra vec zavrsena u datom stanju onda nista, nema vise poteza, i vracam prazan niz</span>
-    <span class="c1"># igra je zavrsena ako jedan od igraca dostigne 3 nivo</span>
-    <span class="k">if</span> <span class="n">tabla</span><span class="o">.</span><span class="n">zauzeo_treci_sprat</span><span class="p">(</span><span class="n">na_potezu</span><span class="p">)</span> <span class="ow">or</span> <span class="n">tabla</span><span class="o">.</span><span class="n">zauzeo_treci_sprat</span><span class="p">(</span><span class="n">protivnik</span><span class="p">(</span><span class="n">na_potezu</span><span class="p">)):</span>
-        <span class="k">return</span> <span class="n">moguci_potezi</span>
-
-    <span class="c1"># pronadji dve figure koje pripadaju trenutnom igracu</span>
-    <span class="n">broj_pronadjenih_figura</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">broj_pronadjenih_figura</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="k">break</span>
-        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">==</span> <span class="n">na_potezu</span><span class="p">:</span>
-                <span class="n">broj_pronadjenih_figura</span> <span class="o">+=</span> <span class="mi">1</span>
-                <span class="c1"># prodji kroz sva njegova susedna polja</span>
-                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">):</span>
-                    <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">2</span><span class="p">):</span>
-                        <span class="c1"># proveri da li je novo polje unutar matrice, da li je slobodno i da nije &quot;previsoko&quot;</span>
-                        <span class="n">unutar_matrice</span> <span class="o">=</span> <span class="n">k</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">k</span> <span class="o">&lt;=</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">l</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">l</span> <span class="o">&lt;=</span> <span class="mi">4</span>
-                        <span class="k">if</span> <span class="ow">not</span> <span class="n">unutar_matrice</span><span class="p">:</span>
-                            <span class="k">continue</span>
-                        <span class="n">novo_polje</span> <span class="o">=</span> <span class="n">k</span> <span class="o">!=</span> <span class="n">i</span> <span class="ow">or</span> <span class="n">l</span> <span class="o">!=</span> <span class="n">j</span>  <span class="c1"># da li se polje razlikuje od onog u kome se sad nalazi</span>
-                        <span class="n">slobodno_polje</span> <span class="o">=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">l</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">==</span> <span class="kc">None</span>
-                        <span class="n">odgovara_broj_spratova</span> <span class="o">=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&gt;=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">l</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span>
-                        <span class="k">if</span> <span class="n">unutar_matrice</span> <span class="ow">and</span> <span class="n">novo_polje</span> <span class="ow">and</span> <span class="n">slobodno_polje</span> <span class="ow">and</span> <span class="n">odgovara_broj_spratova</span><span class="p">:</span>
-                            <span class="c1"># kad imamo sva polja u koja mozemo da idemo sad treba iz njih da nadjemo sva polja u koja mozemo da gradimo</span>
-                            <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">2</span><span class="p">):</span>
-                                <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">l</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">l</span> <span class="o">+</span> <span class="mi">2</span><span class="p">):</span>
-                                    <span class="c1"># isto proveravamo da li je ovo polje unutar matrice, da li je slobodno i da li je broj spratova &lt; 4</span>
-                                    <span class="n">unutar_matrice</span> <span class="o">=</span> <span class="n">m</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">m</span> <span class="o">&lt;=</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">n</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">4</span>
-                                    <span class="k">if</span> <span class="ow">not</span> <span class="n">unutar_matrice</span><span class="p">:</span>
-                                        <span class="k">continue</span>
-                                    <span class="n">novo_polje</span> <span class="o">=</span> <span class="n">m</span> <span class="o">!=</span> <span class="n">k</span> <span class="ow">or</span> <span class="n">n</span> <span class="o">!=</span> <span class="n">l</span>
-                                    <span class="n">slobodno_polje</span> <span class="o">=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">m</span><span class="p">][</span><span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">==</span> <span class="kc">None</span>
-                                    <span class="n">moze_da_se_gradi</span> <span class="o">=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">m</span><span class="p">][</span><span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span> <span class="o">&lt;</span> <span class="mi">4</span>
-                                    <span class="k">if</span> <span class="n">unutar_matrice</span> <span class="ow">and</span> <span class="n">novo_polje</span> <span class="ow">and</span> <span class="n">slobodno_polje</span> <span class="ow">and</span> <span class="n">moze_da_se_gradi</span><span class="p">:</span>
-                                        <span class="n">moguci_potezi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Potez</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">moguci_potezi</span></div>
-
 
 
 <span class="c1">#test</span>

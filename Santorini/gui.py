@@ -83,12 +83,12 @@ class OdabirTipaIgreFrame(Frame):
         Label(self, text="Odabir tipa i tezine igre", font=LARGE_FONT).grid(row = 0, columnspan = 2, sticky = "n", pady = 30)
 
         Label(self, text = "Plavi igrac").grid(row = 1, column = 0)
-        cb1 = ttk.Combobox(self, values = TIPOVI_IGRACA, width = 25)
+        cb1 = ttk.Combobox(self, state="readonly", values = TIPOVI_IGRACA, width = 25)
         cb1.grid(row = 2, column = 0, padx = 40, pady = 20)
         cb1.current(0)
 
         Label(self, text = "Crveni igrac").grid(row = 1, column = 1)
-        cb2 = ttk.Combobox(self, values = TIPOVI_IGRACA, width = 25)
+        cb2 = ttk.Combobox(self, state="readonly", values = TIPOVI_IGRACA, width = 25)
         cb2.grid(row = 2, column = 1, padx = 40, pady = 20)
         cb2.current(0)
 
@@ -142,6 +142,7 @@ class IgraFrame(Frame):
         naziv_fajla = kwarg.get("naziv_fajla", "")
         stampanje_poteza = kwarg.get("stampaj_vrednosti_svih_poteza", "0")
         preskoci_crtanje_poteza = kwarg.get("preskoci_crtanje_poteza", "0")
+        # IgraFrame samo ucita ili kreira fajl, prodledjuje putanju do njega IgraCanvas-u i on onda radi sa njim sta hoce
         if naziv_fajla == "":
             naziv_fajla = self.kreiraj_fajl()
 

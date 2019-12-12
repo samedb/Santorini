@@ -288,6 +288,7 @@
         <span class="n">naziv_fajla</span> <span class="o">=</span> <span class="n">kwarg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;naziv_fajla&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
         <span class="n">stampanje_poteza</span> <span class="o">=</span> <span class="n">kwarg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;stampaj_vrednosti_svih_poteza&quot;</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span>
         <span class="n">preskoci_crtanje_poteza</span> <span class="o">=</span> <span class="n">kwarg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;preskoci_crtanje_poteza&quot;</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span>
+        <span class="c1"># IgraFrame samo ucita ili kreira fajl, prodledjuje putanju do njega IgraCanvas-u i on onda radi sa njim sta hoce</span>
         <span class="k">if</span> <span class="n">naziv_fajla</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
             <span class="n">naziv_fajla</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kreiraj_fajl</span><span class="p">()</span>
 

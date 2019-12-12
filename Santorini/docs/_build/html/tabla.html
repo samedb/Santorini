@@ -156,16 +156,13 @@
             
   <div class="section" id="module-tabla">
 <span id="tabla-module"></span><h1>tabla module<a class="headerlink" href="#module-tabla" title="Permalink to this headline">¶</a></h1>
+<p>Modul tabla sadrzi funkcije i pomocne klase koje se koriste u ai.py i igra.py.
+To su klase Polje, Tabla, Potez, GameState</p>
 <dl class="class">
 <dt id="tabla.GameState">
 <em class="property">class </em><code class="sig-prename descclassname">tabla.</code><code class="sig-name descname">GameState</code><a class="reference internal" href="_modules/tabla.html#GameState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tabla.GameState" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
-<p>asdf asdf asdf</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>Enum</strong> (<em>[</em><em>type</em><em>]</em>) – [description]</p>
-</dd>
-</dl>
+<p>Nasledjuje klasu Enum i tako dobijamo enumeraciju u Python-u. Ova klasa sadrzi sva moguca stanja igre.</p>
 <dl class="attribute">
 <dt id="tabla.GameState.GRADNJA">
 <code class="sig-name descname">GRADNJA</code><em class="property"> = 3</em><a class="headerlink" href="#tabla.GameState.GRADNJA" title="Permalink to this definition">¶</a></dt>
@@ -197,6 +194,7 @@
 <dt id="tabla.Polje">
 <em class="property">class </em><code class="sig-prename descclassname">tabla.</code><code class="sig-name descname">Polje</code><a class="reference internal" href="_modules/tabla.html#Polje"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tabla.Polje" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Klasa koja predstavlja jedno polje u tabli, polje je opisano brojem spratova i igracem koji se trenutno nalazi u tom polju.</p>
 <dl class="attribute">
 <dt id="tabla.Polje.broj_spratova">
 <code class="sig-name descname">broj_spratova</code><em class="property"> = 0</em><a class="headerlink" href="#tabla.Polje.broj_spratova" title="Permalink to this definition">¶</a></dt>
@@ -213,29 +211,79 @@
 <dt id="tabla.Potez">
 <em class="property">class </em><code class="sig-prename descclassname">tabla.</code><code class="sig-name descname">Potez</code><span class="sig-paren">(</span><em class="sig-param">x1</em>, <em class="sig-param">y1</em>, <em class="sig-param">x2</em>, <em class="sig-param">y2</em>, <em class="sig-param">xg</em>, <em class="sig-param">yg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tabla.html#Potez"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tabla.Potez" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>sadf fdas dsf sad</p>
+<p>Preko ove klase predstavlja se jedan potez u igri Santorini, potez se sastoji od pomeranja i gradnje.
+Prema tome od atributa treba da sadrzi pocetno polje, odredisno polje i polje na kojem se gradi.</p>
+<dl class="method">
+<dt id="tabla.Potez.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">x1</em>, <em class="sig-param">y1</em>, <em class="sig-param">x2</em>, <em class="sig-param">y2</em>, <em class="sig-param">xg</em>, <em class="sig-param">yg</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tabla.html#Potez.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tabla.Potez.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Konstruktor klase koji inicijalizuje pocetno polje, odredisno polje i polje na kojem se gradi.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>[description]</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>[type]</p>
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x1</strong> (<em>int</em>) – x koordinata pocetnog polja</p></li>
+<li><p><strong>y1</strong> (<em>int</em>) – y koordinata pocetnog polja</p></li>
+<li><p><strong>x2</strong> (<em>int</em>) – x koordinata odredisnog polja</p></li>
+<li><p><strong>y2</strong> (<em>int</em>) – y koordinata odredisnog polja</p></li>
+<li><p><strong>xg</strong> (<em>int</em>) – x koordinata polja na kojem se gradi</p></li>
+<li><p><strong>yg</strong> (<em>int</em>) – y koordinata polja na kojem se gradi</p></li>
+</ul>
 </dd>
 </dl>
+</dd></dl>
+
 <dl class="method">
 <dt id="tabla.Potez.iz_stringa">
 <em class="property">static </em><code class="sig-name descname">iz_stringa</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tabla.html#Potez.iz_stringa"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tabla.Potez.iz_stringa" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Staticka funkcija koja prima string jednog poteza kako se on upisuje u fajl i pretvara ga u objekat klase Potez koji vraca.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – Potez u tekstualnom obliku, onako kako se pise u fajlu</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Objekat klase Potez koji odgovara ulaznog tekstu</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#tabla.Potez" title="tabla.Potez">Potez</a></p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="tabla.Potez.koordinate_u_string">
 <em class="property">static </em><code class="sig-name descname">koordinate_u_string</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tabla.html#Potez.koordinate_u_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tabla.Potez.koordinate_u_string" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Staticka funkija koja prima x i y kooridnate i vraca string koji dogovara tim koordinatama npr. B2, C0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>int</em>) – x koordinata polja</p></li>
+<li><p><strong>y</strong> (<em>int</em>) – y koordinata polja</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Polje u tekstualnom obliku</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="tabla.Potez.string_u_koordinate">
 <em class="property">static </em><code class="sig-name descname">string_u_koordinate</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tabla.html#Potez.string_u_koordinate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tabla.Potez.string_u_koordinate" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Staticka funkcija koja prima string jednog polja npr. A0 ili D3 i vraca njegove x i y koordinate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – Polje u tekstualnog obliku, koje treba prebaciti u x i y koordinate</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>x i y koordinate prosledjenog polja</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
@@ -243,62 +291,196 @@
 <dt id="tabla.Tabla">
 <em class="property">class </em><code class="sig-prename descclassname">tabla.</code><code class="sig-name descname">Tabla</code><span class="sig-paren">(</span><em class="sig-param">tabla=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tabla.html#Tabla"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tabla.Tabla" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Tabla je matrica objekata klase Polje i predstavlja glavnu klasu za igru Santorini.</p>
+<dl class="method">
+<dt id="tabla.Tabla.__init__">
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">tabla=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tabla.html#Tabla.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tabla.Tabla.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Konstruktor klase Tabla, kreira matricu Polja koja je u pocetku prazna.
+On je istovremeno i copy construktor (posto u pythonu mora da ima samo jedan ctor), ukoliko se kao drugi parametar prosledi
+tabla on kopira njen sadrzaj u trenutnu tablu.
+Ovo je uradjeno zbog performansi, funkcija koji ima python copy.deepcopy(object) je bila previse spora pa sam napravio svoj copy ctor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tabla</strong> (<a class="reference internal" href="#tabla.Tabla" title="tabla.Tabla"><em>Tabla</em></a><em>, </em><em>optional</em>) – tabla ciji sadrzaj treba prekopriati u ovom objektu, defaults to None</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="method">
 <dt id="tabla.Tabla.gradi">
 <code class="sig-name descname">gradi</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tabla.html#Tabla.gradi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tabla.Tabla.gradi" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Gradi jedan sprat na polju x, y.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>int</em>) – x koordinata polja gde treba graditi sprat</p></li>
+<li><p><strong>y</strong> (<em>int</em>) – y koordinata polja gde treba graditi sprat</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="tabla.Tabla.ima_mogucih_poteza">
 <code class="sig-name descname">ima_mogucih_poteza</code><span class="sig-paren">(</span><em class="sig-param">igrac</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tabla.html#Tabla.ima_mogucih_poteza"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tabla.Tabla.ima_mogucih_poteza" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Proverava za datog igraca da li mu je preostalo ispravnih poteza.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>igrac</strong> (<em>int</em>) – Igrac za kojeg se proverava da li ima mogucih poteza</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True ako ima mogucih poteza, inace False</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="tabla.Tabla.izvrsi_potez">
 <code class="sig-name descname">izvrsi_potez</code><span class="sig-paren">(</span><em class="sig-param">potez: tabla.Potez</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tabla.html#Tabla.izvrsi_potez"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tabla.Tabla.izvrsi_potez" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Izvrsava dati potez nam tablom, tako sto poziva funkije pomeri_figuru i gradi sa atributima prosledjenog poteza.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>potez</strong> (<a class="reference internal" href="#tabla.Potez" title="tabla.Potez"><em>Potez</em></a>) – Potez koji treba izvrsiti</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="tabla.Tabla.pobeda">
 <code class="sig-name descname">pobeda</code><span class="sig-paren">(</span><em class="sig-param">na_potezu</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tabla.html#Tabla.pobeda"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tabla.Tabla.pobeda" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Proverava da li je dati igrac pobedio.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>na_potezu</strong> (<em>int</em>) – Igrac za kojeg se proverava da li je pobedio</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True ako je pobedio, inace False</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="tabla.Tabla.pomeri_figuru">
 <code class="sig-name descname">pomeri_figuru</code><span class="sig-paren">(</span><em class="sig-param">x1</em>, <em class="sig-param">y1</em>, <em class="sig-param">x2</em>, <em class="sig-param">y2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tabla.html#Tabla.pomeri_figuru"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tabla.Tabla.pomeri_figuru" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Pomera figuru sa pocetnog na odredisno polje.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x1</strong> (<em>int</em>) – x koordinata pocetnog polja</p></li>
+<li><p><strong>y1</strong> (<em>int</em>) – y koordinata pocetnog polja</p></li>
+<li><p><strong>x2</strong> (<em>int</em>) – x koordinata odredisnog polja</p></li>
+<li><p><strong>y2</strong> (<em>int</em>) – y koordinata odredisnog polja</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="tabla.Tabla.poraz">
 <code class="sig-name descname">poraz</code><span class="sig-paren">(</span><em class="sig-param">na_potezu</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tabla.html#Tabla.poraz"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tabla.Tabla.poraz" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Proverava da li je dati igrac izgubio.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>na_potezu</strong> (<em>int</em>) – Igarc za kojeg se proverava da li je izgubio</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True ako je izgubio, inace False</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="tabla.Tabla.postavi_figuru">
 <code class="sig-name descname">postavi_figuru</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">igrac</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tabla.html#Tabla.postavi_figuru"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tabla.Tabla.postavi_figuru" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Postavlja figuru igraca na koordinate x, y u tabli ako je to polje slobodno.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>int</em>) – x koordinata polja gde treba postaviti figuru</p></li>
+<li><p><strong>y</strong> (<em>int</em>) – y koordinata polja gde treba postaviti figuru</p></li>
+<li><p><strong>igrac</strong> (<em>int</em>) – igrac (plavi ili crveni) koji treba postaviti u datom polju</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="tabla.Tabla.pronadji_dozvoljena_polja">
 <code class="sig-name descname">pronadji_dozvoljena_polja</code><span class="sig-paren">(</span><em class="sig-param">game_state: tabla.GameState</em>, <em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">igrac_na_potezu=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tabla.html#Tabla.pronadji_dozvoljena_polja"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tabla.Tabla.pronadji_dozvoljena_polja" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Funkcija koja nalazi listu svih dozvoljenih polja koje igrac moze da selektuje, to zavisi od mnogih faktora
+od trenutnog gameState-a, od pozicije selektovanog igraca (x, y) itd.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>game_state</strong> (<a class="reference internal" href="#tabla.GameState" title="tabla.GameState"><em>GameState</em></a>) – Trenutni GameState</p></li>
+<li><p><strong>x</strong> (<em>int</em>) – x koordinata igraca ili selektovanog polja</p></li>
+<li><p><strong>y</strong> (<em>int</em>) – y koordinata igraca ili selektovanog polja</p></li>
+<li><p><strong>igrac_na_potezu</strong> (<em>int</em><em>, </em><em>optional</em>) – Igrac koji je trenutno na potezu i za kojeg se nalaze dozvoljena polja, defaults to None</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Listu dozvoljenih polja</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="tabla.Tabla.rastojanje">
 <code class="sig-name descname">rastojanje</code><span class="sig-paren">(</span><em class="sig-param">x1</em>, <em class="sig-param">y1</em>, <em class="sig-param">x2</em>, <em class="sig-param">y2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tabla.html#Tabla.rastojanje"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tabla.Tabla.rastojanje" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Funkcija koja racuna rastojanje izmedju dva polja u tabli, ne uzima u obzir da li ima prepreka vec samo racuna rastojanje “vazdusnom linijom”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x1</strong> (<em>int</em>) – x koordinata prvog polja</p></li>
+<li><p><strong>y1</strong> (<em>int</em>) – y koordinata prvog polja</p></li>
+<li><p><strong>x2</strong> (<em>int</em>) – x koordinata drugog polja</p></li>
+<li><p><strong>y2</strong> (<em>int</em>) – y koordinata drugog polja</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Rastojanje izmedju ova dva polja</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="method">
 <dt id="tabla.Tabla.zauzeo_treci_sprat">
 <code class="sig-name descname">zauzeo_treci_sprat</code><span class="sig-paren">(</span><em class="sig-param">igrac</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tabla.html#Tabla.zauzeo_treci_sprat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tabla.Tabla.zauzeo_treci_sprat" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Prolazi kroz celu matricu/tablu i proverava da li je igrac zauzeo treci sprat.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>igrac</strong> (<em>int</em>) – Igrac za kojeg proveravamo da li zauzeo treci sprat</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True ako je zauzeo treci sprat inace False</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="function">
 <dt id="tabla.protivnik">
 <code class="sig-prename descclassname">tabla.</code><code class="sig-name descname">protivnik</code><span class="sig-paren">(</span><em class="sig-param">igrac</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tabla.html#protivnik"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tabla.protivnik" title="Permalink to this definition">¶</a></dt>
-<dd><p>Vraca protivnika igraca kojeg prosledimo kao parametar</p>
+<dd><p>Vraca protivnika igraca kojeg prosledimo kao parametar.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>igrac</strong> (<em>int</em>) – Trenutni igrac</p>
