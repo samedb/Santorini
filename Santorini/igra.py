@@ -361,4 +361,3 @@ class IgraCanvas(Canvas):
     def zatovori_fajl(self):
         """Zatvara fajl self.f"""        
         self.f.close()
-    
