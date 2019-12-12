@@ -80,14 +80,14 @@ class OdabirTipaIgreFrame(Frame):
         :type controller: Tk
         """  
         Frame.__init__(self, parent)
-        Label(self, text="Odabir tipa i tezine igre", font=LARGE_FONT).grid(row = 0, columnspan = 2, sticky = "n", pady = 30)
+        Label(self, text="Odabir tipa i težine igre", font=LARGE_FONT).grid(row = 0, columnspan = 2, sticky = "n", pady = 30)
 
-        Label(self, text = "Plavi igrac").grid(row = 1, column = 0)
+        Label(self, text = "Plavi igrač").grid(row = 1, column = 0)
         cb1 = ttk.Combobox(self, state="readonly", values = TIPOVI_IGRACA, width = 25)
         cb1.grid(row = 2, column = 0, padx = 40, pady = 20)
         cb1.current(0)
 
-        Label(self, text = "Crveni igrac").grid(row = 1, column = 1)
+        Label(self, text = "Crveni igrač").grid(row = 1, column = 1)
         cb2 = ttk.Combobox(self, state="readonly", values = TIPOVI_IGRACA, width = 25)
         cb2.grid(row = 2, column = 1, padx = 40, pady = 20)
         cb2.current(0)
@@ -95,21 +95,21 @@ class OdabirTipaIgreFrame(Frame):
         #vs ili protiv izmedju
         Label(self, text = "vs").grid(row = 2, columnspan = 2)
 
-        Button(self, text="Ucitaj iz fajla", command=self.ucitaj_fajl, width = 20).grid(row = 3, columnspan = 2)
+        Button(self, text="Učitaj iz fajla", command=self.ucitaj_fajl, width = 20).grid(row = 3, columnspan = 2)
 
         self.naziv_fajla_labela = Label(self, text = "")
         self.naziv_fajla_labela.grid(row = 4, columnspan = 2)
 
         stampaj_vrednosti_algoritma = IntVar()
-        Checkbutton(self, text="Stampaj vrednosti svih mogucih poteza AI", variable=stampaj_vrednosti_algoritma).grid(row = 5, columnspan = 2)
+        Checkbutton(self, text="Štampaj vrednosti svih mogućih poteza AI", variable=stampaj_vrednosti_algoritma).grid(row = 5, columnspan = 2)
 
         preskoci_crtanje_poteza = IntVar()
         Checkbutton(self, text="Izvršavanje implementirane strategije do kraja", variable=preskoci_crtanje_poteza).grid(row = 6, columnspan = 2)
 
-        objasnjenje_tezina = "Opis raznih nivoa vestacke inteligencije \n• AI easy - minimax algoritam sa dubinom 2 \n• AI medium - minimax algoritam sa dubinom 3 uz alfa-beta odsecanje \n• AI hard - minimax algoritam sa dubinom 4 uz alfa-beta odsecanje"
+        objasnjenje_tezina = "Opis raznih nivoa veštačke inteligencije \n• AI easy - minimax algoritam sa dubinom 2 \n• AI medium - minimax algoritam sa dubinom 3 uz alfa-beta odsecanje \n• AI hard - minimax algoritam sa dubinom 4 uz alfa-beta odsecanje"
         Label(self, text=objasnjenje_tezina, justify = LEFT, font = "Arial 16").grid(row = 7, columnspan = 2, pady = 40)
 
-        Button(self, text="Nazad na pocetnu stranu", command=lambda: controller.show_frame(PocetniFrame), width = 20).grid(row = 8, column = 0)
+        Button(self, text="Nazad na početnu stranu", command=lambda: controller.show_frame(PocetniFrame), width = 20).grid(row = 8, column = 0)
         
         # informacije o tipovima igraca, nazivu fajla u kome se pise ili cita stanje igre itd. prosledjujem IgraFrame-u preko kwargs, koje on onda u konstruktoru procita
         Button(self, text="Pokreni igru", command=lambda: controller.show_frame(IgraFrame, igrac1 = cb1.get(), igrac2 = cb2.get(), naziv_fajla = self.naziv_fajla_labela["text"], stampaj_vrednosti_svih_poteza = stampaj_vrednosti_algoritma.get(), preskoci_crtanje_poteza = preskoci_crtanje_poteza.get()), width = 20).grid(row = 8, column = 1)
@@ -148,7 +148,7 @@ class IgraFrame(Frame):
 
         self.igraCanvas = IgraCanvas(self, igrac1, igrac2, naziv_fajla, stampanje_poteza == 1, preskoci_crtanje_poteza != 1)
         self.igraCanvas.place(x = 150, y = 0)
-        Button(self, text="Nazad na pocetnu stranu", command=self.povratak_na_pocetnu).pack(side = BOTTOM, pady = 3)
+        Button(self, text="Nazad na početnu stranu", command=self.povratak_na_pocetnu).pack(side = BOTTOM, pady = 3)
         
 
     def povratak_na_pocetnu(self):
@@ -208,7 +208,7 @@ class PravilaFrame(Frame):
         Frame.__init__(self, parent)
         Label(self, text="Pravila igre Santorini", font=LARGE_FONT).pack(pady = 20)
         Label(self, text = self.__pravila_igre__, font = "Arial 13", justify = LEFT).pack(pady = 10)
-        Button(self, text="Nazad na pocetnu stranu", command=lambda: controller.show_frame(PocetniFrame)).pack(side = BOTTOM, pady = 10)
+        Button(self, text="Nazad na početnu stranu", command=lambda: controller.show_frame(PocetniFrame)).pack(side = BOTTOM, pady = 10)
 
 
 # pokretanje aplikacije
@@ -216,7 +216,5 @@ if __name__ == "__main__":
     app = Application()
     app.mainloop()
 
-#TODO celava latinica
-#TODO combobox da bude readonly\
 
 
