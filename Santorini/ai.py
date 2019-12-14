@@ -135,44 +135,6 @@ def svi_moguci_potezi(tabla, na_potezu):
     return moguci_potezi
 
 
-class Node:
-    """Klasa Node prestavlja jedan cvor u stablu, kao atribute ima vrednost i children(listu potomaka)."""
-    def __init__(self, vrednost = 0, children = None):
-        """Konstruktor koji postavlja vrednosti atributa klase.
-        
-        :param vrednost: Vrednost ovog cvora, defaults to 0
-        :type vrednost: int, optional
-        :param children: Lista potomaka cvora, defaults to None
-        :type children: lista, optional
-        """        
-        self.vrednost = vrednost
-        self.children = children or []
-    
-    def max_child_vrednost(self):
-        """Medju children(potomcima) ovog cvora nalazi onaj cvor koji ima najvecu vrednost i vraca njegovu vrednost.
-        
-        :return: Najveca vrednost medju potomcima ovog cvora
-        :rtype: int
-        """        
-        value = -math.inf
-        for node in self.children:
-            if (node.vrednost > value):
-                value = node.vrednost
-        return value
-
-    def min_child_vrednost(self):
-        """Medju children(potomcima) ovog cvora nalazi onaj cvor koji ima najmanju vrednost i vraca njegovu vrednost.
-        
-        :return: Najmanja vrednost medju potomcima ovog cvora
-        :rtype: int
-        """        
-        value = math.inf
-        for node in self.children:
-            if (node.vrednost < value):
-                value = node.vrednost
-        return value
-
-
 #Abstraktna klasa za AI
 class AI(ABC):
     """Abstraktna klasa koju nasledjuju sve klase koje implementiraju neku vrstu vestacke inteligencije.
@@ -222,82 +184,76 @@ class MiniMax(AI):
         """          
         super().__init__(stampaj_vrednosti_svih_poteza, dubina, funkcija_procene)
 
-    def sledeci_potez(self, tabla, na_potezu):
+    def sledeci_potez(self, tabla, igrac):
         """Igra poziva ovu funkcija, prosledjuje joj stanje i igraca a ova funkija vraca sledeci potez.
         Ovo je abstraktna funkcija tako da je moraju implementirati sve klase koje nasledjuju AI.
         
         :param tabla: Tabla za koju treba naci sledeci potez
         :type tabla: Tabla
-        :param na_potezu: Igrac koji je na potezu i za kojeg treba naci sledeci potez
-        :type na_potezu: int
-        """     
-
-        # moglo bi ovo i prostije da se odradi ali se u zadatku trazi da se stampaju vrednosti svih mogucih poteza pa moram da ga iskomplikujem malo   
-        stablo = self.kreiraj_stablo_i_izvrsi_minimax(tabla, self.dubina, na_potezu, True, None)
-        svi_potezi = svi_moguci_potezi(tabla, na_potezu)
-
-        # stampaj vrednosti svih poteza
+        :param igrac: Igrac koji je na potezu, za kojeg treba naci sledeci potez i za koga se kroz algoritam racuna staticka f-ja procene
+        :type igrac: int
+        """   
+        svi_potezi = svi_moguci_potezi(tabla, igrac)
+        vrednosti = []
+        # nadji vrednosti svih mogucih poteza
+        for p in svi_potezi:
+            nova_tabla = Tabla(tabla)
+            nova_tabla.izvrsi_potez(p)
+            vrednosti.append(self.minimax(nova_tabla, self.dubina - 1, igrac, False, p))
+        
+        # stampaj vrednosti svih poteza ako treba
         if self.stampaj_vrednosti_svih_poteza:
-            print(f"\n\n\nNa potezu je {na_potezu}, koristi se algoritam MiniMax i vrednsti svih mogucih poteza su:")
+            print(f"\n\n\nNa potezu je {igrac}, koristi se algoritam MiniMax NOVI NOVI i vrednsti svih mogucih poteza su:")
             for i in range(len(svi_potezi)):
-                print(svi_potezi[i], stablo.children[i].vrednost)
+                print(svi_potezi[i], vrednosti[i])
         
         # nadji najbolji potez i vrati ga
-        for i in range(len(svi_potezi)):
-            if stablo.children[i].vrednost == stablo.vrednost:
-                return svi_potezi[i]
+        indexMaximuma = vrednosti.index(max(vrednosti))
+        return svi_potezi[indexMaximuma]
 
-
-    def kreiraj_stablo_i_izvrsi_minimax(self, tabla, dubina, na_potezu, maximizing_player, potez):
-        """Rekurzivna funkcija koja kreira stablo dubine n, stablo se sastoji od Node objekata, tj. za svaki cvor se pamti samo vrednost tog
-        cvora i njegovi potomci, nad tim stablom se izvrsava minimax i popuni se vrednost svih cvorova u stablu. Ovaj algoritam je uradjen po 
-        ugledu na psudo kod minimax algoritma sa moodle-a
+    def minimax(self, tabla, dubina, igrac, maximizing_player, potez):
+        """Rekurzivna funkcija koja racuna (samo) vrednost koju ce minimax algoritam vratiti za prosledjenu tabelu/stanje.
+        Ovaj algoritam je uradjen po ugledu na psudo kod minimax algoritma sa moodle-a.
         
         :param tabla: Tabla nad kojom treba izvrsavati poteze ili za koju treba racunati staticku funkciju procene
         :type tabla: Tabla
         :param dubina: Dubina razvijanja stabla
         :type dubina: int
-        :param na_potezu: Igrac za kojeg se racuna staticka funkcija procene
-        :type na_potezu: int
+        :param igrac: Igrac za kojeg se racuna staticka funkcija procene
+        :type igrac: int
         :param maximizing_player: Da li treba uzimati max ili min vrednost od potomaka
         :type maximizing_player: bool
         :param potez: Potez koji je doveo do ovog stanja
         :type potez: Potez
-        :return: Stablo dubine n koje se sastoji od Node objekata, nad kojim je izvrsen minimax i pronadjena vrednost svakog cvora
-        :rtype: Node
+        :return: Vrednost koji ce minimimax algoritam nadji za stablo koje nastaje iz prosledjene table
+        :rtype: int
         """
         # ako ne treba dalje razvijati stablo vracamo staticku funkciju procene        
         if dubina == 0:
-            vrednost = self.funkcija_procene(tabla, potez, na_potezu)
-            return Node(vrednost)
+            return self.funkcija_procene(tabla, potez, igrac)
         
-        # pronalazimo sve moguce poteze iz ovog stabla u zavisnosti od toga koji igrac povlaci sad potez
+        # pronalazimo sve moguce poteze iz ovog stanja u zavisnosti od toga koji igrac je sada na potezu
         if maximizing_player:
-            svi_potezi = svi_moguci_potezi(tabla, na_potezu)
+            svi_potezi = svi_moguci_potezi(tabla, igrac)
         else:
-            svi_potezi = svi_moguci_potezi(tabla, protivnik(na_potezu))
+            svi_potezi = svi_moguci_potezi(tabla, protivnik(igrac))
 
         # ako nema mogucih poteza vrati vrednost tog cvora vracamo staticku funkciju procene
         if len(svi_potezi) == 0:
-            vrednost = self.funkcija_procene(tabla, potez, na_potezu)
-            return Node(vrednost)
-        else: # inace kreiraj novi node i dodaj mu vrednosti svih mogucih sledecih poteza kao children
-            novi_node = Node()
+            return self.funkcija_procene(tabla, potez, igrac)
+        else: # inace nadji vrednosti svih mogucih poteza iz ovog stanja
+            vrednosti = []
             for p in svi_potezi:
-                #nova_tabla = copy.deepcopy(tabla) deepcopy je ZLO
                 nova_tabla = Tabla(tabla)
                 nova_tabla.izvrsi_potez(p)
-                novi_node.children.append(self.kreiraj_stablo_i_izvrsi_minimax(nova_tabla, dubina - 1, na_potezu, not maximizing_player, p))
+                vrednosti.append(self.minimax(nova_tabla, dubina - 1, igrac, not maximizing_player, p))
 
         # nalazimo minimalnu ili maksimalu vrednost medju potomcima cvora i postavljamo je za vrednost tog cvora
         if maximizing_player:
-            novi_node.vrednost = novi_node.max_child_vrednost()
+            return max(vrednosti)
         else:
-            novi_node.vrednost = novi_node.min_child_vrednost()
-        
-        return novi_node
+            return min(vrednosti)
 
-    
 
 class MiniMaxAlfaBeta(AI): 
     """Klasa koja nasledjuje AI i implementira MiniMax algoritam sa alfa-beta odsecanjem""" 
@@ -408,7 +364,6 @@ class MiniMaxAlfaBeta(AI):
                 beta = min(beta, v)
         return v
 
-
 #test
 if __name__ == "__main__":
     tabla = Tabla()
@@ -421,7 +376,7 @@ if __name__ == "__main__":
     ukupno = 0
     for i in range(10):
         start = time.time()
-        potez = MiniMax(False).sledeci_potez(tabla, IGRAC_PLAVI)
+        potez = MiniMaxAlfaBeta(False, 4).sledeci_potez(tabla, IGRAC_PLAVI)
         print(potez)
         print("Vreme potrebno za izracunavanje: ", time.time() - start)
         ukupno += time.time() - start
@@ -431,7 +386,7 @@ if __name__ == "__main__":
     ukupno = 0
     for i in range(10):
         start = time.time()
-        potez = MiniMaxAlfaBeta(False).sledeci_potez(tabla, IGRAC_PLAVI)
+        potez = MiniMax(False, 3).sledeci_potez(tabla, IGRAC_PLAVI)
         print(potez)
         print("Vreme potrebno za izracunavanje: ", time.time() - start)
         ukupno += time.time() - start
