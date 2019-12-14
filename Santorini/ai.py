@@ -257,7 +257,6 @@ class MiniMax(AI):
 
 class MiniMaxAlfaBeta(AI): 
     """Klasa koja nasledjuje AI i implementira MiniMax algoritam sa alfa-beta odsecanjem""" 
-    lista_poteza = []
 
     def __init__(self, stampaj_vrednosti_svih_poteza,dubina = 3, funkcija_procene = staticka_funkcija_procene):    
         """Konsturtor sa parametrima koji postavlja vredsnoti atributa klase
@@ -282,34 +281,22 @@ class MiniMaxAlfaBeta(AI):
         :type na_potezu: int
         """     
         self.na_potezu = na_potezu
-        return self.alfa_beta_pretraga(tabla, self.dubina, None)
-   
-
-    #TODO da napisem komentare za ovo cudo i za ove funkcije ispod
-    def alfa_beta_pretraga(self, tabla, dubina, potez):
-        """Ovaj algoritam je uradjen po ugledu na psudo kod za alfa-beta pretragu iz knjige. Figure 5.7.
-        
-        :param tabla: Tabla nad kojom treba izvrsavati poteze ili za koju treba racunati staticku funkciju procene
-        :type tabla: Tabla
-        :param dubina: Dubina razvijanja stabla
-        :type dubina: int
-        :param potez: Potez koji je doveo do ovog stanja
-        :type potez: Potez
-        :return: Potez koji treba da se izvrsi
-        :rtype: Potezs
-        """        
-        self.lista_poteza.clear()
-        v = self.max_value(tabla, dubina, potez, -1000, 1000)
+        self.lista_poteza_i_njihovih_vrednosti = []
+        v = self.max_value(tabla, self.dubina, None, -1000, 1000)
 
         # stampaj vrednosti svih poteza
         if self.stampaj_vrednosti_svih_poteza:
             print(f"\n\n\nNa potezu je {self.na_potezu}, koristi se algoritam MiniMax sa Alfa Beta odsecanjem i vrednsti svih mogucih poteza su:")
-            for p in self.lista_poteza:
+            for p in self.lista_poteza_i_njihovih_vrednosti:
                 print(p[1], p[0])
         
-        for p in self.lista_poteza:
+        # vrati najbolji potez, tj. potez iz liste poteza koji ima vrednost koju vraca max_value funkcija
+        for p in self.lista_poteza_i_njihovih_vrednosti:
             if p[0] == v:
                 return p[1]
+   
+
+    #TODO da napisem komentare za ovo cudo i za ove funkcije ispod
 
     def max_value(self, tabla, dubina, potez, alfa, beta):
         if dubina == 0:
@@ -331,7 +318,7 @@ class MiniMaxAlfaBeta(AI):
 
                 # sad upisujem sve poteze u self.lista_poteza da bih na kraju znao koji da uzmem
                 if dubina == self.dubina:
-                    self.lista_poteza.append((nova_vrednost, p))
+                    self.lista_poteza_i_njihovih_vrednosti.append((nova_vrednost, p))
 
                 v = max(v, nova_vrednost)
                 if v >= beta:
