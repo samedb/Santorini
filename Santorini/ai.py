@@ -26,7 +26,6 @@ def staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):
     :rtype: int
     """    
     if tabla.pobeda(na_potezu):
-        #print("Pobeda")
         return 100
     if tabla.poraz(na_potezu):
         #print("Poraz")
@@ -40,15 +39,15 @@ def staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):
                 rastojanja += tabla.rastojanje(i, j, potez.xg, potez.yg)
             elif tabla.matrica[i][j].igrac != na_potezu and tabla.matrica[i][j].igrac != None:  # ako je protivnik
                 rastojanja -= tabla.rastojanje(i, j, potez.xg, potez.yg)
-    l = tabla.matrica[potez.xg][potez.yg].broj_spratova * rastojanja
-    return m + l
+    m = tabla.matrica[potez.xg][potez.yg].broj_spratova * rastojanja
+    return n + m
 
 
-
-#TODO ako je odredisno polje vece od trenutnog onda + nesto, + sprat odredisnog polja * 2, idk tako nesto
 def unapredjena_staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):
-    """Ovo je jednostavna staticka funkcija procene f,koja se računa kao 𝑓 = 𝑛 + 𝑚, gde je 𝑛 broj pločica odredišnog
-    polja, a 𝑚 broj nivoa na koje se dodaje plocica poomnozen razlikom rastojanja sopstvenih i protivnickih igraca od tog polja.
+    """Ovo je unapredjena staticka funkcija procene f,koja se računa kao 𝑓 = 3 * 𝑛 + 𝑚 + suma_visina + 5 * razlika_u_visini,
+    gde je 𝑛 broj pločica odredišnog polja, a 𝑚 broj nivoa na koje se dodaje plocica poomnozen razlikom rastojanja sopstvenih
+    i protivnickih igraca od tog polja, suma_visina je zbir visina spostvenih figura umanjen za zbir visina protivnickih figura,
+    razlika_u_visini je razlika u visini izmedju prethodne i sadasnje pozicije figure koja se krece.
     Da bi se ova funkcija izracunala pored stanja/table potreban mi je i potez koji dovodi to tog novog stanja kao i igrac koji 
     je trenutno na potezu.  
     
@@ -62,22 +61,25 @@ def unapredjena_staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu)
     :rtype: int
     """    
     if tabla.pobeda(na_potezu):
-        #print("Pobeda")
         return 100
     if tabla.poraz(na_potezu):
-        #print("Poraz")
         return -100
 
-    m = tabla.matrica[potez.x2][potez.y2].broj_spratova
+    n = tabla.matrica[potez.x2][potez.y2].broj_spratova
     rastojanja = 0
+    suma_visina = 0
     for i in range(5):
         for j in range(5):
             if tabla.matrica[i][j].igrac == na_potezu:
                 rastojanja += tabla.rastojanje(i, j, potez.xg, potez.yg)
+                suma_visina += tabla.matrica[i][j].broj_spratova
             elif tabla.matrica[i][j].igrac != na_potezu and tabla.matrica[i][j].igrac != None:  # ako je protivnik
                 rastojanja -= tabla.rastojanje(i, j, potez.xg, potez.yg)
-    l = tabla.matrica[potez.xg][potez.yg].broj_spratova * rastojanja
-    return 3 * m + l # za sad je samo ovo unapredjeno
+                suma_visina -= tabla.matrica[i][j].broj_spratova
+    m = tabla.matrica[potez.xg][potez.yg].broj_spratova * rastojanja
+
+    razlika_u_visini = tabla.matrica[potez.x2][potez.y2].broj_spratova - tabla.matrica[potez.x1][potez.x2].broj_spratova 
+    return 3 * n + m + suma_visina + 5 * razlika_u_visini 
 
 
 def svi_moguci_potezi(tabla, na_potezu):
@@ -186,6 +188,7 @@ class MiniMax(AI):
 
     def sledeci_potez(self, tabla, igrac):
         """Igra poziva ovu funkcija, prosledjuje joj stanje i igraca a ova funkija vraca sledeci potez.
+        Ovde se koriti obicni minimax algoritam za nalazenje najboljeg poteza.
         Ovo je abstraktna funkcija tako da je moraju implementirati sve klase koje nasledjuju AI.
         
         :param tabla: Tabla za koju treba naci sledeci potez
@@ -259,7 +262,7 @@ class MiniMaxAlfaBeta(AI):
     """Klasa koja nasledjuje AI i implementira MiniMax algoritam sa alfa-beta odsecanjem""" 
 
     def __init__(self, stampaj_vrednosti_svih_poteza,dubina = 3, funkcija_procene = staticka_funkcija_procene):    
-        """Konsturtor sa parametrima koji postavlja vredsnoti atributa klase
+        """Konsturtor sa parametrima koji postavlja vredsnoti atributa klase.
         
         :param stampaj_vrednosti_svih_poteza: Da li treba stampati vrednost svakom moguceg poteza AI
         :type stampaj_vrednosti_svih_poteza: bool
@@ -273,6 +276,7 @@ class MiniMaxAlfaBeta(AI):
 
     def sledeci_potez(self, tabla, na_potezu):
         """Igra poziva ovu funkcija, prosledjuje joj stanje i igraca a ova funkija vraca sledeci potez.
+        Ovde se koriti minimax sa alfa-beta odsecanjem za nalazenje najboljeg poteza.
         Ovo je abstraktna funkcija tako da je moraju implementirati sve klase koje nasledjuju AI.
         
         :param tabla: Tabla za koju treba naci sledeci potez
@@ -296,20 +300,31 @@ class MiniMaxAlfaBeta(AI):
                 return p[1]
    
 
-    #TODO da napisem komentare za ovo cudo i za ove funkcije ispod
-
     def max_value(self, tabla, dubina, potez, alfa, beta):
+        """Vraca maksimalnu vrednost podstabla uz upotrebu minimax algoritma sa alfa beta odsecanjem.
+        
+        :param tabla: Trenutna tabla/stanje igre, raspored figura i spratova
+        :type tabla: Tabla
+        :param dubina: Dubina do koje treba pretraziti stablo
+        :type dubina: int
+        :param potez: Potez koji je doveo do ove table/stanja
+        :type potez: Potez
+        :param alfa: Vrednost najboljeg izbora koji smo pronasli do sada tokom putanje za MAX
+        :type alfa: int
+        :param beta: Vrednost najboljeg izbofa (ovde je to najmanja vrednost) koju smo pronali do sada tokom putanja za MIN
+        :type beta: int
+        :return: Vraca maksimalu vrednost podstabla uz uptrebu minimax algoritma sa alfa beta odsecanjem
+        :rtype: int
+        """        
         if dubina == 0:
-            vrednost = self.funkcija_procene(tabla, potez, self.na_potezu)
-            return vrednost
+            return self.funkcija_procene(tabla, potez, self.na_potezu)
 
         v = -1000
 
         svi_potezi = svi_moguci_potezi(tabla, self.na_potezu)
         # ako nema mogucih poteza vrati vrednost tog cvora
         if len(svi_potezi) == 0:
-            vrednost = self.funkcija_procene(tabla, potez, self.na_potezu)
-            return vrednost
+            return self.funkcija_procene(tabla, potez, self.na_potezu)
         else:
             for p in svi_potezi:
                 nova_tabla = Tabla(tabla)
@@ -328,17 +343,30 @@ class MiniMaxAlfaBeta(AI):
 
 
     def min_value(self, tabla, dubina, potez, alfa, beta):
+        """Vraca minimalnu vrednost podstabla uz upotrebu minimax algoritma sa alfa beta odsecanjem.
+        
+        :param tabla: Trenutna tabla/stanje igre, raspored figura i spratova
+        :type tabla: Tabla
+        :param dubina: Dubina do koje treba pretraziti stablo
+        :type dubina: int
+        :param potez: Potez koji je doveo do ove table/stanja
+        :type potez: Potez
+        :param alfa: Vrednost najboljeg izbora koji smo pronasli do sada tokom putanje za MAX
+        :type alfa: int
+        :param beta: Vrednost najboljeg izbofa (ovde je to najmanja vrednost) koju smo pronali do sada tokom putanja za MIN
+        :type beta: int
+        :return: Vraca minimalnu vrednost podstabla uz uptrebu minimax algoritma sa alfa beta odsecanjem
+        :rtype: int
+        """       
         if dubina == 0:
-            vrednost = self.funkcija_procene(tabla, potez, self.na_potezu)
-            return vrednost
+            return self.funkcija_procene(tabla, potez, self.na_potezu)
 
         v = 1000
 
         svi_potezi = svi_moguci_potezi(tabla, protivnik(self.na_potezu))
         # ako nema mogucih poteza vrati vrednost tog cvora
         if len(svi_potezi) == 0:
-            vrednost = self.funkcija_procene(tabla, potez, self.na_potezu)
-            return vrednost
+            return self.funkcija_procene(tabla, potez, self.na_potezu)
         else:
             for p in svi_potezi:
                 nova_tabla = Tabla(tabla)
@@ -351,7 +379,8 @@ class MiniMaxAlfaBeta(AI):
                 beta = min(beta, v)
         return v
 
-#test
+#test vremena potregnog za nalazenje poteza
+#kad koristim pypy interpreter onda se vreme potrebno za nalazenje poteza za bilo koji algoritam smanji 10 do 15 puta :o
 if __name__ == "__main__":
     tabla = Tabla()
 

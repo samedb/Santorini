@@ -111,7 +111,8 @@ class IgraCanvas(Canvas):
         elif tip_igraca == TIPOVI_IGRACA[2]: #AI medium
             return MiniMaxAlfaBeta(stampaj_vrednosti_svih_poteza, 3, staticka_funkcija_procene)
         elif tip_igraca == TIPOVI_IGRACA[3]: #AI hard
-            return MiniMaxAlfaBeta(stampaj_vrednosti_svih_poteza, 4, unapredjena_staticka_funkcija_procene) 
+            return MiniMaxAlfaBeta(stampaj_vrednosti_svih_poteza, 3, unapredjena_staticka_funkcija_procene) 
+            #TODO ovo gore iznad, treba dubina da bude 4 za hard, ali sam smanjio zbog vremena koje je potrebno za pronalazenje poteza
     
 
     def crtaj(self):

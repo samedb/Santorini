@@ -257,7 +257,8 @@
         <span class="k">elif</span> <span class="n">tip_igraca</span> <span class="o">==</span> <span class="n">TIPOVI_IGRACA</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span> <span class="c1">#AI medium</span>
             <span class="k">return</span> <span class="n">MiniMaxAlfaBeta</span><span class="p">(</span><span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">staticka_funkcija_procene</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">tip_igraca</span> <span class="o">==</span> <span class="n">TIPOVI_IGRACA</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span> <span class="c1">#AI hard</span>
-            <span class="k">return</span> <span class="n">MiniMaxAlfaBeta</span><span class="p">(</span><span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">unapredjena_staticka_funkcija_procene</span><span class="p">)</span> </div>
+            <span class="k">return</span> <span class="n">MiniMaxAlfaBeta</span><span class="p">(</span><span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">unapredjena_staticka_funkcija_procene</span><span class="p">)</span> </div>
+            <span class="c1">#TODO ovo gore iznad, treba dubina da bude 4 za hard, ali sam smanjio zbog vremena koje je potrebno za pronalazenje poteza</span>
     
 
 <div class="viewcode-block" id="IgraCanvas.crtaj"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas.crtaj">[docs]</a>    <span class="k">def</span> <span class="nf">crtaj</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -507,7 +508,6 @@
 <div class="viewcode-block" id="IgraCanvas.zatovori_fajl"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas.zatovori_fajl">[docs]</a>    <span class="k">def</span> <span class="nf">zatovori_fajl</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Zatvara fajl self.f&quot;&quot;&quot;</span>        
         <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
-    
 </pre></div>
 
            </div>
