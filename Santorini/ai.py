@@ -28,10 +28,9 @@ def staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):
     if tabla.pobeda(na_potezu):
         return 100
     if tabla.poraz(na_potezu):
-        #print("Poraz")
         return -100
 
-    m = tabla.matrica[potez.x2][potez.y2].broj_spratova
+    n = tabla.matrica[potez.x2][potez.y2].broj_spratova
     rastojanja = 0
     for i in range(5):
         for j in range(5):
