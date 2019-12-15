@@ -1,11 +1,6 @@
 """Modul ai je odgovoran za vestacku inteligenciju igre Santorini, sadrzi klase koje implementiraju minimax i minimax + alfa-beta,
-funkcije za staticku procenu stanja itd. Sve sto ima veze za AI ove igre nalazi se ovde.
-"""
-
+funkcije za staticku procenu stanja itd. Sve sto ima veze za AI ove igre nalazi se ovde."""
 from tabla import Tabla, IGRAC_CRVENI, IGRAC_PLAVI, protivnik, Potez
-import math
-import random
-import copy
 import time
 from abc import ABC, abstractmethod
 
@@ -44,11 +39,11 @@ def staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):
 
 def unapredjena_staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):
     """Ovo je unapredjena staticka funkcija procene f,koja se računa kao 𝑓 = 3 * 𝑛 + 𝑚 + suma_visina + 5 * razlika_u_visini,
-    gde je 𝑛 broj pločica odredišnog polja, a 𝑚 broj nivoa na koje se dodaje plocica poomnozen razlikom rastojanja sopstvenih
-    i protivnickih igraca od tog polja, suma_visina je zbir visina spostvenih figura umanjen za zbir visina protivnickih figura,
-    razlika_u_visini je razlika u visini izmedju prethodne i sadasnje pozicije figure koja se krece.
-    Da bi se ova funkcija izracunala pored stanja/table potreban mi je i potez koji dovodi to tog novog stanja kao i igrac koji 
-    je trenutno na potezu.  
+    gde je 𝑛 broj pločica odredišnog polja, a 𝑚 broj nivoa na koje se dodaje plocica poomnozen razlikom rastojanja
+    sopstvenih i protivnickih igraca od tog polja, suma_visina je zbir visina spostvenih figura umanjen za zbir visina
+    protivnickih figura,razlika_u_visini je razlika u visini izmedju prethodne i sadasnje pozicije figure koja se krece.
+    Da bi se ova funkcija izracunala pored stanja/table potreban mi je i potez koji dovodi to tog novog stanja kao i
+    igrac koji je trenutno na potezu.
     
     :param tabla: Tabla/stanje za koju treba izracunati staticku funkciju procene
     :type tabla: Tabla
@@ -136,13 +131,12 @@ def svi_moguci_potezi(tabla, na_potezu):
     return moguci_potezi
 
 
-#Abstraktna klasa za AI
 class AI(ABC):
     """Abstraktna klasa koju nasledjuju sve klase koje implementiraju neku vrstu vestacke inteligencije.
     Od atributa ima dubinu, funkciju koja racuna staticku vrednost i bool da li treba stampati vrednosti svih mogucih poteza AI algoritma .
     """    
 
-    def __init__(self, stampaj_vrednosti_svih_poteza,dubina = 2, funkcija_procene = staticka_funkcija_procene):
+    def __init__(self, stampaj_vrednosti_svih_poteza, dubina = 2, funkcija_procene = staticka_funkcija_procene):
         """Konsturtor sa parametrima koji postavlja vredsnoti atributa klase
         
         :param stampaj_vrednosti_svih_poteza: Da li treba stampati vrednost svakom moguceg poteza AI
@@ -155,7 +149,6 @@ class AI(ABC):
         self.stampaj_vrednosti_svih_poteza = stampaj_vrednosti_svih_poteza
         self.dubina = dubina
         self.funkcija_procene = funkcija_procene
-
 
     @abstractmethod
     def sledeci_potez(self, tabla, na_potezu):
@@ -210,8 +203,8 @@ class MiniMax(AI):
                 print(svi_potezi[i], vrednosti[i])
         
         # nadji najbolji potez i vrati ga
-        indexMaximuma = vrednosti.index(max(vrednosti))
-        return svi_potezi[indexMaximuma]
+        index_maximuma = vrednosti.index(max(vrednosti))
+        return svi_potezi[index_maximuma]
 
     def minimax(self, tabla, dubina, igrac, maximizing_player, potez):
         """Rekurzivna funkcija koja racuna (samo) vrednost koju ce minimax algoritam vratiti za prosledjenu tabelu/stanje.
@@ -297,7 +290,6 @@ class MiniMaxAlfaBeta(AI):
         for p in self.lista_poteza_i_njihovih_vrednosti:
             if p[0] == v:
                 return p[1]
-   
 
     def max_value(self, tabla, dubina, potez, alfa, beta):
         """Vraca maksimalnu vrednost podstabla uz upotrebu minimax algoritma sa alfa beta odsecanjem.
@@ -340,7 +332,6 @@ class MiniMaxAlfaBeta(AI):
                 alfa = max(alfa, v)
         return v
 
-
     def min_value(self, tabla, dubina, potez, alfa, beta):
         """Vraca minimalnu vrednost podstabla uz upotrebu minimax algoritma sa alfa beta odsecanjem.
         
@@ -378,8 +369,9 @@ class MiniMaxAlfaBeta(AI):
                 beta = min(beta, v)
         return v
 
-#test vremena potregnog za nalazenje poteza
-#kad koristim pypy interpreter onda se vreme potrebno za nalazenje poteza za bilo koji algoritam smanji 10 do 15 puta :o
+
+# test vremena potregnog za nalazenje poteza
+# kad koristim pypy interpreter onda se vreme potrebno za nalazenje poteza za bilo koji algoritam smanji 10 do 15 puta
 if __name__ == "__main__":
     tabla = Tabla()
 

@@ -1,11 +1,11 @@
 """Modul tabla sadrzi funkcije i pomocne klase koje se koriste u ai.py i igra.py.
-To su klase Polje, Tabla, Potez, GameState
-"""
+To su klase Polje, Tabla, Potez, GameState"""
 from enum import Enum
 
 # Globalne varijable koje predstavljaju igrace, 0 je plavi, 1 je crveni
 IGRAC_PLAVI = 0
 IGRAC_CRVENI = 1
+
 
 def protivnik(igrac):
     """Vraca protivnika igraca kojeg prosledimo kao parametar.
@@ -28,7 +28,7 @@ class GameState(Enum):
     KRAJ_IGRE = 4
 
 
-class Potez():
+class Potez:
     """Preko ove klase predstavlja se jedan potez u igri Santorini, potez se sastoji od pomeranja i gradnje.
     Prema tome od atributa treba da sadrzi pocetno polje, odredisno polje i polje na kojem se gradi.
     """    
@@ -56,10 +56,10 @@ class Potez():
         self.xg = xg
         self.yg = yg
 
-
     @staticmethod
     def iz_stringa(text):
-        """Staticka funkcija koja prima string jednog poteza kako se on upisuje u fajl i pretvara ga u objekat klase Potez koji vraca.
+        """Staticka funkcija koja prima string jednog poteza kako se on upisuje u fajl i
+        pretvara ga u objekat klase Potez koji vraca.
         
         :param text: Potez u tekstualnom obliku, onako kako se pise u fajlu
         :type text: str
@@ -72,7 +72,6 @@ class Potez():
         p.x2, p.y2 = Potez.string_u_koordinate(reci[1])
         p.xg, p.yg = Potez.string_u_koordinate(reci[2])
         return p
-
 
     @staticmethod
     def string_u_koordinate(text):
@@ -87,7 +86,6 @@ class Potez():
         y = ord(text[1]) - ord("0")
         return x, y
 
-
     @staticmethod
     def koordinate_u_string(x, y):
         """Staticka funkija koja prima x i y kooridnate i vraca string koji dogovara tim koordinatama npr. B2, C0.
@@ -101,7 +99,6 @@ class Potez():
         """        
         return f"{chr(x + 65)}{y}"
 
-
     def __str__(self):
         """Preklopljenja funkcija str koja ispisuje Potez u formatu koji se trazi u zadatku npr. A0 A1 B2.
         
@@ -110,26 +107,26 @@ class Potez():
         """        
         return f"{Potez.koordinate_u_string(self.x1, self.y1)} {Potez.koordinate_u_string(self.x2, self.y2)} {Potez.koordinate_u_string(self.xg, self.yg)}"
 
-
     def __repr__(self):
-        #isto kao i __str__
+        # isto kao i __str__
         return self.__str__()
         
 
-class Polje():
-    """Klasa koja predstavlja jedno polje u tabli, polje je opisano brojem spratova i igracem koji se trenutno nalazi u tom polju."""    
+class Polje:
+    """Klasa koja predstavlja jedno polje u tabli, polje je opisano brojem spratova
+    i igracem koji se trenutno nalazi u tom polju."""
     broj_spratova = 0
     igrac = None
 
 
-class Tabla():
+class Tabla:
     """Tabla je matrica objekata klase Polje i predstavlja glavnu klasu za igru Santorini."""
 
     def __init__(self, tabla = None):
         """Konstruktor klase Tabla, kreira matricu Polja koja je u pocetku prazna.
-        On je istovremeno i copy construktor (posto u pythonu mora da ima samo jedan ctor), ukoliko se kao drugi parametar prosledi
-        tabla on kopira njen sadrzaj u trenutnu tablu.
-        Ovo je uradjeno zbog performansi, funkcija koji ima python copy.deepcopy(object) je bila previse spora pa sam napravio svoj copy ctor
+        On je istovremeno i copy construktor (posto u pythonu mora da ima samo jedan ctor), ukoliko se kao drugi
+        parametar prosledi tabla on kopira njen sadrzaj u trenutnu tablu. Ovo je uradjeno zbog performansi, funkcija
+        koji ima python copy.deepcopy(object) je bila previse spora pa sam napravio svoj copy ctor.
         
         :param tabla: tabla ciji sadrzaj treba prekopriati u ovom objektu, defaults to None
         :type tabla: Tabla, optional
@@ -148,8 +145,6 @@ class Tabla():
                     if tabla.matrica[i][j].igrac != None:
                         self.matrica[i][j].igrac = tabla.matrica[i][j].igrac
 
-
-
     def postavi_figuru(self, x, y, igrac):
         """Postavlja figuru igraca na koordinate x, y u tabli ako je to polje slobodno.
         
@@ -162,7 +157,6 @@ class Tabla():
         """        
         if self.matrica[x][y].igrac == None:
             self.matrica[x][y].igrac = igrac
-
 
     def pomeri_figuru(self, x1, y1, x2, y2):
         """Pomera figuru sa pocetnog na odredisno polje.
