@@ -145,13 +145,8 @@
             
   <h1>Source code for ai</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Modul ai je odgovoran za vestacku inteligenciju igre Santorini, sadrzi klase koje implementiraju minimax i minimax + alfa-beta,</span>
-<span class="sd">funkcije za staticku procenu stanja itd. Sve sto ima veze za AI ove igre nalazi se ovde.</span>
-<span class="sd">&quot;&quot;&quot;</span>
-
+<span class="sd">funkcije za staticku procenu stanja itd. Sve sto ima veze za AI ove igre nalazi se ovde.&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">tabla</span> <span class="k">import</span> <span class="n">Tabla</span><span class="p">,</span> <span class="n">IGRAC_CRVENI</span><span class="p">,</span> <span class="n">IGRAC_PLAVI</span><span class="p">,</span> <span class="n">protivnik</span><span class="p">,</span> <span class="n">Potez</span>
-<span class="kn">import</span> <span class="nn">math</span>
-<span class="kn">import</span> <span class="nn">random</span>
-<span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">abc</span> <span class="k">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
 
@@ -190,11 +185,11 @@
 
 <div class="viewcode-block" id="unapredjena_staticka_funkcija_procene"><a class="viewcode-back" href="../ai.html#ai.unapredjena_staticka_funkcija_procene">[docs]</a><span class="k">def</span> <span class="nf">unapredjena_staticka_funkcija_procene</span><span class="p">(</span><span class="n">tabla</span><span class="p">:</span> <span class="n">Tabla</span><span class="p">,</span> <span class="n">potez</span><span class="p">:</span> <span class="n">Potez</span><span class="p">,</span> <span class="n">na_potezu</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Ovo je unapredjena staticka funkcija procene f,koja se računa kao 𝑓 = 3 * 𝑛 + 𝑚 + suma_visina + 5 * razlika_u_visini,</span>
-<span class="sd">    gde je 𝑛 broj pločica odredišnog polja, a 𝑚 broj nivoa na koje se dodaje plocica poomnozen razlikom rastojanja sopstvenih</span>
-<span class="sd">    i protivnickih igraca od tog polja, suma_visina je zbir visina spostvenih figura umanjen za zbir visina protivnickih figura,</span>
-<span class="sd">    razlika_u_visini je razlika u visini izmedju prethodne i sadasnje pozicije figure koja se krece.</span>
-<span class="sd">    Da bi se ova funkcija izracunala pored stanja/table potreban mi je i potez koji dovodi to tog novog stanja kao i igrac koji </span>
-<span class="sd">    je trenutno na potezu.  </span>
+<span class="sd">    gde je 𝑛 broj pločica odredišnog polja, a 𝑚 broj nivoa na koje se dodaje plocica poomnozen razlikom rastojanja</span>
+<span class="sd">    sopstvenih i protivnickih igraca od tog polja, suma_visina je zbir visina spostvenih figura umanjen za zbir visina</span>
+<span class="sd">    protivnickih figura,razlika_u_visini je razlika u visini izmedju prethodne i sadasnje pozicije figure koja se krece.</span>
+<span class="sd">    Da bi se ova funkcija izracunala pored stanja/table potreban mi je i potez koji dovodi to tog novog stanja kao i</span>
+<span class="sd">    igrac koji je trenutno na potezu.</span>
 <span class="sd">    </span>
 <span class="sd">    :param tabla: Tabla/stanje za koju treba izracunati staticku funkciju procene</span>
 <span class="sd">    :type tabla: Tabla</span>
@@ -282,13 +277,12 @@
     <span class="k">return</span> <span class="n">moguci_potezi</span></div>
 
 
-<span class="c1">#Abstraktna klasa za AI</span>
 <div class="viewcode-block" id="AI"><a class="viewcode-back" href="../ai.html#ai.AI">[docs]</a><span class="k">class</span> <span class="nc">AI</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Abstraktna klasa koju nasledjuju sve klase koje implementiraju neku vrstu vestacke inteligencije.</span>
 <span class="sd">    Od atributa ima dubinu, funkciju koja racuna staticku vrednost i bool da li treba stampati vrednosti svih mogucih poteza AI algoritma .</span>
 <span class="sd">    &quot;&quot;&quot;</span>    
 
-<div class="viewcode-block" id="AI.__init__"><a class="viewcode-back" href="../ai.html#ai.AI.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span><span class="n">dubina</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">funkcija_procene</span> <span class="o">=</span> <span class="n">staticka_funkcija_procene</span><span class="p">):</span>
+<div class="viewcode-block" id="AI.__init__"><a class="viewcode-back" href="../ai.html#ai.AI.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span> <span class="n">dubina</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">funkcija_procene</span> <span class="o">=</span> <span class="n">staticka_funkcija_procene</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Konsturtor sa parametrima koji postavlja vredsnoti atributa klase</span>
 <span class="sd">        </span>
 <span class="sd">        :param stampaj_vrednosti_svih_poteza: Da li treba stampati vrednost svakom moguceg poteza AI</span>
@@ -301,7 +295,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">stampaj_vrednosti_svih_poteza</span> <span class="o">=</span> <span class="n">stampaj_vrednosti_svih_poteza</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">dubina</span> <span class="o">=</span> <span class="n">dubina</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">funkcija_procene</span> <span class="o">=</span> <span class="n">funkcija_procene</span></div>
-
 
 <div class="viewcode-block" id="AI.sledeci_potez"><a class="viewcode-back" href="../ai.html#ai.AI.sledeci_potez">[docs]</a>    <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">sledeci_potez</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tabla</span><span class="p">,</span> <span class="n">na_potezu</span><span class="p">):</span>
@@ -356,8 +349,8 @@
                 <span class="nb">print</span><span class="p">(</span><span class="n">svi_potezi</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">vrednosti</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
         
         <span class="c1"># nadji najbolji potez i vrati ga</span>
-        <span class="n">indexMaximuma</span> <span class="o">=</span> <span class="n">vrednosti</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">vrednosti</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">svi_potezi</span><span class="p">[</span><span class="n">indexMaximuma</span><span class="p">]</span></div>
+        <span class="n">index_maximuma</span> <span class="o">=</span> <span class="n">vrednosti</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">vrednosti</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">svi_potezi</span><span class="p">[</span><span class="n">index_maximuma</span><span class="p">]</span></div>
 
 <div class="viewcode-block" id="MiniMax.minimax"><a class="viewcode-back" href="../ai.html#ai.MiniMax.minimax">[docs]</a>    <span class="k">def</span> <span class="nf">minimax</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tabla</span><span class="p">,</span> <span class="n">dubina</span><span class="p">,</span> <span class="n">igrac</span><span class="p">,</span> <span class="n">maximizing_player</span><span class="p">,</span> <span class="n">potez</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Rekurzivna funkcija koja racuna (samo) vrednost koju ce minimax algoritam vratiti za prosledjenu tabelu/stanje.</span>
@@ -443,7 +436,6 @@
         <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lista_poteza_i_njihovih_vrednosti</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">v</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
-   
 
 <div class="viewcode-block" id="MiniMaxAlfaBeta.max_value"><a class="viewcode-back" href="../ai.html#ai.MiniMaxAlfaBeta.max_value">[docs]</a>    <span class="k">def</span> <span class="nf">max_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tabla</span><span class="p">,</span> <span class="n">dubina</span><span class="p">,</span> <span class="n">potez</span><span class="p">,</span> <span class="n">alfa</span><span class="p">,</span> <span class="n">beta</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Vraca maksimalnu vrednost podstabla uz upotrebu minimax algoritma sa alfa beta odsecanjem.</span>
@@ -486,7 +478,6 @@
                 <span class="n">alfa</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">alfa</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">v</span></div>
 
-
 <div class="viewcode-block" id="MiniMaxAlfaBeta.min_value"><a class="viewcode-back" href="../ai.html#ai.MiniMaxAlfaBeta.min_value">[docs]</a>    <span class="k">def</span> <span class="nf">min_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tabla</span><span class="p">,</span> <span class="n">dubina</span><span class="p">,</span> <span class="n">potez</span><span class="p">,</span> <span class="n">alfa</span><span class="p">,</span> <span class="n">beta</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Vraca minimalnu vrednost podstabla uz upotrebu minimax algoritma sa alfa beta odsecanjem.</span>
 <span class="sd">        </span>
@@ -524,8 +515,9 @@
                 <span class="n">beta</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">v</span></div></div>
 
-<span class="c1">#test vremena potregnog za nalazenje poteza</span>
-<span class="c1">#kad koristim pypy interpreter onda se vreme potrebno za nalazenje poteza za bilo koji algoritam smanji 10 do 15 puta :o</span>
+
+<span class="c1"># test vremena potregnog za nalazenje poteza</span>
+<span class="c1"># kad koristim pypy interpreter onda se vreme potrebno za nalazenje poteza za bilo koji algoritam smanji 10 do 15 puta</span>
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="n">tabla</span> <span class="o">=</span> <span class="n">Tabla</span><span class="p">()</span>
 

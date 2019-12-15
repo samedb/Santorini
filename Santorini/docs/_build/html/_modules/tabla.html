@@ -145,13 +145,13 @@
             
   <h1>Source code for tabla</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Modul tabla sadrzi funkcije i pomocne klase koje se koriste u ai.py i igra.py.</span>
-<span class="sd">To su klase Polje, Tabla, Potez, GameState</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">To su klase Polje, Tabla, Potez, GameState&quot;&quot;&quot;</span>
 <span class="kn">from</span> <span class="nn">enum</span> <span class="k">import</span> <span class="n">Enum</span>
 
 <span class="c1"># Globalne varijable koje predstavljaju igrace, 0 je plavi, 1 je crveni</span>
 <span class="n">IGRAC_PLAVI</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">IGRAC_CRVENI</span> <span class="o">=</span> <span class="mi">1</span>
+
 
 <div class="viewcode-block" id="protivnik"><a class="viewcode-back" href="../tabla.html#tabla.protivnik">[docs]</a><span class="k">def</span> <span class="nf">protivnik</span><span class="p">(</span><span class="n">igrac</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Vraca protivnika igraca kojeg prosledimo kao parametar.</span>
@@ -174,7 +174,7 @@
     <span class="n">KRAJ_IGRE</span> <span class="o">=</span> <span class="mi">4</span></div>
 
 
-<div class="viewcode-block" id="Potez"><a class="viewcode-back" href="../tabla.html#tabla.Potez">[docs]</a><span class="k">class</span> <span class="nc">Potez</span><span class="p">():</span>
+<div class="viewcode-block" id="Potez"><a class="viewcode-back" href="../tabla.html#tabla.Potez">[docs]</a><span class="k">class</span> <span class="nc">Potez</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Preko ove klase predstavlja se jedan potez u igri Santorini, potez se sastoji od pomeranja i gradnje.</span>
 <span class="sd">    Prema tome od atributa treba da sadrzi pocetno polje, odredisno polje i polje na kojem se gradi.</span>
 <span class="sd">    &quot;&quot;&quot;</span>    
@@ -202,10 +202,10 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">xg</span> <span class="o">=</span> <span class="n">xg</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">yg</span> <span class="o">=</span> <span class="n">yg</span></div>
 
-
 <div class="viewcode-block" id="Potez.iz_stringa"><a class="viewcode-back" href="../tabla.html#tabla.Potez.iz_stringa">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">iz_stringa</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Staticka funkcija koja prima string jednog poteza kako se on upisuje u fajl i pretvara ga u objekat klase Potez koji vraca.</span>
+        <span class="sd">&quot;&quot;&quot;Staticka funkcija koja prima string jednog poteza kako se on upisuje u fajl i</span>
+<span class="sd">        pretvara ga u objekat klase Potez koji vraca.</span>
 <span class="sd">        </span>
 <span class="sd">        :param text: Potez u tekstualnom obliku, onako kako se pise u fajlu</span>
 <span class="sd">        :type text: str</span>
@@ -218,7 +218,6 @@
         <span class="n">p</span><span class="o">.</span><span class="n">x2</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">y2</span> <span class="o">=</span> <span class="n">Potez</span><span class="o">.</span><span class="n">string_u_koordinate</span><span class="p">(</span><span class="n">reci</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
         <span class="n">p</span><span class="o">.</span><span class="n">xg</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">yg</span> <span class="o">=</span> <span class="n">Potez</span><span class="o">.</span><span class="n">string_u_koordinate</span><span class="p">(</span><span class="n">reci</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">p</span></div>
-
 
 <div class="viewcode-block" id="Potez.string_u_koordinate"><a class="viewcode-back" href="../tabla.html#tabla.Potez.string_u_koordinate">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">string_u_koordinate</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
@@ -233,7 +232,6 @@
         <span class="n">y</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="n">text</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="nb">ord</span><span class="p">(</span><span class="s2">&quot;0&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span></div>
 
-
 <div class="viewcode-block" id="Potez.koordinate_u_string"><a class="viewcode-back" href="../tabla.html#tabla.Potez.koordinate_u_string">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">koordinate_u_string</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Staticka funkija koja prima x i y kooridnate i vraca string koji dogovara tim koordinatama npr. B2, C0.</span>
@@ -247,7 +245,6 @@
 <span class="sd">        &quot;&quot;&quot;</span>        
         <span class="k">return</span> <span class="n">f</span><span class="s2">&quot;{chr(x + 65)}</span><span class="si">{y}</span><span class="s2">&quot;</span></div>
 
-
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Preklopljenja funkcija str koja ispisuje Potez u formatu koji se trazi u zadatku npr. A0 A1 B2.</span>
 <span class="sd">        </span>
@@ -256,26 +253,26 @@
 <span class="sd">        &quot;&quot;&quot;</span>        
         <span class="k">return</span> <span class="n">f</span><span class="s2">&quot;{Potez.koordinate_u_string(self.x1, self.y1)} {Potez.koordinate_u_string(self.x2, self.y2)} {Potez.koordinate_u_string(self.xg, self.yg)}&quot;</span>
 
-
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1">#isto kao i __str__</span>
+        <span class="c1"># isto kao i __str__</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span></div>
         
 
-<div class="viewcode-block" id="Polje"><a class="viewcode-back" href="../tabla.html#tabla.Polje">[docs]</a><span class="k">class</span> <span class="nc">Polje</span><span class="p">():</span>
-    <span class="sd">&quot;&quot;&quot;Klasa koja predstavlja jedno polje u tabli, polje je opisano brojem spratova i igracem koji se trenutno nalazi u tom polju.&quot;&quot;&quot;</span>    
+<div class="viewcode-block" id="Polje"><a class="viewcode-back" href="../tabla.html#tabla.Polje">[docs]</a><span class="k">class</span> <span class="nc">Polje</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Klasa koja predstavlja jedno polje u tabli, polje je opisano brojem spratova</span>
+<span class="sd">    i igracem koji se trenutno nalazi u tom polju.&quot;&quot;&quot;</span>
     <span class="n">broj_spratova</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">igrac</span> <span class="o">=</span> <span class="kc">None</span></div>
 
 
-<div class="viewcode-block" id="Tabla"><a class="viewcode-back" href="../tabla.html#tabla.Tabla">[docs]</a><span class="k">class</span> <span class="nc">Tabla</span><span class="p">():</span>
+<div class="viewcode-block" id="Tabla"><a class="viewcode-back" href="../tabla.html#tabla.Tabla">[docs]</a><span class="k">class</span> <span class="nc">Tabla</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Tabla je matrica objekata klase Polje i predstavlja glavnu klasu za igru Santorini.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="Tabla.__init__"><a class="viewcode-back" href="../tabla.html#tabla.Tabla.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tabla</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Konstruktor klase Tabla, kreira matricu Polja koja je u pocetku prazna.</span>
-<span class="sd">        On je istovremeno i copy construktor (posto u pythonu mora da ima samo jedan ctor), ukoliko se kao drugi parametar prosledi</span>
-<span class="sd">        tabla on kopira njen sadrzaj u trenutnu tablu.</span>
-<span class="sd">        Ovo je uradjeno zbog performansi, funkcija koji ima python copy.deepcopy(object) je bila previse spora pa sam napravio svoj copy ctor</span>
+<span class="sd">        On je istovremeno i copy construktor (posto u pythonu mora da ima samo jedan ctor), ukoliko se kao drugi</span>
+<span class="sd">        parametar prosledi tabla on kopira njen sadrzaj u trenutnu tablu. Ovo je uradjeno zbog performansi, funkcija</span>
+<span class="sd">        koji ima python copy.deepcopy(object) je bila previse spora pa sam napravio svoj copy ctor.</span>
 <span class="sd">        </span>
 <span class="sd">        :param tabla: tabla ciji sadrzaj treba prekopriati u ovom objektu, defaults to None</span>
 <span class="sd">        :type tabla: Tabla, optional</span>
@@ -294,8 +291,6 @@
                     <span class="k">if</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span></div>
 
-
-
 <div class="viewcode-block" id="Tabla.postavi_figuru"><a class="viewcode-back" href="../tabla.html#tabla.Tabla.postavi_figuru">[docs]</a>    <span class="k">def</span> <span class="nf">postavi_figuru</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">igrac</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Postavlja figuru igraca na koordinate x, y u tabli ako je to polje slobodno.</span>
 <span class="sd">        </span>
@@ -308,7 +303,6 @@
 <span class="sd">        &quot;&quot;&quot;</span>        
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="n">y</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">=</span> <span class="n">igrac</span></div>
-
 
 <div class="viewcode-block" id="Tabla.pomeri_figuru"><a class="viewcode-back" href="../tabla.html#tabla.Tabla.pomeri_figuru">[docs]</a>    <span class="k">def</span> <span class="nf">pomeri_figuru</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Pomera figuru sa pocetnog na odredisno polje.</span>

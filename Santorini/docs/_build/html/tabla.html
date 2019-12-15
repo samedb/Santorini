@@ -194,7 +194,8 @@ To su klase Polje, Tabla, Potez, GameState</p>
 <dt id="tabla.Polje">
 <em class="property">class </em><code class="sig-prename descclassname">tabla.</code><code class="sig-name descname">Polje</code><a class="reference internal" href="_modules/tabla.html#Polje"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tabla.Polje" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Klasa koja predstavlja jedno polje u tabli, polje je opisano brojem spratova i igracem koji se trenutno nalazi u tom polju.</p>
+<p>Klasa koja predstavlja jedno polje u tabli, polje je opisano brojem spratova
+i igracem koji se trenutno nalazi u tom polju.</p>
 <dl class="attribute">
 <dt id="tabla.Polje.broj_spratova">
 <code class="sig-name descname">broj_spratova</code><em class="property"> = 0</em><a class="headerlink" href="#tabla.Polje.broj_spratova" title="Permalink to this definition">¶</a></dt>
@@ -234,7 +235,8 @@ Prema tome od atributa treba da sadrzi pocetno polje, odredisno polje i polje na
 <dl class="method">
 <dt id="tabla.Potez.iz_stringa">
 <em class="property">static </em><code class="sig-name descname">iz_stringa</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tabla.html#Potez.iz_stringa"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tabla.Potez.iz_stringa" title="Permalink to this definition">¶</a></dt>
-<dd><p>Staticka funkcija koja prima string jednog poteza kako se on upisuje u fajl i pretvara ga u objekat klase Potez koji vraca.</p>
+<dd><p>Staticka funkcija koja prima string jednog poteza kako se on upisuje u fajl i
+pretvara ga u objekat klase Potez koji vraca.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – Potez u tekstualnom obliku, onako kako se pise u fajlu</p>
@@ -296,9 +298,9 @@ Prema tome od atributa treba da sadrzi pocetno polje, odredisno polje i polje na
 <dt id="tabla.Tabla.__init__">
 <code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">tabla=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/tabla.html#Tabla.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tabla.Tabla.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Konstruktor klase Tabla, kreira matricu Polja koja je u pocetku prazna.
-On je istovremeno i copy construktor (posto u pythonu mora da ima samo jedan ctor), ukoliko se kao drugi parametar prosledi
-tabla on kopira njen sadrzaj u trenutnu tablu.
-Ovo je uradjeno zbog performansi, funkcija koji ima python copy.deepcopy(object) je bila previse spora pa sam napravio svoj copy ctor</p>
+On je istovremeno i copy construktor (posto u pythonu mora da ima samo jedan ctor), ukoliko se kao drugi
+parametar prosledi tabla on kopira njen sadrzaj u trenutnu tablu. Ovo je uradjeno zbog performansi, funkcija
+koji ima python copy.deepcopy(object) je bila previse spora pa sam napravio svoj copy ctor.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>tabla</strong> (<a class="reference internal" href="#tabla.Tabla" title="tabla.Tabla"><em>Tabla</em></a><em>, </em><em>optional</em>) – tabla ciji sadrzaj treba prekopriati u ovom objektu, defaults to None</p>
