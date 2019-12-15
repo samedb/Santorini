@@ -1,3 +1,6 @@
+"""Modul cija je glavna klasa IgraCanvas. Onda je odgovorna za crtanje trenutnog stanja igre, prikazivanje poruka,
+primanja inputa od korisnika i upravljanje AI-om kada je jedan od igraca vestacka inteligencija.
+"""
 from tkinter import Canvas, messagebox
 from enum import Enum
 import time

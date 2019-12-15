@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Welcome to Santorini’s documentation! &mdash; Santorini 0.1 documentation</title>
+  <title>Dokumentacija za igru Santorini &mdash; Santorini 0.1 documentation</title>
   
 
   
@@ -79,7 +79,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption"><span class="caption-text">Sadrzaj:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">Santorini</a></li>
 </ul>
@@ -127,7 +127,7 @@
     
       <li><a href="#">Docs</a> &raquo;</li>
         
-      <li>Welcome to Santorini’s documentation!</li>
+      <li>Dokumentacija za igru Santorini</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -146,10 +146,20 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="welcome-to-santorini-s-documentation">
-<h1>Welcome to Santorini’s documentation!<a class="headerlink" href="#welcome-to-santorini-s-documentation" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="dokumentacija-za-igru-santorini">
+<h1>Dokumentacija za igru Santorini<a class="headerlink" href="#dokumentacija-za-igru-santorini" title="Permalink to this headline">¶</a></h1>
+<blockquote>
+<div><p>Ova aplikacija se sastoji od cetiri modula</p>
+<ul class="simple">
+<li><p><strong>gui.py</strong> - prvi modul ove aplikacije, on zadrzi sve Frame-ove i odgovoran je za otvaranje prozora i navigaciju izmedju Frame-ova. Za graficki korisnicki interfejs (gui) ove aplikacije upotrebljena je tkinter biblioteka. Preko ovog modula se i pokrece aplikacija</p></li>
+<li><p><strong>tabla.py</strong> - sadrzi funkcije i pomocne klase koje se koriste u ai.py i igra.py. To su klase Polje, Tabla, Potez, GameState</p></li>
+<li><p><strong>igra.py</strong> - modul cija je glavna klasa IgraCanvas. Onda je odgovorna za crtanje trenutnog stanja igre, prikazivanje poruka, primanja inputa od korisnika i upravljanje AI-om kada je jedan od igraca vestacka inteligencija.</p></li>
+<li><p><strong>ai.py</strong> - je odgovoran za vestacku inteligenciju igre Santorini, sadrzi klase koje implementiraju minimax i minimax + alfa-beta, funkcije za staticku procenu stanja itd. Sve sto ima veze za AI ove igre nalazi se ovde.</p></li>
+</ul>
+<p>Dokumentacija je automatski generisana uz pomoc docstring-a i sphinx biblioteke</p>
+</div></blockquote>
 <div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Contents:</span></p>
+<p class="caption"><span class="caption-text">Sadrzaj:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">Santorini</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="ai.html">ai module</a></li>
