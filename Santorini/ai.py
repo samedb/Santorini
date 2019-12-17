@@ -72,7 +72,7 @@ def unapredjena_staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu)
                 suma_visina -= tabla.matrica[i][j].broj_spratova
     m = tabla.matrica[potez.xg][potez.yg].broj_spratova * rastojanja
 
-    razlika_u_visini = tabla.matrica[potez.x2][potez.y2].broj_spratova - tabla.matrica[potez.x1][potez.x2].broj_spratova 
+    razlika_u_visini = tabla.matrica[potez.x2][potez.y2].broj_spratova - tabla.matrica[potez.x1][potez.y1].broj_spratova 
     return 3 * n + m + suma_visina + 5 * razlika_u_visini 
 
 
@@ -370,6 +370,10 @@ class MiniMaxAlfaBeta(AI):
         return v
 
 
+# probna staicka funkcija procene, samo za test sluzi
+def test_staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):
+    return potez.x1
+
 # test vremena potregnog za nalazenje poteza
 # kad koristim pypy interpreter onda se vreme potrebno za nalazenje poteza za bilo koji algoritam smanji 10 do 15 puta
 if __name__ == "__main__":
@@ -379,11 +383,12 @@ if __name__ == "__main__":
     tabla.matrica[2][3].igrac = IGRAC_PLAVI
     tabla.matrica[0][0].igrac = IGRAC_CRVENI
     tabla.matrica[0][1].igrac = IGRAC_CRVENI
+    tabla.matrica[1][1].broj_spratova = 3
 
     ukupno = 0
     for i in range(10):
         start = time.time()
-        potez = MiniMaxAlfaBeta(False, 4).sledeci_potez(tabla, IGRAC_PLAVI)
+        potez = MiniMax(False, 3, test_staticka_funkcija_procene).sledeci_potez(tabla, IGRAC_PLAVI)
         print(potez)
         print("Vreme potrebno za izracunavanje: ", time.time() - start)
         ukupno += time.time() - start
@@ -393,9 +398,44 @@ if __name__ == "__main__":
     ukupno = 0
     for i in range(10):
         start = time.time()
-        potez = MiniMax(False, 3).sledeci_potez(tabla, IGRAC_PLAVI)
+        potez = MiniMax(False, 3, test_staticka_funkcija_procene).sledeci_potez(tabla, IGRAC_PLAVI)
         print(potez)
         print("Vreme potrebno za izracunavanje: ", time.time() - start)
         ukupno += time.time() - start
 
     print("Prosek:", ukupno / 10.)
+
+    ukupno = 0
+    for i in range(10):
+        start = time.time()
+        potez = MiniMax(False, 3, staticka_funkcija_procene).sledeci_potez(tabla, IGRAC_PLAVI)
+        print(potez)
+        print("Vreme potrebno za izracunavanje: ", time.time() - start)
+        ukupno += time.time() - start
+
+    print("Prosek:", ukupno / 10.)
+
+    ukupno = 0
+    for i in range(10):
+        start = time.time()
+        potez = MiniMax(False, 3, unapredjena_staticka_funkcija_procene).sledeci_potez(tabla, IGRAC_PLAVI)
+        print(potez)
+        print("Vreme potrebno za izracunavanje: ", time.time() - start)
+        ukupno += time.time() - start
+
+    print("Prosek:", ukupno / 10.)
+
+    # start = time.time()
+    # for i in range(1000000):
+    #     v = test_staticka_funkcija_procene(tabla, Potez(0, 2, 0, 1, 1, 1), 0)
+    # print("Vreme potrebno za obicnu staticku funkciju procene ", time.time() - start)
+
+    # start = time.time()
+    # for i in range(1000000):
+    #     v = staticka_funkcija_procene(tabla, Potez(0, 2, 0, 1, 1, 1), 0)
+    # print("Vreme potrebno za obicnu staticku funkciju procene ", time.time() - start)
+
+    # start = time.time()
+    # for i in range(1000000):
+    #     v = unapredjena_staticka_funkcija_procene(tabla, Potez(0, 2, 0, 1, 1, 1), 0)
+    # print("Vreme potrebno za naprednu staticku funkciju procene ", time.time() - start)
