@@ -244,17 +244,23 @@ class IgraCanvas(Canvas):
         if self.game_state == GameState.KRAJ_IGRE:
             return
         # minimalno trajanje poteza AI, da se ne bi momentalno izvrsio potez, potez moze da traje i duze ako treba
-        PAUZA_IZMEDJU_POTEZA = 0.8  # sekundi
+        DOZVOLJENO_VREME = 1  # koliko vremena AI moze da trazi potez
+        # TODO if hard onda 2 sekunda ili vise
         pocetak = time.time()
         # AI odredi sledeci potez
+        ai = None
+        potez = None
+        dubina = 2
         if self.na_potezu == IGRAC_PLAVI:
-            potez = self.plavi_AI.sledeci_potez(self.tabla, self.na_potezu)
-        if self.na_potezu == IGRAC_CRVENI:
-            potez = self.crveni_AI.sledeci_potez(self.tabla, self.na_potezu)
-        vreme_potrebno_za_nalazenje_poteza = time.time() - pocetak
-        # ako je bio previse "brz", onda ceka do isteka minimalnog vremena za jedan potez AI-a
-        if pravi_pauzu and vreme_potrebno_za_nalazenje_poteza < PAUZA_IZMEDJU_POTEZA:
-            time.sleep(PAUZA_IZMEDJU_POTEZA - vreme_potrebno_za_nalazenje_poteza)
+            ai = self.plavi_AI
+        else:
+            ai = self.crveni_AI
+
+        while time.time() - pocetak < DOZVOLJENO_VREME:
+            print("Iterativno produbljivanje, dubina", dubina)
+            potez = ai.sledeci_potez(self.tabla, self.na_potezu, dubina)
+            dubina += 1
+
 
         print("Na potezu je " + str(self.na_potezu) + " i on je odgirao sledeci potez: " + str(potez))
 

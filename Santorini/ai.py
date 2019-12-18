@@ -136,6 +136,7 @@ class AI(ABC):
     Od atributa ima dubinu, funkciju koja racuna staticku vrednost i bool da li treba stampati vrednosti svih mogucih poteza AI algoritma .
     """    
 
+    # TODO dubina ide napolje, zbog iterativnog produbiljivanja
     def __init__(self, stampaj_vrednosti_svih_poteza, dubina = 2, funkcija_procene = staticka_funkcija_procene):
         """Konsturtor sa parametrima koji postavlja vredsnoti atributa klase
         
@@ -151,7 +152,7 @@ class AI(ABC):
         self.funkcija_procene = funkcija_procene
 
     @abstractmethod
-    def sledeci_potez(self, tabla, na_potezu):
+    def sledeci_potez(self, tabla, na_potezu, dubina):
         """Glavna funkcija ovog modula, igra poziva ovu funkcija, prosledjuje joj stanje i igraca a ova funkija vraca sledeci potez.
         Ovo je abstraktna funkcija tako da je moraju implementirati sve klase koje nasledjuju AI.
         
@@ -159,6 +160,7 @@ class AI(ABC):
         :type tabla: Tabla
         :param na_potezu: Igrac koji je na potezu i za kojeg treba naci sledeci potez
         :type na_potezu: int
+        # TODO dokumentaicja za dubinu
         """        
         pass
 
@@ -178,7 +180,7 @@ class MiniMax(AI):
         """          
         super().__init__(stampaj_vrednosti_svih_poteza, dubina, funkcija_procene)
 
-    def sledeci_potez(self, tabla, igrac):
+    def sledeci_potez(self, tabla, igrac, dubina):
         """Igra poziva ovu funkcija, prosledjuje joj stanje i igraca a ova funkija vraca sledeci potez.
         Ovde se koriti obicni minimax algoritam za nalazenje najboljeg poteza.
         Ovo je abstraktna funkcija tako da je moraju implementirati sve klase koje nasledjuju AI.
@@ -188,6 +190,7 @@ class MiniMax(AI):
         :param igrac: Igrac koji je na potezu, za kojeg treba naci sledeci potez i za koga se kroz algoritam racuna staticka f-ja procene
         :type igrac: int
         """   
+        self.dubina = dubina
         svi_potezi = svi_moguci_potezi(tabla, igrac)
         vrednosti = []
         # nadji vrednosti svih mogucih poteza
@@ -266,7 +269,7 @@ class MiniMaxAlfaBeta(AI):
         super().__init__(stampaj_vrednosti_svih_poteza, dubina, funkcija_procene)
 
 
-    def sledeci_potez(self, tabla, na_potezu):
+    def sledeci_potez(self, tabla, na_potezu, dubina):
         """Igra poziva ovu funkcija, prosledjuje joj stanje i igraca a ova funkija vraca sledeci potez.
         Ovde se koriti minimax sa alfa-beta odsecanjem za nalazenje najboljeg poteza.
         Ovo je abstraktna funkcija tako da je moraju implementirati sve klase koje nasledjuju AI.
@@ -276,6 +279,7 @@ class MiniMaxAlfaBeta(AI):
         :param na_potezu: Igrac koji je na potezu i za kojeg treba naci sledeci potez
         :type na_potezu: int
         """     
+        self.dubina = dubina
         self.na_potezu = na_potezu
         self.lista_poteza_i_njihovih_vrednosti = []
         v = self.max_value(tabla, self.dubina, None, -1000, 1000)
@@ -385,45 +389,45 @@ if __name__ == "__main__":
     tabla.matrica[0][1].igrac = IGRAC_CRVENI
     tabla.matrica[1][1].broj_spratova = 3
 
-    ukupno = 0
-    for i in range(10):
-        start = time.time()
-        potez = MiniMax(False, 3, test_staticka_funkcija_procene).sledeci_potez(tabla, IGRAC_PLAVI)
-        print(potez)
-        print("Vreme potrebno za izracunavanje: ", time.time() - start)
-        ukupno += time.time() - start
+    # ukupno = 0
+    # for i in range(10):
+    #     start = time.time()
+    #     potez = MiniMax(False, 3, test_staticka_funkcija_procene).sledeci_potez(tabla, IGRAC_PLAVI)
+    #     print(potez)
+    #     print("Vreme potrebno za izracunavanje: ", time.time() - start)
+    #     ukupno += time.time() - start
 
-    print("Prosek:", ukupno / 10.)
+    # print("Prosek:", ukupno / 10.)
 
-    ukupno = 0
-    for i in range(10):
-        start = time.time()
-        potez = MiniMax(False, 3, test_staticka_funkcija_procene).sledeci_potez(tabla, IGRAC_PLAVI)
-        print(potez)
-        print("Vreme potrebno za izracunavanje: ", time.time() - start)
-        ukupno += time.time() - start
+    # ukupno = 0
+    # for i in range(10):
+    #     start = time.time()
+    #     potez = MiniMax(False, 3, test_staticka_funkcija_procene).sledeci_potez(tabla, IGRAC_PLAVI)
+    #     print(potez)
+    #     print("Vreme potrebno za izracunavanje: ", time.time() - start)
+    #     ukupno += time.time() - start
 
-    print("Prosek:", ukupno / 10.)
+    # print("Prosek:", ukupno / 10.)
 
-    ukupno = 0
-    for i in range(10):
-        start = time.time()
-        potez = MiniMax(False, 3, staticka_funkcija_procene).sledeci_potez(tabla, IGRAC_PLAVI)
-        print(potez)
-        print("Vreme potrebno za izracunavanje: ", time.time() - start)
-        ukupno += time.time() - start
+    # ukupno = 0
+    # for i in range(10):
+    #     start = time.time()
+    #     potez = MiniMax(False, 3, staticka_funkcija_procene).sledeci_potez(tabla, IGRAC_PLAVI)
+    #     print(potez)
+    #     print("Vreme potrebno za izracunavanje: ", time.time() - start)
+    #     ukupno += time.time() - start
 
-    print("Prosek:", ukupno / 10.)
+    # print("Prosek:", ukupno / 10.)
 
-    ukupno = 0
-    for i in range(10):
-        start = time.time()
-        potez = MiniMax(False, 3, unapredjena_staticka_funkcija_procene).sledeci_potez(tabla, IGRAC_PLAVI)
-        print(potez)
-        print("Vreme potrebno za izracunavanje: ", time.time() - start)
-        ukupno += time.time() - start
+    # ukupno = 0
+    # for i in range(10):
+    #     start = time.time()
+    #     potez = MiniMax(False, 3, unapredjena_staticka_funkcija_procene).sledeci_potez(tabla, IGRAC_PLAVI)
+    #     print(potez)
+    #     print("Vreme potrebno za izracunavanje: ", time.time() - start)
+    #     ukupno += time.time() - start
 
-    print("Prosek:", ukupno / 10.)
+    # print("Prosek:", ukupno / 10.)
 
     # start = time.time()
     # for i in range(1000000):
