@@ -27,7 +27,7 @@ def staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):
     # da sprecim postavljanje kupole kada to nije potrebno, privremeno resenje TODO bolje da resim
     # kupolu postavlja samo kada bas mora
     if tabla.matrica[potez.xg][potez.yg].broj_spratova == 4:
-        return 0
+        return -50
 
     n = tabla.matrica[potez.x2][potez.y2].broj_spratova
     rastojanja = 0
@@ -65,7 +65,7 @@ def unapredjena_staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu)
     # da sprecim postavljanje kupole kada to nije potrebno, privremeno resenje TODO bolje da resim
     # kupolu postavlja samo kada bas mora
     if tabla.matrica[potez.xg][potez.yg].broj_spratova == 4:
-        return 0
+        return -50
 
     n = tabla.matrica[potez.x2][potez.y2].broj_spratova
     rastojanja = 0
