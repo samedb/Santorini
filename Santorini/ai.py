@@ -255,7 +255,7 @@ class MiniMax(AI):
 
 class MiniMaxAlfaBeta(AI): 
     """Klasa koja nasledjuje AI i implementira MiniMax algoritam sa alfa-beta odsecanjem""" 
-
+    #TODO da se dubina izbaci iz konstruktora i da se samo nalazi u funkciji sledeci_potez, to da se uradi za sve ove klase i za AI isto
     def __init__(self, stampaj_vrednosti_svih_poteza,dubina = 3, funkcija_procene = staticka_funkcija_procene):    
         """Konsturtor sa parametrima koji postavlja vredsnoti atributa klase.
         
