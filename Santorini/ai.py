@@ -24,6 +24,10 @@ def staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):
         return 100
     if tabla.poraz(na_potezu):
         return -100
+    # da sprecim postavljanje kupole kada to nije potrebno, privremeno resenje TODO bolje da resim
+    # kupolu postavlja samo kada bas mora
+    if tabla.matrica[potez.xg][potez.yg].broj_spratova == 4:
+        return 0
 
     n = tabla.matrica[potez.x2][potez.y2].broj_spratova
     rastojanja = 0
@@ -58,6 +62,10 @@ def unapredjena_staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu)
         return 100
     if tabla.poraz(na_potezu):
         return -100
+    # da sprecim postavljanje kupole kada to nije potrebno, privremeno resenje TODO bolje da resim
+    # kupolu postavlja samo kada bas mora
+    if tabla.matrica[potez.xg][potez.yg].broj_spratova == 4:
+        return 0
 
     n = tabla.matrica[potez.x2][potez.y2].broj_spratova
     rastojanja = 0
@@ -71,7 +79,6 @@ def unapredjena_staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu)
                 rastojanja -= tabla.rastojanje(i, j, potez.xg, potez.yg)
                 suma_visina -= tabla.matrica[i][j].broj_spratova
     m = tabla.matrica[potez.xg][potez.yg].broj_spratova * rastojanja
-
     razlika_u_visini = tabla.matrica[potez.x2][potez.y2].broj_spratova - tabla.matrica[potez.x1][potez.y1].broj_spratova 
     return 3 * n + m + suma_visina + 5 * razlika_u_visini 
 
