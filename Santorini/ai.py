@@ -40,6 +40,24 @@ def staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):
     m = tabla.matrica[potez.xg][potez.yg].broj_spratova * rastojanja
     return n + m
 
+def nova_neka_staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):
+    if tabla.pobeda(na_potezu):
+        return 100
+    if tabla.poraz(na_potezu):
+        return -100
+    # da sprecim postavljanje kupole kada to nije potrebno, privremeno resenje TODO bolje da resim
+    # kupolu postavlja samo kada bas mora,    mozda je ovo i suvisno idk
+    #if tabla.matrica[potez.xg][potez.yg].broj_spratova == 4:
+    #    return -50
+    suma_visina = 0
+    for i in range(5):
+        for j in range(5):
+            if tabla.matrica[i][j].igrac == na_potezu:
+                suma_visina += tabla.matrica[i][j].broj_spratova**2
+            elif tabla.matrica[i][j].igrac != na_potezu and tabla.matrica[i][j].igrac != None:  # ako je protivnik
+                suma_visina -= tabla.matrica[i][j].broj_spratova**2
+    return suma_visina
+
 
 def unapredjena_staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):
     """Ovo je unapredjena staticka funkcija procene f,koja se računa kao 𝑓 = 3 * 𝑛 + 𝑚 + suma_visina + 5 * razlika_u_visini,
@@ -73,11 +91,11 @@ def unapredjena_staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu)
     for i in range(5):
         for j in range(5):
             if tabla.matrica[i][j].igrac == na_potezu:
-                rastojanja += tabla.rastojanje(i, j, potez.xg, potez.yg)
-                suma_visina += tabla.matrica[i][j].broj_spratova
+                rastojanja += tabla.rastojanje(i, j, potez.xg, potez.yg)**2
+                suma_visina += tabla.matrica[i][j].broj_spratova**2
             elif tabla.matrica[i][j].igrac != na_potezu and tabla.matrica[i][j].igrac != None:  # ako je protivnik
-                rastojanja -= tabla.rastojanje(i, j, potez.xg, potez.yg)
-                suma_visina -= tabla.matrica[i][j].broj_spratova
+                rastojanja -= tabla.rastojanje(i, j, potez.xg, potez.yg)**2
+                suma_visina -= tabla.matrica[i][j].broj_spratova**2
     m = tabla.matrica[potez.xg][potez.yg].broj_spratova * rastojanja
     razlika_u_visini = tabla.matrica[potez.x2][potez.y2].broj_spratova - tabla.matrica[potez.x1][potez.y1].broj_spratova 
     return 3 * n + m + suma_visina + 5 * razlika_u_visini 
@@ -436,17 +454,17 @@ if __name__ == "__main__":
 
     # print("Prosek:", ukupno / 10.)
 
-    # start = time.time()
-    # for i in range(1000000):
-    #     v = test_staticka_funkcija_procene(tabla, Potez(0, 2, 0, 1, 1, 1), 0)
-    # print("Vreme potrebno za obicnu staticku funkciju procene ", time.time() - start)
+    start = time.time()
+    for i in range(1000000):
+        v = test_staticka_funkcija_procene(tabla, Potez(0, 2, 0, 1, 1, 1), 0)
+    print("Vreme potrebno za obicnu staticku funkciju procene ", time.time() - start)
 
-    # start = time.time()
-    # for i in range(1000000):
-    #     v = staticka_funkcija_procene(tabla, Potez(0, 2, 0, 1, 1, 1), 0)
-    # print("Vreme potrebno za obicnu staticku funkciju procene ", time.time() - start)
+    start = time.time()
+    for i in range(100000):
+        v = staticka_funkcija_procene(tabla, Potez(0, 2, 0, 1, 1, 1), 0)
+    print("Vreme potrebno za obicnu staticku funkciju procene ", time.time() - start)
 
-    # start = time.time()
-    # for i in range(1000000):
-    #     v = unapredjena_staticka_funkcija_procene(tabla, Potez(0, 2, 0, 1, 1, 1), 0)
-    # print("Vreme potrebno za naprednu staticku funkciju procene ", time.time() - start)
+    start = time.time()
+    for i in range(100000):
+        v = nova_neka_staticka_funkcija_procene(tabla, Potez(0, 2, 0, 1, 1, 1), 0)
+    print("Vreme potrebno za naprednu staticku funkciju procene ", time.time() - start)
