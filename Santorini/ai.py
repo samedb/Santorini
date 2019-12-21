@@ -58,7 +58,7 @@ def nova_staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):
                 suma_visina -= tabla.matrica[i][j].broj_spratova**2
     return suma_visina
 
-def optimizovana_neka_nova_staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):
+def optimizovana_nova_staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):
     """Radi isto sto i funkcija iznad samo je malo optimizovana, brza je 40%
     
     :param tabla: Tabla/stanje za koju treba izracunati staticku funkciju procene

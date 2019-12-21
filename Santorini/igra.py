@@ -3,7 +3,7 @@ primanja inputa od korisnika i upravljanje AI-om kada je jedan od igraca vestack
 from tkinter import Canvas, messagebox
 import time
 import random
-from ai import MiniMax, MiniMaxAlfaBeta, staticka_funkcija_procene, unapredjena_staticka_funkcija_procene, nova_staticka_funkcija_procene, optimizovana_neka_nova_staticka_funkcija_procene, optimizovana_neka_nova_staticka_funkcija_procene2
+from ai import MiniMax, MiniMaxAlfaBeta, staticka_funkcija_procene, unapredjena_staticka_funkcija_procene, nova_staticka_funkcija_procene, optimizovana_nova_staticka_funkcija_procene, optimizovana_neka_nova_staticka_funkcija_procene2
 from tabla import Tabla, GameState, Igrac, protivnik, Potez
 
 
@@ -113,7 +113,7 @@ class IgraCanvas(Canvas):
         elif tip_igraca == TIPOVI_IGRACA[2]:  # AI medium
             return MiniMaxAlfaBeta(stampaj_vrednosti_svih_poteza, 3, optimizovana_neka_nova_staticka_funkcija_procene2) # ovo je samo za test
         elif tip_igraca == TIPOVI_IGRACA[3]:  # AI hard
-            return MiniMaxAlfaBeta(stampaj_vrednosti_svih_poteza, 3, optimizovana_neka_nova_staticka_funkcija_procene) 
+            return MiniMaxAlfaBeta(stampaj_vrednosti_svih_poteza, 3, optimizovana_nova_staticka_funkcija_procene) 
             # TODO ovo gore iznad, treba dubina da bude 4 za hard, ali sam smanjio zbog vremena koje je potrebno za pronalazenje poteza
 
     def crtaj(self):
