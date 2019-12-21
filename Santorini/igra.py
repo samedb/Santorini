@@ -327,7 +327,7 @@ class IgraCanvas(Canvas):
     def sastavi_poruku(self):
         """Sastavlja poruku o trenutnom stanju igre i igracu koji je na potezu"""
         igrac = "PLAVI"
-        if self.na_potezu == 1:
+        if self.na_potezu == 2:
             igrac = "CRVENI"        
         return f"Na potezu je {igrac} \na gamestate je {self.game_state}"
 

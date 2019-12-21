@@ -5,7 +5,7 @@ from enum import Enum
 
 #TODO komentari
 class Igrac:
-    PRAZNO_POLJE = 0
+    NIJEDAN = 0
     IGRAC_PLAVI = 1
     IGRAC_CRVENI = 2
 
@@ -120,7 +120,7 @@ class Polje:
     """Klasa koja predstavlja jedno polje u tabli, polje je opisano brojem spratova
     i igracem koji se trenutno nalazi u tom polju."""
     broj_spratova = 0
-    igrac = Igrac.PRAZNO_POLJE
+    igrac = Igrac.NIJEDAN
 
 
 class Tabla:
@@ -158,7 +158,7 @@ class Tabla:
         :param igrac: igrac (plavi ili crveni) koji treba postaviti u datom polju
         :type igrac: int
         """        
-        if self.matrica[x][y].igrac == Igrac.PRAZNO_POLJE:
+        if self.matrica[x][y].igrac == Igrac.NIJEDAN:
             self.matrica[x][y].igrac = igrac
 
     def pomeri_figuru(self, x1, y1, x2, y2):
@@ -174,7 +174,7 @@ class Tabla:
         :type y2: int
         """ 
         figura = self.matrica[x1][y1].igrac
-        self.matrica[x1][y1].igrac = Igrac.PRAZNO_POLJE
+        self.matrica[x1][y1].igrac = Igrac.NIJEDAN
         self.matrica[x2][y2].igrac = figura
 
     def gradi(self, x, y):
@@ -224,7 +224,7 @@ class Tabla:
                     # prodji kroz sva susedna polja i proveri da li moze na njih da predje, ako ne moze onda je izgubio 
                     for i in range(x - 1, x + 2):
                         for j in range(y - 1, y + 2):
-                            if i >= 0 and i <= 4 and j >= 0 and j <= 4 and self.matrica[i][j].igrac == Igrac.PRAZNO_POLJE and self.matrica[i][j].broj_spratova <= self.matrica[x][y].broj_spratova + 1:
+                            if i >= 0 and i <= 4 and j >= 0 and j <= 4 and self.matrica[i][j].igrac == Igrac.NIJEDAN and self.matrica[i][j].broj_spratova <= self.matrica[x][y].broj_spratova + 1:
                                 return True
         return False
     
@@ -248,7 +248,7 @@ class Tabla:
         """        
         return self.zauzeo_treci_sprat(protivnik(na_potezu)) or not self.ima_mogucih_poteza(na_potezu)
 
-    def pronadji_dozvoljena_polja(self, game_state: GameState, x , y, igrac_na_potezu = Igrac.PRAZNO_POLJE):
+    def pronadji_dozvoljena_polja(self, game_state: GameState, x , y, igrac_na_potezu = Igrac.NIJEDAN):
         """Funkcija koja nalazi listu svih dozvoljenih polja koje igrac moze da selektuje, to zavisi od mnogih faktora
         od trenutnog gameState-a, od pozicije selektovanog igraca (x, y) itd.
         
@@ -267,7 +267,7 @@ class Tabla:
         if game_state == GameState.POSTAVLJANJE_FIGURA:
             for i in range(0, 5):
                 for j in range(0, 5):
-                    if self.matrica[i][j].igrac == Igrac.PRAZNO_POLJE:
+                    if self.matrica[i][j].igrac == Igrac.NIJEDAN:
                         dozvoljena_polja.append((i, j))
         elif game_state == GameState.SELEKTOVANJE_FIGURE:
             for i in range(0, 5):
@@ -283,13 +283,13 @@ class Tabla:
             # prodji kroz sva polja u neposrednoj blizini selektovane figure
             for i in range(x - 1, x + 2):
                 for j in range(y - 1, y + 2):
-                    if i >= 0 and i <= 4 and j >= 0 and j <= 4 and self.matrica[i][j].igrac == Igrac.PRAZNO_POLJE and self.matrica[i][j].broj_spratova <= self.matrica[x][y].broj_spratova + 1 and self.matrica[i][j].broj_spratova < 4:
+                    if i >= 0 and i <= 4 and j >= 0 and j <= 4 and self.matrica[i][j].igrac == Igrac.NIJEDAN and self.matrica[i][j].broj_spratova <= self.matrica[x][y].broj_spratova + 1 and self.matrica[i][j].broj_spratova < 4:
                         dozvoljena_polja.append((i, j))
         elif game_state == GameState.GRADNJA:
             # prodji kroz sva polja u neposrednoj blizini selektovane figure
             for i in range(x - 1, x + 2):
                 for j in range(y - 1, y + 2):
-                    if i >= 0 and i <= 4 and j >= 0 and j <= 4 and self.matrica[i][j].igrac == Igrac.PRAZNO_POLJE and self.matrica[i][j].broj_spratova < 4:  
+                    if i >= 0 and i <= 4 and j >= 0 and j <= 4 and self.matrica[i][j].igrac == Igrac.NIJEDAN and self.matrica[i][j].broj_spratova < 4:  
                         dozvoljena_polja.append((i, j))
         return dozvoljena_polja
         

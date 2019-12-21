@@ -35,7 +35,7 @@ def staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):
         for j in range(5):
             if tabla.matrica[i][j].igrac == na_potezu:
                 rastojanja += tabla.rastojanje(i, j, potez.xg, potez.yg)
-            elif tabla.matrica[i][j].igrac != na_potezu and tabla.matrica[i][j].igrac != Igrac.PRAZNO_POLJE:  # ako je protivnik
+            elif tabla.matrica[i][j].igrac != na_potezu and tabla.matrica[i][j].igrac != Igrac.NIJEDAN:  # ako je protivnik
                 rastojanja -= tabla.rastojanje(i, j, potez.xg, potez.yg)
     m = tabla.matrica[potez.xg][potez.yg].broj_spratova * rastojanja
     return n + m
@@ -54,7 +54,7 @@ def nova_neka_staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):
         for j in range(5):
             if tabla.matrica[i][j].igrac == na_potezu:
                 suma_visina += tabla.matrica[i][j].broj_spratova**2
-            elif tabla.matrica[i][j].igrac != na_potezu and tabla.matrica[i][j].igrac != Igrac.PRAZNO_POLJE:  # ako je protivnik
+            elif tabla.matrica[i][j].igrac != na_potezu and tabla.matrica[i][j].igrac != Igrac.NIJEDAN:  # ako je protivnik
                 suma_visina -= tabla.matrica[i][j].broj_spratova**2
     return suma_visina
 
@@ -81,7 +81,7 @@ def optimizovana_neka_nova_staticka_funkcija_procene(tabla: Tabla, potez: Potez,
             for j in range(5):
                 if brojac_figura == 4:
                     return suma_visina
-                if tabla.matrica[i][j].igrac != Igrac.PRAZNO_POLJE:
+                if tabla.matrica[i][j].igrac != Igrac.NIJEDAN:
                     brojac_figura += 1
                     if tabla.matrica[i][j].igrac == na_potezu:
                         if tabla.matrica[i][j].broj_spratova == 3:
@@ -128,7 +128,7 @@ def unapredjena_staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu)
             if tabla.matrica[i][j].igrac == na_potezu:
                 rastojanja += tabla.rastojanje(i, j, potez.xg, potez.yg)**2
                 suma_visina += tabla.matrica[i][j].broj_spratova**2
-            elif tabla.matrica[i][j].igrac != na_potezu and tabla.matrica[i][j].igrac != Igrac.PRAZNO_POLJE:  # ako je protivnik
+            elif tabla.matrica[i][j].igrac != na_potezu and tabla.matrica[i][j].igrac != Igrac.NIJEDAN:  # ako je protivnik
                 rastojanja -= tabla.rastojanje(i, j, potez.xg, potez.yg)**2
                 suma_visina -= tabla.matrica[i][j].broj_spratova**2
     m = tabla.matrica[potez.xg][potez.yg].broj_spratova * rastojanja
@@ -173,7 +173,7 @@ def svi_moguci_potezi(tabla, na_potezu):
                         if not unutar_matrice:
                             continue
                         novo_polje = k != i or l != j  # da li se polje razlikuje od onog u kome se sad nalazi
-                        slobodno_polje = tabla.matrica[k][l].igrac == Igrac.PRAZNO_POLJE
+                        slobodno_polje = tabla.matrica[k][l].igrac == Igrac.NIJEDAN
                         odgovara_broj_spratova = tabla.matrica[i][j].broj_spratova + 1 >= tabla.matrica[k][l].broj_spratova
                         if unutar_matrice and novo_polje and slobodno_polje and odgovara_broj_spratova:
                             # kad imamo sva polja u koja mozemo da idemo sad treba iz njih da nadjemo sva polja u koja mozemo da gradimo
@@ -184,7 +184,7 @@ def svi_moguci_potezi(tabla, na_potezu):
                                     if not unutar_matrice:
                                         continue
                                     novo_polje = m != k or n != l
-                                    slobodno_polje = tabla.matrica[m][n].igrac == Igrac.PRAZNO_POLJE
+                                    slobodno_polje = tabla.matrica[m][n].igrac == Igrac.NIJEDAN
                                     moze_da_se_gradi = tabla.matrica[m][n].broj_spratova < 4
                                     if unutar_matrice and novo_polje and slobodno_polje and moze_da_se_gradi:
                                         moguci_potezi.append(Potez(i, j, k, l, m, n))
