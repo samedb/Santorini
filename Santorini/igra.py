@@ -107,9 +107,9 @@ class IgraCanvas(Canvas):
         if tip_igraca == TIPOVI_IGRACA[0]:  # Osoba
             return None
         elif tip_igraca == TIPOVI_IGRACA[1]:  # AI easy
-            return MiniMax(stampaj_vrednosti_svih_poteza, 4, staticka_funkcija_procene)
+            return MiniMax(stampaj_vrednosti_svih_poteza, 5, staticka_funkcija_procene)
         elif tip_igraca == TIPOVI_IGRACA[2]:  # AI medium
-            return MiniMaxAlfaBeta(stampaj_vrednosti_svih_poteza, 6, staticka_funkcija_procene)
+            return MiniMaxAlfaBeta(stampaj_vrednosti_svih_poteza, 7, staticka_funkcija_procene)
         elif tip_igraca == TIPOVI_IGRACA[3]:  # AI hard
             return MiniMaxAlfaBeta(stampaj_vrednosti_svih_poteza, 20, optimizovana_nova_staticka_funkcija_procene) 
             
