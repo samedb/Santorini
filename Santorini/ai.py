@@ -160,9 +160,9 @@ def svi_moguci_potezi(tabla, na_potezu):
     # pronadji dve figure koje pripadaju trenutnom igracu
     broj_pronadjenih_figura = 0
     for i in range(5):
-        if broj_pronadjenih_figura == 2:
-            break
         for j in range(5):
+            if broj_pronadjenih_figura == 2:
+                return moguci_potezi
             if tabla.matrica[i][j].igrac == na_potezu:
                 broj_pronadjenih_figura += 1
                 # prodji kroz sva njegova susedna polja
