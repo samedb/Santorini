@@ -4,7 +4,7 @@ from tkinter import Canvas, messagebox
 import time
 import random
 from ai import MiniMax, MiniMaxAlfaBeta, staticka_funkcija_procene, unapredjena_staticka_funkcija_procene, nova_neka_staticka_funkcija_procene, optimizovana_neka_nova_staticka_funkcija_procene
-from tabla import Tabla, GameState, IGRAC_CRVENI, IGRAC_PLAVI, protivnik, Potez
+from tabla import Tabla, GameState, Igrac, protivnik, Potez
 
 
 TIPOVI_IGRACA = ("Osoba", "AI easy", "AI medium", "AI hard")
@@ -144,9 +144,9 @@ class IgraCanvas(Canvas):
                 if stepen >= 4:
                     self.create_oval(x1 + 30, y1 + 30, x1 + 70, y1 + 70, fill="black")
                 # nacrtaj igraca
-                if self.tabla.matrica[i][j].igrac == IGRAC_PLAVI:  # 0 znaci plavi igrac
+                if self.tabla.matrica[i][j].igrac == Igrac.IGRAC_PLAVI:  # 1 znaci plavi igrac
                     self.create_oval(x1 + 30, y1 + 30, x1 + 70, y1 + 70, fill="blue")
-                elif self.tabla.matrica[i][j].igrac == IGRAC_CRVENI:  # 1 znaci crveni igrac
+                elif self.tabla.matrica[i][j].igrac == Igrac.IGRAC_CRVENI:  # 2 znaci crveni igrac
                     self.create_oval(x1 + 30, y1 + 30, x1 + 70, y1 + 70, fill="red")
 
         self.create_text(250, 25, text=self.sastavi_poruku(), font="Airal 12")
@@ -232,7 +232,7 @@ class IgraCanvas(Canvas):
         :return: True ako je AI na potezu, inace false
         :rtype: bool
         """        
-        return (self.na_potezu == IGRAC_PLAVI and self.plavi_AI != None) or (self.na_potezu == IGRAC_CRVENI and self.crveni_AI != None)
+        return (self.na_potezu == Igrac.IGRAC_PLAVI and self.plavi_AI != None) or (self.na_potezu == Igrac.IGRAC_CRVENI and self.crveni_AI != None)
 
     def AI_izvrsi_potez(self, pravi_pauzu: bool):
         """Funkcija koja poziva AI koji je trenutno na potezu, prosledjuje mu trenutno stanje table i dobija novi potez
@@ -251,7 +251,7 @@ class IgraCanvas(Canvas):
         ai = None
         potez = None
         dubina = 2
-        if self.na_potezu == IGRAC_PLAVI:
+        if self.na_potezu == Igrac.IGRAC_PLAVI:
             ai = self.plavi_AI
         else:
             ai = self.crveni_AI
@@ -299,7 +299,7 @@ class IgraCanvas(Canvas):
             return
 
         if self.na_potezu == None:
-            self.na_potezu = IGRAC_PLAVI
+            self.na_potezu = Igrac.IGRAC_PLAVI
         else:
             self.na_potezu = protivnik(self.na_potezu)
 

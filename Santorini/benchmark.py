@@ -9,10 +9,10 @@ def test_staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):
 if __name__ == "__main__":
     tabla = Tabla()
 
-    tabla.matrica[2][2].igrac = IGRAC_PLAVI
-    tabla.matrica[2][3].igrac = IGRAC_PLAVI
-    tabla.matrica[0][0].igrac = IGRAC_CRVENI
-    tabla.matrica[0][1].igrac = IGRAC_CRVENI
+    tabla.matrica[2][2].igrac = Igrac.IGRAC_PLAVI
+    tabla.matrica[2][3].igrac = Igrac.IGRAC_PLAVI
+    tabla.matrica[0][0].igrac = Igrac.IGRAC_CRVENI
+    tabla.matrica[0][1].igrac = Igrac.IGRAC_CRVENI
     tabla.matrica[1][1].broj_spratova = 3
 
     # ukupno = 0
@@ -38,7 +38,7 @@ if __name__ == "__main__":
     ukupno = 0
     for i in range(10):
         start = time.time()
-        potez = MiniMaxAlfaBeta(False, 5, optimizovana_neka_nova_staticka_funkcija_procene).sledeci_potez(tabla, IGRAC_PLAVI, 4)
+        potez = MiniMaxAlfaBeta(False, 5, optimizovana_neka_nova_staticka_funkcija_procene).sledeci_potez(tabla, Igrac.IGRAC_PLAVI, 4)
         print(potez)
         print("Vreme potrebno za izracunavanje: ", time.time() - start)
         ukupno += time.time() - start
@@ -48,7 +48,7 @@ if __name__ == "__main__":
     ukupno = 0
     for i in range(10):
         start = time.time()
-        potez = MiniMaxAlfaBeta(False, 5, unapredjena_staticka_funkcija_procene).sledeci_potez(tabla, IGRAC_PLAVI, 4)
+        potez = MiniMaxAlfaBeta(False, 5, unapredjena_staticka_funkcija_procene).sledeci_potez(tabla, Igrac.IGRAC_PLAVI, 4)
         print(potez)
         print("Vreme potrebno za izracunavanje: ", time.time() - start)
         ukupno += time.time() - start
