@@ -146,7 +146,7 @@
   <h1>Source code for ai</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;Modul ai je odgovoran za vestacku inteligenciju igre Santorini, sadrzi klase koje implementiraju minimax i minimax + alfa-beta,</span>
 <span class="sd">funkcije za staticku procenu stanja itd. Sve sto ima veze za AI ove igre nalazi se ovde.&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">tabla</span> <span class="k">import</span> <span class="n">Tabla</span><span class="p">,</span> <span class="n">IGRAC_CRVENI</span><span class="p">,</span> <span class="n">IGRAC_PLAVI</span><span class="p">,</span> <span class="n">protivnik</span><span class="p">,</span> <span class="n">Potez</span>
+<span class="kn">from</span> <span class="nn">tabla</span> <span class="k">import</span> <span class="n">Tabla</span><span class="p">,</span> <span class="n">Igrac</span><span class="p">,</span> <span class="n">protivnik</span><span class="p">,</span> <span class="n">Potez</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">abc</span> <span class="k">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
 
@@ -170,6 +170,9 @@
         <span class="k">return</span> <span class="mi">100</span>
     <span class="k">if</span> <span class="n">tabla</span><span class="o">.</span><span class="n">poraz</span><span class="p">(</span><span class="n">na_potezu</span><span class="p">):</span>
         <span class="k">return</span> <span class="o">-</span><span class="mi">100</span>
+    <span class="c1"># kupolu postavlja samo kada bas mora, postavljanje kupole se racuna kao -50</span>
+    <span class="k">if</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">potez</span><span class="o">.</span><span class="n">xg</span><span class="p">][</span><span class="n">potez</span><span class="o">.</span><span class="n">yg</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">50</span>
 
     <span class="n">n</span> <span class="o">=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">potez</span><span class="o">.</span><span class="n">x2</span><span class="p">][</span><span class="n">potez</span><span class="o">.</span><span class="n">y2</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span>
     <span class="n">rastojanja</span> <span class="o">=</span> <span class="mi">0</span>
@@ -177,12 +180,77 @@
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">==</span> <span class="n">na_potezu</span><span class="p">:</span>
                 <span class="n">rastojanja</span> <span class="o">+=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">rastojanje</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">potez</span><span class="o">.</span><span class="n">xg</span><span class="p">,</span> <span class="n">potez</span><span class="o">.</span><span class="n">yg</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">!=</span> <span class="n">na_potezu</span> <span class="ow">and</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># ako je protivnik</span>
+            <span class="k">elif</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">!=</span> <span class="n">na_potezu</span> <span class="ow">and</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">!=</span> <span class="n">Igrac</span><span class="o">.</span><span class="n">NIJEDAN</span><span class="p">:</span>  <span class="c1"># ako je protivnik</span>
                 <span class="n">rastojanja</span> <span class="o">-=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">rastojanje</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">potez</span><span class="o">.</span><span class="n">xg</span><span class="p">,</span> <span class="n">potez</span><span class="o">.</span><span class="n">yg</span><span class="p">)</span>
     <span class="n">m</span> <span class="o">=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">potez</span><span class="o">.</span><span class="n">xg</span><span class="p">][</span><span class="n">potez</span><span class="o">.</span><span class="n">yg</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span> <span class="o">*</span> <span class="n">rastojanja</span>
     <span class="k">return</span> <span class="n">n</span> <span class="o">+</span> <span class="n">m</span></div>
 
+<div class="viewcode-block" id="nova_staticka_funkcija_procene"><a class="viewcode-back" href="../ai.html#ai.nova_staticka_funkcija_procene">[docs]</a><span class="k">def</span> <span class="nf">nova_staticka_funkcija_procene</span><span class="p">(</span><span class="n">tabla</span><span class="p">:</span> <span class="n">Tabla</span><span class="p">,</span> <span class="n">potez</span><span class="p">:</span> <span class="n">Potez</span><span class="p">,</span> <span class="n">na_potezu</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Staticka funkcija procene stanja igre koja se racuna kao algebarski zbir visina figura na kvadrat.</span>
+<span class="sd">    f = moja_figura1.broj_spratova^2 + moja_figura2.broj_spratova^2 - protivnikova_figura1.broj_spratova^2 - protivnikova_figura2.broj_spratova^2</span>
+<span class="sd">    </span>
+<span class="sd">    :param tabla: Tabla/stanje za koju treba izracunati staticku funkciju procene</span>
+<span class="sd">    :type tabla: Tabla</span>
+<span class="sd">    :param potez: Potez koji je doveo to tog stanja</span>
+<span class="sd">    :type potez: Potez</span>
+<span class="sd">    :param na_potezu: Igrac za kojeg se racuna staticka funkcija procene</span>
+<span class="sd">    :type na_potezu: int</span>
+<span class="sd">    :return: Vrednost staticke funkcije procene</span>
+<span class="sd">    :rtype: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>   
+    <span class="k">if</span> <span class="n">tabla</span><span class="o">.</span><span class="n">pobeda</span><span class="p">(</span><span class="n">na_potezu</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">100</span>
+    <span class="k">if</span> <span class="n">tabla</span><span class="o">.</span><span class="n">poraz</span><span class="p">(</span><span class="n">na_potezu</span><span class="p">):</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">100</span>
+    <span class="n">suma_visina</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">==</span> <span class="n">na_potezu</span><span class="p">:</span>
+                <span class="n">suma_visina</span> <span class="o">+=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span><span class="o">**</span><span class="mi">2</span>
+            <span class="k">elif</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">!=</span> <span class="n">na_potezu</span> <span class="ow">and</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">!=</span> <span class="n">Igrac</span><span class="o">.</span><span class="n">NIJEDAN</span><span class="p">:</span>  <span class="c1"># ako je protivnik</span>
+                <span class="n">suma_visina</span> <span class="o">-=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span><span class="o">**</span><span class="mi">2</span>
+    <span class="k">return</span> <span class="n">suma_visina</span></div>
 
+<div class="viewcode-block" id="optimizovana_nova_staticka_funkcija_procene"><a class="viewcode-back" href="../ai.html#ai.optimizovana_nova_staticka_funkcija_procene">[docs]</a><span class="k">def</span> <span class="nf">optimizovana_nova_staticka_funkcija_procene</span><span class="p">(</span><span class="n">tabla</span><span class="p">:</span> <span class="n">Tabla</span><span class="p">,</span> <span class="n">potez</span><span class="p">:</span> <span class="n">Potez</span><span class="p">,</span> <span class="n">na_potezu</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Radi slicno kao funkcija iznad samo je malo optimizovana, brza je 40%</span>
+<span class="sd">    Staticka funkcija procene stanja igre koja se racuna kao algebarski zbir visina figura na kvadrat.</span>
+<span class="sd">    f = moja_figura1.broj_spratova^2 + moja_figura2.broj_spratova^2 - protivnikova_figura1.broj_spratova^2 - protivnikova_figura2.broj_spratova^2</span>
+<span class="sd">    + visina polja na kojem se gradi</span>
+<span class="sd">    :param tabla: Tabla/stanje za koju treba izracunati staticku funkciju procene</span>
+<span class="sd">    :type tabla: Tabla</span>
+<span class="sd">    :param potez: Potez koji je doveo to tog stanja</span>
+<span class="sd">    :type potez: Potez</span>
+<span class="sd">    :param na_potezu: Igrac za kojeg se racuna staticka funkcija procene</span>
+<span class="sd">    :type na_potezu: int</span>
+<span class="sd">    :return: Vrednost staticke funkcije procene</span>
+<span class="sd">    :rtype: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">tabla</span><span class="o">.</span><span class="n">ima_mogucih_poteza</span><span class="p">(</span><span class="n">na_potezu</span><span class="p">):</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">100</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">tabla</span><span class="o">.</span><span class="n">ima_mogucih_poteza</span><span class="p">(</span><span class="n">protivnik</span><span class="p">(</span><span class="n">na_potezu</span><span class="p">)):</span>
+        <span class="k">return</span> <span class="mi">100</span>
+    <span class="k">elif</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">potez</span><span class="o">.</span><span class="n">xg</span><span class="p">][</span><span class="n">potez</span><span class="o">.</span><span class="n">yg</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">50</span>  <span class="c1"># nepotrebno postavljanje kupole se boduje sa -50</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">suma_visina</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">brojac_figura</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># zbog ovoga imam 20% ubrzanje, jer prekidam petlje kad nadjem 4 figure</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">brojac_figura</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">suma_visina</span>
+                <span class="k">if</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">!=</span> <span class="n">Igrac</span><span class="o">.</span><span class="n">NIJEDAN</span><span class="p">:</span>
+                    <span class="n">brojac_figura</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">if</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">==</span> <span class="n">na_potezu</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                            <span class="k">return</span> <span class="mi">100</span>
+                        <span class="n">suma_visina</span> <span class="o">+=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span><span class="o">**</span><span class="mi">2</span>
+                    <span class="k">elif</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">!=</span> <span class="n">na_potezu</span><span class="p">:</span>  <span class="c1"># protivnik</span>
+                        <span class="k">if</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+                            <span class="k">return</span> <span class="o">-</span><span class="mi">100</span>
+                        <span class="n">suma_visina</span> <span class="o">-=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span><span class="o">**</span><span class="mi">2</span>
+        <span class="k">return</span> <span class="n">suma_visina</span> <span class="o">+</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">potez</span><span class="o">.</span><span class="n">xg</span><span class="p">][</span><span class="n">potez</span><span class="o">.</span><span class="n">yg</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span></div>
+
+<span class="c1"># visak, na listi za izbacivanje</span>
 <div class="viewcode-block" id="unapredjena_staticka_funkcija_procene"><a class="viewcode-back" href="../ai.html#ai.unapredjena_staticka_funkcija_procene">[docs]</a><span class="k">def</span> <span class="nf">unapredjena_staticka_funkcija_procene</span><span class="p">(</span><span class="n">tabla</span><span class="p">:</span> <span class="n">Tabla</span><span class="p">,</span> <span class="n">potez</span><span class="p">:</span> <span class="n">Potez</span><span class="p">,</span> <span class="n">na_potezu</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Ovo je unapredjena staticka funkcija procene f,koja se računa kao 𝑓 = 3 * 𝑛 + 𝑚 + suma_visina + 5 * razlika_u_visini,</span>
 <span class="sd">    gde je 𝑛 broj pločica odredišnog polja, a 𝑚 broj nivoa na koje se dodaje plocica poomnozen razlikom rastojanja</span>
@@ -204,6 +272,9 @@
         <span class="k">return</span> <span class="mi">100</span>
     <span class="k">if</span> <span class="n">tabla</span><span class="o">.</span><span class="n">poraz</span><span class="p">(</span><span class="n">na_potezu</span><span class="p">):</span>
         <span class="k">return</span> <span class="o">-</span><span class="mi">100</span>
+    <span class="c1"># kupolu postavlja samo kada bas mora</span>
+    <span class="k">if</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">potez</span><span class="o">.</span><span class="n">xg</span><span class="p">][</span><span class="n">potez</span><span class="o">.</span><span class="n">yg</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+        <span class="k">return</span> <span class="o">-</span><span class="mi">50</span>
 
     <span class="n">n</span> <span class="o">=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">potez</span><span class="o">.</span><span class="n">x2</span><span class="p">][</span><span class="n">potez</span><span class="o">.</span><span class="n">y2</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span>
     <span class="n">rastojanja</span> <span class="o">=</span> <span class="mi">0</span>
@@ -211,16 +282,14 @@
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">==</span> <span class="n">na_potezu</span><span class="p">:</span>
-                <span class="n">rastojanja</span> <span class="o">+=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">rastojanje</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">potez</span><span class="o">.</span><span class="n">xg</span><span class="p">,</span> <span class="n">potez</span><span class="o">.</span><span class="n">yg</span><span class="p">)</span>
-                <span class="n">suma_visina</span> <span class="o">+=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span>
-            <span class="k">elif</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">!=</span> <span class="n">na_potezu</span> <span class="ow">and</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># ako je protivnik</span>
-                <span class="n">rastojanja</span> <span class="o">-=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">rastojanje</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">potez</span><span class="o">.</span><span class="n">xg</span><span class="p">,</span> <span class="n">potez</span><span class="o">.</span><span class="n">yg</span><span class="p">)</span>
-                <span class="n">suma_visina</span> <span class="o">-=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span>
+                <span class="n">rastojanja</span> <span class="o">+=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">rastojanje</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">potez</span><span class="o">.</span><span class="n">xg</span><span class="p">,</span> <span class="n">potez</span><span class="o">.</span><span class="n">yg</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+                <span class="n">suma_visina</span> <span class="o">+=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span><span class="o">**</span><span class="mi">2</span>
+            <span class="k">elif</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">!=</span> <span class="n">na_potezu</span> <span class="ow">and</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">!=</span> <span class="n">Igrac</span><span class="o">.</span><span class="n">NIJEDAN</span><span class="p">:</span>  <span class="c1"># ako je protivnik</span>
+                <span class="n">rastojanja</span> <span class="o">-=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">rastojanje</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">potez</span><span class="o">.</span><span class="n">xg</span><span class="p">,</span> <span class="n">potez</span><span class="o">.</span><span class="n">yg</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+                <span class="n">suma_visina</span> <span class="o">-=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span><span class="o">**</span><span class="mi">2</span>
     <span class="n">m</span> <span class="o">=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">potez</span><span class="o">.</span><span class="n">xg</span><span class="p">][</span><span class="n">potez</span><span class="o">.</span><span class="n">yg</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span> <span class="o">*</span> <span class="n">rastojanja</span>
-
-    <span class="n">razlika_u_visini</span> <span class="o">=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">potez</span><span class="o">.</span><span class="n">x2</span><span class="p">][</span><span class="n">potez</span><span class="o">.</span><span class="n">y2</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span> <span class="o">-</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">potez</span><span class="o">.</span><span class="n">x1</span><span class="p">][</span><span class="n">potez</span><span class="o">.</span><span class="n">x2</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span> 
+    <span class="n">razlika_u_visini</span> <span class="o">=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">potez</span><span class="o">.</span><span class="n">x2</span><span class="p">][</span><span class="n">potez</span><span class="o">.</span><span class="n">y2</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span> <span class="o">-</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">potez</span><span class="o">.</span><span class="n">x1</span><span class="p">][</span><span class="n">potez</span><span class="o">.</span><span class="n">y1</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span> 
     <span class="k">return</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">n</span> <span class="o">+</span> <span class="n">m</span> <span class="o">+</span> <span class="n">suma_visina</span> <span class="o">+</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">razlika_u_visini</span> </div>
-
 
 <div class="viewcode-block" id="svi_moguci_potezi"><a class="viewcode-back" href="../ai.html#ai.svi_moguci_potezi">[docs]</a><span class="k">def</span> <span class="nf">svi_moguci_potezi</span><span class="p">(</span><span class="n">tabla</span><span class="p">,</span> <span class="n">na_potezu</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Funkcija koja za datu tablu/stanje i igraca vraca sve moguce poteze koje on iz tog stanja moze da izvrsi.</span>
@@ -246,9 +315,9 @@
     <span class="c1"># pronadji dve figure koje pripadaju trenutnom igracu</span>
     <span class="n">broj_pronadjenih_figura</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">broj_pronadjenih_figura</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="k">break</span>
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">broj_pronadjenih_figura</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">moguci_potezi</span>
             <span class="k">if</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">==</span> <span class="n">na_potezu</span><span class="p">:</span>
                 <span class="n">broj_pronadjenih_figura</span> <span class="o">+=</span> <span class="mi">1</span>
                 <span class="c1"># prodji kroz sva njegova susedna polja</span>
@@ -259,7 +328,7 @@
                         <span class="k">if</span> <span class="ow">not</span> <span class="n">unutar_matrice</span><span class="p">:</span>
                             <span class="k">continue</span>
                         <span class="n">novo_polje</span> <span class="o">=</span> <span class="n">k</span> <span class="o">!=</span> <span class="n">i</span> <span class="ow">or</span> <span class="n">l</span> <span class="o">!=</span> <span class="n">j</span>  <span class="c1"># da li se polje razlikuje od onog u kome se sad nalazi</span>
-                        <span class="n">slobodno_polje</span> <span class="o">=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">l</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">==</span> <span class="kc">None</span>
+                        <span class="n">slobodno_polje</span> <span class="o">=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">l</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">==</span> <span class="n">Igrac</span><span class="o">.</span><span class="n">NIJEDAN</span>
                         <span class="n">odgovara_broj_spratova</span> <span class="o">=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&gt;=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="n">l</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span>
                         <span class="k">if</span> <span class="n">unutar_matrice</span> <span class="ow">and</span> <span class="n">novo_polje</span> <span class="ow">and</span> <span class="n">slobodno_polje</span> <span class="ow">and</span> <span class="n">odgovara_broj_spratova</span><span class="p">:</span>
                             <span class="c1"># kad imamo sva polja u koja mozemo da idemo sad treba iz njih da nadjemo sva polja u koja mozemo da gradimo</span>
@@ -270,7 +339,7 @@
                                     <span class="k">if</span> <span class="ow">not</span> <span class="n">unutar_matrice</span><span class="p">:</span>
                                         <span class="k">continue</span>
                                     <span class="n">novo_polje</span> <span class="o">=</span> <span class="n">m</span> <span class="o">!=</span> <span class="n">k</span> <span class="ow">or</span> <span class="n">n</span> <span class="o">!=</span> <span class="n">l</span>
-                                    <span class="n">slobodno_polje</span> <span class="o">=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">m</span><span class="p">][</span><span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">==</span> <span class="kc">None</span>
+                                    <span class="n">slobodno_polje</span> <span class="o">=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">m</span><span class="p">][</span><span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">==</span> <span class="n">Igrac</span><span class="o">.</span><span class="n">NIJEDAN</span>
                                     <span class="n">moze_da_se_gradi</span> <span class="o">=</span> <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="n">m</span><span class="p">][</span><span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">broj_spratova</span> <span class="o">&lt;</span> <span class="mi">4</span>
                                     <span class="k">if</span> <span class="n">unutar_matrice</span> <span class="ow">and</span> <span class="n">novo_polje</span> <span class="ow">and</span> <span class="n">slobodno_polje</span> <span class="ow">and</span> <span class="n">moze_da_se_gradi</span><span class="p">:</span>
                                         <span class="n">moguci_potezi</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Potez</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
@@ -282,22 +351,22 @@
 <span class="sd">    Od atributa ima dubinu, funkciju koja racuna staticku vrednost i bool da li treba stampati vrednosti svih mogucih poteza AI algoritma .</span>
 <span class="sd">    &quot;&quot;&quot;</span>    
 
-<div class="viewcode-block" id="AI.__init__"><a class="viewcode-back" href="../ai.html#ai.AI.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span> <span class="n">dubina</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">funkcija_procene</span> <span class="o">=</span> <span class="n">staticka_funkcija_procene</span><span class="p">):</span>
+<div class="viewcode-block" id="AI.__init__"><a class="viewcode-back" href="../ai.html#ai.AI.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span> <span class="n">max_dubina</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">funkcija_procene</span> <span class="o">=</span> <span class="n">staticka_funkcija_procene</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Konsturtor sa parametrima koji postavlja vredsnoti atributa klase</span>
 <span class="sd">        </span>
 <span class="sd">        :param stampaj_vrednosti_svih_poteza: Da li treba stampati vrednost svakom moguceg poteza AI</span>
 <span class="sd">        :type stampaj_vrednosti_svih_poteza: bool</span>
-<span class="sd">        :param dubina: Dubina do koje treba pretrazivati stablo igre, defaults to 2</span>
-<span class="sd">        :type dubina: int, optional</span>
+<span class="sd">        :param max_dubina: Dubina do koje  iterativno produbljivanje moze da ide, defaults to 2</span>
+<span class="sd">        :type max_dubina: int, optional</span>
 <span class="sd">        :param funkcija_procene: Funkcija sa kojom se racuna staticka vrednost, defaults to staticka_funkcija_procene</span>
 <span class="sd">        :type funkcija_procene: function, optional</span>
 <span class="sd">        &quot;&quot;&quot;</span>        
         <span class="bp">self</span><span class="o">.</span><span class="n">stampaj_vrednosti_svih_poteza</span> <span class="o">=</span> <span class="n">stampaj_vrednosti_svih_poteza</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dubina</span> <span class="o">=</span> <span class="n">dubina</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_dubina</span> <span class="o">=</span> <span class="n">max_dubina</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">funkcija_procene</span> <span class="o">=</span> <span class="n">funkcija_procene</span></div>
 
 <div class="viewcode-block" id="AI.sledeci_potez"><a class="viewcode-back" href="../ai.html#ai.AI.sledeci_potez">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">sledeci_potez</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tabla</span><span class="p">,</span> <span class="n">na_potezu</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">sledeci_potez</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tabla</span><span class="p">,</span> <span class="n">na_potezu</span><span class="p">,</span> <span class="n">dubina</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Glavna funkcija ovog modula, igra poziva ovu funkcija, prosledjuje joj stanje i igraca a ova funkija vraca sledeci potez.</span>
 <span class="sd">        Ovo je abstraktna funkcija tako da je moraju implementirati sve klase koje nasledjuju AI.</span>
 <span class="sd">        </span>
@@ -305,6 +374,8 @@
 <span class="sd">        :type tabla: Tabla</span>
 <span class="sd">        :param na_potezu: Igrac koji je na potezu i za kojeg treba naci sledeci potez</span>
 <span class="sd">        :type na_potezu: int</span>
+<span class="sd">        :param dubina: Dubina za koju treba izvrsiti pretrazivanje stabla</span>
+<span class="sd">        :type dubina: int</span>
 <span class="sd">        &quot;&quot;&quot;</span>        
         <span class="k">pass</span></div></div>
 
@@ -312,28 +383,31 @@
 <div class="viewcode-block" id="MiniMax"><a class="viewcode-back" href="../ai.html#ai.MiniMax">[docs]</a><span class="k">class</span> <span class="nc">MiniMax</span><span class="p">(</span><span class="n">AI</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Klasa koja nasledjuje AI i implementira obicni MiniMax algoritam&quot;&quot;&quot;</span>    
 
-<div class="viewcode-block" id="MiniMax.__init__"><a class="viewcode-back" href="../ai.html#ai.MiniMax.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span><span class="n">dubina</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">funkcija_procene</span> <span class="o">=</span> <span class="n">staticka_funkcija_procene</span><span class="p">):</span>
+<div class="viewcode-block" id="MiniMax.__init__"><a class="viewcode-back" href="../ai.html#ai.MiniMax.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span> <span class="n">max_dubina</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">funkcija_procene</span> <span class="o">=</span> <span class="n">staticka_funkcija_procene</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Konsturtor sa parametrima koji postavlja vredsnoti atributa klase</span>
 <span class="sd">        </span>
 <span class="sd">        :param stampaj_vrednosti_svih_poteza: Da li treba stampati vrednost svakom moguceg poteza AI</span>
 <span class="sd">        :type stampaj_vrednosti_svih_poteza: bool</span>
-<span class="sd">        :param dubina: Dubina do koje treba pretrazivati stablo igre, defaults to 2</span>
-<span class="sd">        :type dubina: int, optional</span>
+<span class="sd">        :param max_dubina: Dubina do koje  iterativno produbljivanje moze da ide, defaults to 2</span>
+<span class="sd">        :type max_dubina: int, optional</span>
 <span class="sd">        :param funkcija_procene: Funkcija sa kojom se racuna staticka vrednost, defaults to staticka_funkcija_procene</span>
 <span class="sd">        :type funkcija_procene: function, optional</span>
 <span class="sd">        &quot;&quot;&quot;</span>          
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span> <span class="n">dubina</span><span class="p">,</span> <span class="n">funkcija_procene</span><span class="p">)</span></div>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span> <span class="n">max_dubina</span><span class="p">,</span> <span class="n">funkcija_procene</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="MiniMax.sledeci_potez"><a class="viewcode-back" href="../ai.html#ai.MiniMax.sledeci_potez">[docs]</a>    <span class="k">def</span> <span class="nf">sledeci_potez</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tabla</span><span class="p">,</span> <span class="n">igrac</span><span class="p">):</span>
+<div class="viewcode-block" id="MiniMax.sledeci_potez"><a class="viewcode-back" href="../ai.html#ai.MiniMax.sledeci_potez">[docs]</a>    <span class="k">def</span> <span class="nf">sledeci_potez</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tabla</span><span class="p">,</span> <span class="n">igrac</span><span class="p">,</span> <span class="n">dubina</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Igra poziva ovu funkcija, prosledjuje joj stanje i igraca a ova funkija vraca sledeci potez.</span>
 <span class="sd">        Ovde se koriti obicni minimax algoritam za nalazenje najboljeg poteza.</span>
 <span class="sd">        Ovo je abstraktna funkcija tako da je moraju implementirati sve klase koje nasledjuju AI.</span>
 <span class="sd">        </span>
 <span class="sd">        :param tabla: Tabla za koju treba naci sledeci potez</span>
 <span class="sd">        :type tabla: Tabla</span>
-<span class="sd">        :param igrac: Igrac koji je na potezu, za kojeg treba naci sledeci potez i za koga se kroz algoritam racuna staticka f-ja procene</span>
-<span class="sd">        :type igrac: int</span>
-<span class="sd">        &quot;&quot;&quot;</span>   
+<span class="sd">        :param na_potezu: Igrac koji je na potezu i za kojeg treba naci sledeci potez</span>
+<span class="sd">        :type na_potezu: int</span>
+<span class="sd">        :param dubina: Dubina za koju treba izvrsiti pretrazivanje stabla</span>
+<span class="sd">        :type dubina: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>      
+        <span class="bp">self</span><span class="o">.</span><span class="n">dubina</span> <span class="o">=</span> <span class="n">dubina</span>
         <span class="n">svi_potezi</span> <span class="o">=</span> <span class="n">svi_moguci_potezi</span><span class="p">(</span><span class="n">tabla</span><span class="p">,</span> <span class="n">igrac</span><span class="p">)</span>
         <span class="n">vrednosti</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="c1"># nadji vrednosti svih mogucih poteza</span>
@@ -398,30 +472,32 @@
 
 <div class="viewcode-block" id="MiniMaxAlfaBeta"><a class="viewcode-back" href="../ai.html#ai.MiniMaxAlfaBeta">[docs]</a><span class="k">class</span> <span class="nc">MiniMaxAlfaBeta</span><span class="p">(</span><span class="n">AI</span><span class="p">):</span> 
     <span class="sd">&quot;&quot;&quot;Klasa koja nasledjuje AI i implementira MiniMax algoritam sa alfa-beta odsecanjem&quot;&quot;&quot;</span> 
-
-<div class="viewcode-block" id="MiniMaxAlfaBeta.__init__"><a class="viewcode-back" href="../ai.html#ai.MiniMaxAlfaBeta.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span><span class="n">dubina</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">funkcija_procene</span> <span class="o">=</span> <span class="n">staticka_funkcija_procene</span><span class="p">):</span>    
-        <span class="sd">&quot;&quot;&quot;Konsturtor sa parametrima koji postavlja vredsnoti atributa klase.</span>
+<div class="viewcode-block" id="MiniMaxAlfaBeta.__init__"><a class="viewcode-back" href="../ai.html#ai.MiniMaxAlfaBeta.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span> <span class="n">max_dubina</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span> <span class="n">funkcija_procene</span> <span class="o">=</span> <span class="n">staticka_funkcija_procene</span><span class="p">):</span>    
+        <span class="sd">&quot;&quot;&quot;Konsturtor sa parametrima koji postavlja vredsnoti atributa klase</span>
 <span class="sd">        </span>
 <span class="sd">        :param stampaj_vrednosti_svih_poteza: Da li treba stampati vrednost svakom moguceg poteza AI</span>
 <span class="sd">        :type stampaj_vrednosti_svih_poteza: bool</span>
-<span class="sd">        :param dubina: Dubina do koje treba pretrazivati stablo igre, defaults to 3</span>
-<span class="sd">        :type dubina: int, optional</span>
+<span class="sd">        :param max_dubina: Dubina do koje  iterativno produbljivanje moze da ide, defaults to 2</span>
+<span class="sd">        :type max_dubina: int, optional</span>
 <span class="sd">        :param funkcija_procene: Funkcija sa kojom se racuna staticka vrednost, defaults to staticka_funkcija_procene</span>
 <span class="sd">        :type funkcija_procene: function, optional</span>
-<span class="sd">        &quot;&quot;&quot;</span>  
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span> <span class="n">dubina</span><span class="p">,</span> <span class="n">funkcija_procene</span><span class="p">)</span></div>
+<span class="sd">        &quot;&quot;&quot;</span>   
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span> <span class="n">max_dubina</span><span class="p">,</span> <span class="n">funkcija_procene</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="MiniMaxAlfaBeta.sledeci_potez"><a class="viewcode-back" href="../ai.html#ai.MiniMaxAlfaBeta.sledeci_potez">[docs]</a>    <span class="k">def</span> <span class="nf">sledeci_potez</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tabla</span><span class="p">,</span> <span class="n">na_potezu</span><span class="p">):</span>
+<div class="viewcode-block" id="MiniMaxAlfaBeta.sledeci_potez"><a class="viewcode-back" href="../ai.html#ai.MiniMaxAlfaBeta.sledeci_potez">[docs]</a>    <span class="k">def</span> <span class="nf">sledeci_potez</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tabla</span><span class="p">,</span> <span class="n">na_potezu</span><span class="p">,</span> <span class="n">dubina</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Igra poziva ovu funkcija, prosledjuje joj stanje i igraca a ova funkija vraca sledeci potez.</span>
 <span class="sd">        Ovde se koriti minimax sa alfa-beta odsecanjem za nalazenje najboljeg poteza.</span>
 <span class="sd">        Ovo je abstraktna funkcija tako da je moraju implementirati sve klase koje nasledjuju AI.</span>
 <span class="sd">        </span>
-<span class="sd">        :param tabla: Tabla za koju treba naci sledeci potez</span>
+<span class="sd">       :param tabla: Tabla za koju treba naci sledeci potez</span>
 <span class="sd">        :type tabla: Tabla</span>
 <span class="sd">        :param na_potezu: Igrac koji je na potezu i za kojeg treba naci sledeci potez</span>
 <span class="sd">        :type na_potezu: int</span>
-<span class="sd">        &quot;&quot;&quot;</span>     
+<span class="sd">        :param dubina: Dubina za koju treba izvrsiti pretrazivanje stabla</span>
+<span class="sd">        :type dubina: int</span>
+<span class="sd">        &quot;&quot;&quot;</span>       
+        <span class="bp">self</span><span class="o">.</span><span class="n">dubina</span> <span class="o">=</span> <span class="n">dubina</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span> <span class="o">=</span> <span class="n">na_potezu</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lista_poteza_i_njihovih_vrednosti</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_value</span><span class="p">(</span><span class="n">tabla</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dubina</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="o">-</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
@@ -516,35 +592,6 @@
         <span class="k">return</span> <span class="n">v</span></div></div>
 
 
-<span class="c1"># test vremena potregnog za nalazenje poteza</span>
-<span class="c1"># kad koristim pypy interpreter onda se vreme potrebno za nalazenje poteza za bilo koji algoritam smanji 10 do 15 puta</span>
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="n">tabla</span> <span class="o">=</span> <span class="n">Tabla</span><span class="p">()</span>
-
-    <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">=</span> <span class="n">IGRAC_PLAVI</span>
-    <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">=</span> <span class="n">IGRAC_PLAVI</span>
-    <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">=</span> <span class="n">IGRAC_CRVENI</span>
-    <span class="n">tabla</span><span class="o">.</span><span class="n">matrica</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">igrac</span> <span class="o">=</span> <span class="n">IGRAC_CRVENI</span>
-
-    <span class="n">ukupno</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-        <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-        <span class="n">potez</span> <span class="o">=</span> <span class="n">MiniMaxAlfaBeta</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">sledeci_potez</span><span class="p">(</span><span class="n">tabla</span><span class="p">,</span> <span class="n">IGRAC_PLAVI</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">potez</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Vreme potrebno za izracunavanje: &quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
-        <span class="n">ukupno</span> <span class="o">+=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
-
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Prosek:&quot;</span><span class="p">,</span> <span class="n">ukupno</span> <span class="o">/</span> <span class="mf">10.</span><span class="p">)</span>
-
-    <span class="n">ukupno</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-        <span class="n">start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
-        <span class="n">potez</span> <span class="o">=</span> <span class="n">MiniMax</span><span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">sledeci_potez</span><span class="p">(</span><span class="n">tabla</span><span class="p">,</span> <span class="n">IGRAC_PLAVI</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">potez</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Vreme potrebno za izracunavanje: &quot;</span><span class="p">,</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
-        <span class="n">ukupno</span> <span class="o">+=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start</span>
-
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Prosek:&quot;</span><span class="p">,</span> <span class="n">ukupno</span> <span class="o">/</span> <span class="mf">10.</span><span class="p">)</span>
 </pre></div>
 
            </div>

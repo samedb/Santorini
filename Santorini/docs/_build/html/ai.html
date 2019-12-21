@@ -161,19 +161,19 @@
 funkcije za staticku procenu stanja itd. Sve sto ima veze za AI ove igre nalazi se ovde.</p>
 <dl class="class">
 <dt id="ai.AI">
-<em class="property">class </em><code class="sig-prename descclassname">ai.</code><code class="sig-name descname">AI</code><span class="sig-paren">(</span><em class="sig-param">stampaj_vrednosti_svih_poteza</em>, <em class="sig-param">dubina=2</em>, <em class="sig-param">funkcija_procene=&lt;function staticka_funkcija_procene&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ai.html#AI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ai.AI" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">ai.</code><code class="sig-name descname">AI</code><span class="sig-paren">(</span><em class="sig-param">stampaj_vrednosti_svih_poteza</em>, <em class="sig-param">max_dubina=5</em>, <em class="sig-param">funkcija_procene=&lt;function staticka_funkcija_procene&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ai.html#AI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ai.AI" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">abc.ABC</span></code></p>
 <p>Abstraktna klasa koju nasledjuju sve klase koje implementiraju neku vrstu vestacke inteligencije.
 Od atributa ima dubinu, funkciju koja racuna staticku vrednost i bool da li treba stampati vrednosti svih mogucih poteza AI algoritma .</p>
 <dl class="method">
 <dt id="ai.AI.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">stampaj_vrednosti_svih_poteza</em>, <em class="sig-param">dubina=2</em>, <em class="sig-param">funkcija_procene=&lt;function staticka_funkcija_procene&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ai.html#AI.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ai.AI.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">stampaj_vrednosti_svih_poteza</em>, <em class="sig-param">max_dubina=5</em>, <em class="sig-param">funkcija_procene=&lt;function staticka_funkcija_procene&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ai.html#AI.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ai.AI.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Konsturtor sa parametrima koji postavlja vredsnoti atributa klase</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stampaj_vrednosti_svih_poteza</strong> (<em>bool</em>) – Da li treba stampati vrednost svakom moguceg poteza AI</p></li>
-<li><p><strong>dubina</strong> (<em>int</em><em>, </em><em>optional</em>) – Dubina do koje treba pretrazivati stablo igre, defaults to 2</p></li>
+<li><p><strong>max_dubina</strong> (<em>int</em><em>, </em><em>optional</em>) – Dubina do koje  iterativno produbljivanje moze da ide, defaults to 2</p></li>
 <li><p><strong>funkcija_procene</strong> (<em>function</em><em>, </em><em>optional</em>) – Funkcija sa kojom se racuna staticka vrednost, defaults to staticka_funkcija_procene</p></li>
 </ul>
 </dd>
@@ -182,7 +182,7 @@ Od atributa ima dubinu, funkciju koja racuna staticku vrednost i bool da li treb
 
 <dl class="method">
 <dt id="ai.AI.sledeci_potez">
-<em class="property">abstract </em><code class="sig-name descname">sledeci_potez</code><span class="sig-paren">(</span><em class="sig-param">tabla</em>, <em class="sig-param">na_potezu</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ai.html#AI.sledeci_potez"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ai.AI.sledeci_potez" title="Permalink to this definition">¶</a></dt>
+<em class="property">abstract </em><code class="sig-name descname">sledeci_potez</code><span class="sig-paren">(</span><em class="sig-param">tabla</em>, <em class="sig-param">na_potezu</em>, <em class="sig-param">dubina</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ai.html#AI.sledeci_potez"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ai.AI.sledeci_potez" title="Permalink to this definition">¶</a></dt>
 <dd><p>Glavna funkcija ovog modula, igra poziva ovu funkcija, prosledjuje joj stanje i igraca a ova funkija vraca sledeci potez.
 Ovo je abstraktna funkcija tako da je moraju implementirati sve klase koje nasledjuju AI.</p>
 <dl class="field-list simple">
@@ -190,6 +190,7 @@ Ovo je abstraktna funkcija tako da je moraju implementirati sve klase koje nasle
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>tabla</strong> (<a class="reference internal" href="tabla.html#tabla.Tabla" title="tabla.Tabla"><em>Tabla</em></a>) – Tabla za koju treba naci sledeci potez</p></li>
 <li><p><strong>na_potezu</strong> (<em>int</em>) – Igrac koji je na potezu i za kojeg treba naci sledeci potez</p></li>
+<li><p><strong>dubina</strong> (<em>int</em>) – Dubina za koju treba izvrsiti pretrazivanje stabla</p></li>
 </ul>
 </dd>
 </dl>
@@ -199,18 +200,18 @@ Ovo je abstraktna funkcija tako da je moraju implementirati sve klase koje nasle
 
 <dl class="class">
 <dt id="ai.MiniMax">
-<em class="property">class </em><code class="sig-prename descclassname">ai.</code><code class="sig-name descname">MiniMax</code><span class="sig-paren">(</span><em class="sig-param">stampaj_vrednosti_svih_poteza</em>, <em class="sig-param">dubina=2</em>, <em class="sig-param">funkcija_procene=&lt;function staticka_funkcija_procene&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ai.html#MiniMax"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ai.MiniMax" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">ai.</code><code class="sig-name descname">MiniMax</code><span class="sig-paren">(</span><em class="sig-param">stampaj_vrednosti_svih_poteza</em>, <em class="sig-param">max_dubina=4</em>, <em class="sig-param">funkcija_procene=&lt;function staticka_funkcija_procene&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ai.html#MiniMax"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ai.MiniMax" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ai.AI" title="ai.AI"><code class="xref py py-class docutils literal notranslate"><span class="pre">ai.AI</span></code></a></p>
 <p>Klasa koja nasledjuje AI i implementira obicni MiniMax algoritam</p>
 <dl class="method">
 <dt id="ai.MiniMax.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">stampaj_vrednosti_svih_poteza</em>, <em class="sig-param">dubina=2</em>, <em class="sig-param">funkcija_procene=&lt;function staticka_funkcija_procene&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ai.html#MiniMax.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ai.MiniMax.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">stampaj_vrednosti_svih_poteza</em>, <em class="sig-param">max_dubina=4</em>, <em class="sig-param">funkcija_procene=&lt;function staticka_funkcija_procene&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ai.html#MiniMax.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ai.MiniMax.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Konsturtor sa parametrima koji postavlja vredsnoti atributa klase</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stampaj_vrednosti_svih_poteza</strong> (<em>bool</em>) – Da li treba stampati vrednost svakom moguceg poteza AI</p></li>
-<li><p><strong>dubina</strong> (<em>int</em><em>, </em><em>optional</em>) – Dubina do koje treba pretrazivati stablo igre, defaults to 2</p></li>
+<li><p><strong>max_dubina</strong> (<em>int</em><em>, </em><em>optional</em>) – Dubina do koje  iterativno produbljivanje moze da ide, defaults to 2</p></li>
 <li><p><strong>funkcija_procene</strong> (<em>function</em><em>, </em><em>optional</em>) – Funkcija sa kojom se racuna staticka vrednost, defaults to staticka_funkcija_procene</p></li>
 </ul>
 </dd>
@@ -243,7 +244,7 @@ Ovaj algoritam je uradjen po ugledu na psudo kod minimax algoritma sa moodle-a.<
 
 <dl class="method">
 <dt id="ai.MiniMax.sledeci_potez">
-<code class="sig-name descname">sledeci_potez</code><span class="sig-paren">(</span><em class="sig-param">tabla</em>, <em class="sig-param">igrac</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ai.html#MiniMax.sledeci_potez"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ai.MiniMax.sledeci_potez" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">sledeci_potez</code><span class="sig-paren">(</span><em class="sig-param">tabla</em>, <em class="sig-param">igrac</em>, <em class="sig-param">dubina</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ai.html#MiniMax.sledeci_potez"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ai.MiniMax.sledeci_potez" title="Permalink to this definition">¶</a></dt>
 <dd><p>Igra poziva ovu funkcija, prosledjuje joj stanje i igraca a ova funkija vraca sledeci potez.
 Ovde se koriti obicni minimax algoritam za nalazenje najboljeg poteza.
 Ovo je abstraktna funkcija tako da je moraju implementirati sve klase koje nasledjuju AI.</p>
@@ -251,7 +252,8 @@ Ovo je abstraktna funkcija tako da je moraju implementirati sve klase koje nasle
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>tabla</strong> (<a class="reference internal" href="tabla.html#tabla.Tabla" title="tabla.Tabla"><em>Tabla</em></a>) – Tabla za koju treba naci sledeci potez</p></li>
-<li><p><strong>igrac</strong> (<em>int</em>) – Igrac koji je na potezu, za kojeg treba naci sledeci potez i za koga se kroz algoritam racuna staticka f-ja procene</p></li>
+<li><p><strong>na_potezu</strong> (<em>int</em>) – Igrac koji je na potezu i za kojeg treba naci sledeci potez</p></li>
+<li><p><strong>dubina</strong> (<em>int</em>) – Dubina za koju treba izvrsiti pretrazivanje stabla</p></li>
 </ul>
 </dd>
 </dl>
@@ -261,18 +263,18 @@ Ovo je abstraktna funkcija tako da je moraju implementirati sve klase koje nasle
 
 <dl class="class">
 <dt id="ai.MiniMaxAlfaBeta">
-<em class="property">class </em><code class="sig-prename descclassname">ai.</code><code class="sig-name descname">MiniMaxAlfaBeta</code><span class="sig-paren">(</span><em class="sig-param">stampaj_vrednosti_svih_poteza</em>, <em class="sig-param">dubina=3</em>, <em class="sig-param">funkcija_procene=&lt;function staticka_funkcija_procene&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ai.html#MiniMaxAlfaBeta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ai.MiniMaxAlfaBeta" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">ai.</code><code class="sig-name descname">MiniMaxAlfaBeta</code><span class="sig-paren">(</span><em class="sig-param">stampaj_vrednosti_svih_poteza</em>, <em class="sig-param">max_dubina=6</em>, <em class="sig-param">funkcija_procene=&lt;function staticka_funkcija_procene&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ai.html#MiniMaxAlfaBeta"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ai.MiniMaxAlfaBeta" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#ai.AI" title="ai.AI"><code class="xref py py-class docutils literal notranslate"><span class="pre">ai.AI</span></code></a></p>
 <p>Klasa koja nasledjuje AI i implementira MiniMax algoritam sa alfa-beta odsecanjem</p>
 <dl class="method">
 <dt id="ai.MiniMaxAlfaBeta.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">stampaj_vrednosti_svih_poteza</em>, <em class="sig-param">dubina=3</em>, <em class="sig-param">funkcija_procene=&lt;function staticka_funkcija_procene&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ai.html#MiniMaxAlfaBeta.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ai.MiniMaxAlfaBeta.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Konsturtor sa parametrima koji postavlja vredsnoti atributa klase.</p>
+<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">stampaj_vrednosti_svih_poteza</em>, <em class="sig-param">max_dubina=6</em>, <em class="sig-param">funkcija_procene=&lt;function staticka_funkcija_procene&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ai.html#MiniMaxAlfaBeta.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ai.MiniMaxAlfaBeta.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Konsturtor sa parametrima koji postavlja vredsnoti atributa klase</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>stampaj_vrednosti_svih_poteza</strong> (<em>bool</em>) – Da li treba stampati vrednost svakom moguceg poteza AI</p></li>
-<li><p><strong>dubina</strong> (<em>int</em><em>, </em><em>optional</em>) – Dubina do koje treba pretrazivati stablo igre, defaults to 3</p></li>
+<li><p><strong>max_dubina</strong> (<em>int</em><em>, </em><em>optional</em>) – Dubina do koje  iterativno produbljivanje moze da ide, defaults to 2</p></li>
 <li><p><strong>funkcija_procene</strong> (<em>function</em><em>, </em><em>optional</em>) – Funkcija sa kojom se racuna staticka vrednost, defaults to staticka_funkcija_procene</p></li>
 </ul>
 </dd>
@@ -327,20 +329,63 @@ Ovo je abstraktna funkcija tako da je moraju implementirati sve klase koje nasle
 
 <dl class="method">
 <dt id="ai.MiniMaxAlfaBeta.sledeci_potez">
-<code class="sig-name descname">sledeci_potez</code><span class="sig-paren">(</span><em class="sig-param">tabla</em>, <em class="sig-param">na_potezu</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ai.html#MiniMaxAlfaBeta.sledeci_potez"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ai.MiniMaxAlfaBeta.sledeci_potez" title="Permalink to this definition">¶</a></dt>
-<dd><p>Igra poziva ovu funkcija, prosledjuje joj stanje i igraca a ova funkija vraca sledeci potez.
-Ovde se koriti minimax sa alfa-beta odsecanjem za nalazenje najboljeg poteza.
+<code class="sig-name descname">sledeci_potez</code><span class="sig-paren">(</span><em class="sig-param">tabla</em>, <em class="sig-param">na_potezu</em>, <em class="sig-param">dubina</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ai.html#MiniMaxAlfaBeta.sledeci_potez"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ai.MiniMaxAlfaBeta.sledeci_potez" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Igra poziva ovu funkcija, prosledjuje joj stanje i igraca a ova funkija vraca sledeci potez.</dt><dd><p>Ovde se koriti minimax sa alfa-beta odsecanjem za nalazenje najboljeg poteza.
 Ovo je abstraktna funkcija tako da je moraju implementirati sve klase koje nasledjuju AI.</p>
+</dd>
+</dl>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>tabla</strong> (<a class="reference internal" href="tabla.html#tabla.Tabla" title="tabla.Tabla"><em>Tabla</em></a>) – Tabla za koju treba naci sledeci potez</p></li>
-<li><p><strong>na_potezu</strong> (<em>int</em>) – Igrac koji je na potezu i za kojeg treba naci sledeci potez</p></li>
-</ul>
+<dd class="field-odd"><p><strong>tabla</strong> – Tabla za koju treba naci sledeci potez
+:type tabla: Tabla
+:param na_potezu: Igrac koji je na potezu i za kojeg treba naci sledeci potez
+:type na_potezu: int
+:param dubina: Dubina za koju treba izvrsiti pretrazivanje stabla
+:type dubina: int</p>
 </dd>
 </dl>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="function">
+<dt id="ai.nova_staticka_funkcija_procene">
+<code class="sig-prename descclassname">ai.</code><code class="sig-name descname">nova_staticka_funkcija_procene</code><span class="sig-paren">(</span><em class="sig-param">tabla: tabla.Tabla</em>, <em class="sig-param">potez: tabla.Potez</em>, <em class="sig-param">na_potezu</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ai.html#nova_staticka_funkcija_procene"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ai.nova_staticka_funkcija_procene" title="Permalink to this definition">¶</a></dt>
+<dd><p>Staticka funkcija procene stanja igre koja se racuna kao algebarski zbir visina figura na kvadrat.
+f = moja_figura1.broj_spratova^2 + moja_figura2.broj_spratova^2 - protivnikova_figura1.broj_spratova^2 - protivnikova_figura2.broj_spratova^2</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tabla</strong> (<a class="reference internal" href="tabla.html#tabla.Tabla" title="tabla.Tabla"><em>Tabla</em></a>) – Tabla/stanje za koju treba izracunati staticku funkciju procene</p></li>
+<li><p><strong>potez</strong> (<a class="reference internal" href="tabla.html#tabla.Potez" title="tabla.Potez"><em>Potez</em></a>) – Potez koji je doveo to tog stanja</p></li>
+<li><p><strong>na_potezu</strong> (<em>int</em>) – Igrac za kojeg se racuna staticka funkcija procene</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Vrednost staticke funkcije procene</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ai.optimizovana_nova_staticka_funkcija_procene">
+<code class="sig-prename descclassname">ai.</code><code class="sig-name descname">optimizovana_nova_staticka_funkcija_procene</code><span class="sig-paren">(</span><em class="sig-param">tabla: tabla.Tabla</em>, <em class="sig-param">potez: tabla.Potez</em>, <em class="sig-param">na_potezu</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ai.html#optimizovana_nova_staticka_funkcija_procene"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ai.optimizovana_nova_staticka_funkcija_procene" title="Permalink to this definition">¶</a></dt>
+<dd><p>Radi slicno kao funkcija iznad samo je malo optimizovana, brza je 40%
+Staticka funkcija procene stanja igre koja se racuna kao algebarski zbir visina figura na kvadrat.
+f = moja_figura1.broj_spratova^2 + moja_figura2.broj_spratova^2 - protivnikova_figura1.broj_spratova^2 - protivnikova_figura2.broj_spratova^2
++ visina polja na kojem se gradi
+:param tabla: Tabla/stanje za koju treba izracunati staticku funkciju procene
+:type tabla: Tabla
+:param potez: Potez koji je doveo to tog stanja
+:type potez: Potez
+:param na_potezu: Igrac za kojeg se racuna staticka funkcija procene
+:type na_potezu: int
+:return: Vrednost staticke funkcije procene
+:rtype: int</p>
 </dd></dl>
 
 <dl class="function">

@@ -3,8 +3,9 @@ To su klase Polje, Tabla, Potez, GameState"""
 from enum import Enum
 
 
-#TODO komentari
 class Igrac:
+    """Sadrzi konstante za sve igrace i onaku za prazno polje, kao neki enum
+    """    
     PLAVI = 0
     CRVENI = 1
     NIJEDAN = 2

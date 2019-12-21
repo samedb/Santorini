@@ -24,8 +24,7 @@ def staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):
         return 100
     if tabla.poraz(na_potezu):
         return -100
-    # da sprecim postavljanje kupole kada to nije potrebno, privremeno resenje TODO bolje da resim
-    # kupolu postavlja samo kada bas mora
+    # kupolu postavlja samo kada bas mora, postavljanje kupole se racuna kao -50
     if tabla.matrica[potez.xg][potez.yg].broj_spratova == 4:
         return -50
 
@@ -41,14 +40,22 @@ def staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):
     return n + m
 
 def nova_staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):
+    """Staticka funkcija procene stanja igre koja se racuna kao algebarski zbir visina figura na kvadrat.
+    f = moja_figura1.broj_spratova^2 + moja_figura2.broj_spratova^2 - protivnikova_figura1.broj_spratova^2 - protivnikova_figura2.broj_spratova^2
+    
+    :param tabla: Tabla/stanje za koju treba izracunati staticku funkciju procene
+    :type tabla: Tabla
+    :param potez: Potez koji je doveo to tog stanja
+    :type potez: Potez
+    :param na_potezu: Igrac za kojeg se racuna staticka funkcija procene
+    :type na_potezu: int
+    :return: Vrednost staticke funkcije procene
+    :rtype: int
+    """   
     if tabla.pobeda(na_potezu):
         return 100
     if tabla.poraz(na_potezu):
         return -100
-    # da sprecim postavljanje kupole kada to nije potrebno, privremeno resenje TODO bolje da resim
-    # kupolu postavlja samo kada bas mora,    mozda je ovo i suvisno idk
-    #if tabla.matrica[potez.xg][potez.yg].broj_spratova == 4:
-    #    return -50
     suma_visina = 0
     for i in range(5):
         for j in range(5):
@@ -59,8 +66,10 @@ def nova_staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):
     return suma_visina
 
 def optimizovana_nova_staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):
-    """Radi isto sto i funkcija iznad samo je malo optimizovana, brza je 40%
-    
+    """Radi slicno kao funkcija iznad samo je malo optimizovana, brza je 40%
+    Staticka funkcija procene stanja igre koja se racuna kao algebarski zbir visina figura na kvadrat.
+    f = moja_figura1.broj_spratova^2 + moja_figura2.broj_spratova^2 - protivnikova_figura1.broj_spratova^2 - protivnikova_figura2.broj_spratova^2
+    + visina polja na kojem se gradi
     :param tabla: Tabla/stanje za koju treba izracunati staticku funkciju procene
     :type tabla: Tabla
     :param potez: Potez koji je doveo to tog stanja
@@ -74,6 +83,8 @@ def optimizovana_nova_staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_p
         return -100
     elif not tabla.ima_mogucih_poteza(protivnik(na_potezu)):
         return 100
+    elif tabla.matrica[potez.xg][potez.yg].broj_spratova == 4:
+        return -50  # nepotrebno postavljanje kupole se boduje sa -50
     else:
         suma_visina = 0
         brojac_figura = 0  # zbog ovoga imam 20% ubrzanje, jer prekidam petlje kad nadjem 4 figure
@@ -91,52 +102,9 @@ def optimizovana_nova_staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_p
                         if tabla.matrica[i][j].broj_spratova == 3:
                             return -100
                         suma_visina -= tabla.matrica[i][j].broj_spratova**2
-        return suma_visina
+        return suma_visina + tabla.matrica[potez.xg][potez.yg].broj_spratova
 
-def optimizovana_neka_nova_staticka_funkcija_procene2(tabla: Tabla, potez: Potez, na_potezu):
-    """Radi isto sto i funkcija iznad samo je malo optimizovana, brza je 40%
-    
-    :param tabla: Tabla/stanje za koju treba izracunati staticku funkciju procene
-    :type tabla: Tabla
-    :param potez: Potez koji je doveo to tog stanja
-    :type potez: Potez
-    :param na_potezu: Igrac za kojeg se racuna staticka funkcija procene
-    :type na_potezu: int
-    :return: Vrednost staticke funkcije procene
-    :rtype: int
-    """    
-    if not tabla.ima_mogucih_poteza(na_potezu):
-        return -100
-    elif not tabla.ima_mogucih_poteza(protivnik(na_potezu)):
-        return 100
-    else:
-        nasi, njihovi = [], []
-        suma_visina = 0
-        brojac_figura = 0  # zbog ovoga imam 20% ubrzanje, jer prekidam petlje kad nadjem 4 figure
-        for i in range(5):
-            for j in range(5):
-                if brojac_figura == 4:
-                    return suma_visina
-                if tabla.matrica[i][j].igrac != Igrac.NIJEDAN:
-                    brojac_figura += 1
-                    if tabla.matrica[i][j].igrac == na_potezu:
-                        nasi.append((i, j))
-                        if tabla.matrica[i][j].broj_spratova == 3:
-                            return 100
-                        suma_visina += tabla.matrica[i][j].broj_spratova**2
-                    elif tabla.matrica[i][j].igrac != na_potezu:  # protivnik
-                        njihovi.append((i, j))
-                        if tabla.matrica[i][j].broj_spratova == 3:
-                            return -100
-                        suma_visina -= tabla.matrica[i][j].broj_spratova**2
-
-        ukupno_rastojanje = 0
-        for nas in nasi:
-            for njihov in njihovi:
-                ukupno_rastojanje += tabla.rastojanje(nas[0], nas[1], njihov[0], njihov[1])
-        return 8 * suma_visina - ukupno_rastojanje
-
-
+# visak, na listi za izbacivanje
 def unapredjena_staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):
     """Ovo je unapredjena staticka funkcija procene f,koja se računa kao 𝑓 = 3 * 𝑛 + 𝑚 + suma_visina + 5 * razlika_u_visini,
     gde je 𝑛 broj pločica odredišnog polja, a 𝑚 broj nivoa na koje se dodaje plocica poomnozen razlikom rastojanja
@@ -158,7 +126,6 @@ def unapredjena_staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu)
         return 100
     if tabla.poraz(na_potezu):
         return -100
-    # da sprecim postavljanje kupole kada to nije potrebno, privremeno resenje TODO bolje da resim
     # kupolu postavlja samo kada bas mora
     if tabla.matrica[potez.xg][potez.yg].broj_spratova == 4:
         return -50
@@ -177,7 +144,6 @@ def unapredjena_staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu)
     m = tabla.matrica[potez.xg][potez.yg].broj_spratova * rastojanja
     razlika_u_visini = tabla.matrica[potez.x2][potez.y2].broj_spratova - tabla.matrica[potez.x1][potez.y1].broj_spratova 
     return 3 * n + m + suma_visina + 5 * razlika_u_visini 
-
 
 def svi_moguci_potezi(tabla, na_potezu):
     """Funkcija koja za datu tablu/stanje i igraca vraca sve moguce poteze koje on iz tog stanja moze da izvrsi.
@@ -239,19 +205,18 @@ class AI(ABC):
     Od atributa ima dubinu, funkciju koja racuna staticku vrednost i bool da li treba stampati vrednosti svih mogucih poteza AI algoritma .
     """    
 
-    # TODO dubina ide napolje, zbog iterativnog produbiljivanja
-    def __init__(self, stampaj_vrednosti_svih_poteza, dubina = 2, funkcija_procene = staticka_funkcija_procene):
+    def __init__(self, stampaj_vrednosti_svih_poteza, max_dubina = 5, funkcija_procene = staticka_funkcija_procene):
         """Konsturtor sa parametrima koji postavlja vredsnoti atributa klase
         
         :param stampaj_vrednosti_svih_poteza: Da li treba stampati vrednost svakom moguceg poteza AI
         :type stampaj_vrednosti_svih_poteza: bool
-        :param dubina: Dubina do koje treba pretrazivati stablo igre, defaults to 2
-        :type dubina: int, optional
+        :param max_dubina: Dubina do koje  iterativno produbljivanje moze da ide, defaults to 2
+        :type max_dubina: int, optional
         :param funkcija_procene: Funkcija sa kojom se racuna staticka vrednost, defaults to staticka_funkcija_procene
         :type funkcija_procene: function, optional
         """        
         self.stampaj_vrednosti_svih_poteza = stampaj_vrednosti_svih_poteza
-        self.dubina = dubina
+        self.max_dubina = max_dubina
         self.funkcija_procene = funkcija_procene
 
     @abstractmethod
@@ -263,7 +228,8 @@ class AI(ABC):
         :type tabla: Tabla
         :param na_potezu: Igrac koji je na potezu i za kojeg treba naci sledeci potez
         :type na_potezu: int
-        # TODO dokumentaicja za dubinu
+        :param dubina: Dubina za koju treba izvrsiti pretrazivanje stabla
+        :type dubina: int
         """        
         pass
 
@@ -271,17 +237,17 @@ class AI(ABC):
 class MiniMax(AI):
     """Klasa koja nasledjuje AI i implementira obicni MiniMax algoritam"""    
 
-    def __init__(self, stampaj_vrednosti_svih_poteza,dubina = 2, funkcija_procene = staticka_funkcija_procene):
+    def __init__(self, stampaj_vrednosti_svih_poteza, max_dubina = 4, funkcija_procene = staticka_funkcija_procene):
         """Konsturtor sa parametrima koji postavlja vredsnoti atributa klase
         
         :param stampaj_vrednosti_svih_poteza: Da li treba stampati vrednost svakom moguceg poteza AI
         :type stampaj_vrednosti_svih_poteza: bool
-        :param dubina: Dubina do koje treba pretrazivati stablo igre, defaults to 2
-        :type dubina: int, optional
+        :param max_dubina: Dubina do koje  iterativno produbljivanje moze da ide, defaults to 2
+        :type max_dubina: int, optional
         :param funkcija_procene: Funkcija sa kojom se racuna staticka vrednost, defaults to staticka_funkcija_procene
         :type funkcija_procene: function, optional
         """          
-        super().__init__(stampaj_vrednosti_svih_poteza, dubina, funkcija_procene)
+        super().__init__(stampaj_vrednosti_svih_poteza, max_dubina, funkcija_procene)
 
     def sledeci_potez(self, tabla, igrac, dubina):
         """Igra poziva ovu funkcija, prosledjuje joj stanje i igraca a ova funkija vraca sledeci potez.
@@ -290,9 +256,11 @@ class MiniMax(AI):
         
         :param tabla: Tabla za koju treba naci sledeci potez
         :type tabla: Tabla
-        :param igrac: Igrac koji je na potezu, za kojeg treba naci sledeci potez i za koga se kroz algoritam racuna staticka f-ja procene
-        :type igrac: int
-        """   
+        :param na_potezu: Igrac koji je na potezu i za kojeg treba naci sledeci potez
+        :type na_potezu: int
+        :param dubina: Dubina za koju treba izvrsiti pretrazivanje stabla
+        :type dubina: int
+        """      
         self.dubina = dubina
         svi_potezi = svi_moguci_potezi(tabla, igrac)
         vrednosti = []
@@ -358,18 +326,17 @@ class MiniMax(AI):
 
 class MiniMaxAlfaBeta(AI): 
     """Klasa koja nasledjuje AI i implementira MiniMax algoritam sa alfa-beta odsecanjem""" 
-    #TODO da se dubina izbaci iz konstruktora i da se samo nalazi u funkciji sledeci_potez, to da se uradi za sve ove klase i za AI isto
-    def __init__(self, stampaj_vrednosti_svih_poteza,dubina = 3, funkcija_procene = staticka_funkcija_procene):    
-        """Konsturtor sa parametrima koji postavlja vredsnoti atributa klase.
+    def __init__(self, stampaj_vrednosti_svih_poteza, max_dubina = 6, funkcija_procene = staticka_funkcija_procene):    
+        """Konsturtor sa parametrima koji postavlja vredsnoti atributa klase
         
         :param stampaj_vrednosti_svih_poteza: Da li treba stampati vrednost svakom moguceg poteza AI
         :type stampaj_vrednosti_svih_poteza: bool
-        :param dubina: Dubina do koje treba pretrazivati stablo igre, defaults to 3
-        :type dubina: int, optional
+        :param max_dubina: Dubina do koje  iterativno produbljivanje moze da ide, defaults to 2
+        :type max_dubina: int, optional
         :param funkcija_procene: Funkcija sa kojom se racuna staticka vrednost, defaults to staticka_funkcija_procene
         :type funkcija_procene: function, optional
-        """  
-        super().__init__(stampaj_vrednosti_svih_poteza, dubina, funkcija_procene)
+        """   
+        super().__init__(stampaj_vrednosti_svih_poteza, max_dubina, funkcija_procene)
 
 
     def sledeci_potez(self, tabla, na_potezu, dubina):
@@ -377,11 +344,13 @@ class MiniMaxAlfaBeta(AI):
         Ovde se koriti minimax sa alfa-beta odsecanjem za nalazenje najboljeg poteza.
         Ovo je abstraktna funkcija tako da je moraju implementirati sve klase koje nasledjuju AI.
         
-        :param tabla: Tabla za koju treba naci sledeci potez
+       :param tabla: Tabla za koju treba naci sledeci potez
         :type tabla: Tabla
         :param na_potezu: Igrac koji je na potezu i za kojeg treba naci sledeci potez
         :type na_potezu: int
-        """     
+        :param dubina: Dubina za koju treba izvrsiti pretrazivanje stabla
+        :type dubina: int
+        """       
         self.dubina = dubina
         self.na_potezu = na_potezu
         self.lista_poteza_i_njihovih_vrednosti = []

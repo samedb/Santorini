@@ -3,7 +3,7 @@ primanja inputa od korisnika i upravljanje AI-om kada je jedan od igraca vestack
 from tkinter import Canvas, messagebox
 import time
 import random
-from ai import MiniMax, MiniMaxAlfaBeta, staticka_funkcija_procene, unapredjena_staticka_funkcija_procene, nova_staticka_funkcija_procene, optimizovana_nova_staticka_funkcija_procene, optimizovana_neka_nova_staticka_funkcija_procene2
+from ai import MiniMax, MiniMaxAlfaBeta, staticka_funkcija_procene, unapredjena_staticka_funkcija_procene, nova_staticka_funkcija_procene, optimizovana_nova_staticka_funkcija_procene
 from tabla import Tabla, GameState, Igrac, protivnik, Potez
 
 
@@ -17,8 +17,6 @@ class IgraCanvas(Canvas):
     def __init__(self, parent, igrac1, igrac2, naziv_fajla, stampaj_vrednosti_svih_poteza, crtaj_svaki_korak = True):
         """Konstruktor klase IgraCanvas, inicijalizuje potrebne atribute.
         
-        :param Canvas: [description]
-        :type Canvas: [type]
         :param parent: Roditeljski widget u kojem se crta IgraCanvas
         :type parent: Widget
         :param igrac1: Tip prvog igraca
@@ -109,12 +107,12 @@ class IgraCanvas(Canvas):
         if tip_igraca == TIPOVI_IGRACA[0]:  # Osoba
             return None
         elif tip_igraca == TIPOVI_IGRACA[1]:  # AI easy
-            return MiniMax(stampaj_vrednosti_svih_poteza, 2, staticka_funkcija_procene)
+            return MiniMax(stampaj_vrednosti_svih_poteza, 4, staticka_funkcija_procene)
         elif tip_igraca == TIPOVI_IGRACA[2]:  # AI medium
-            return MiniMaxAlfaBeta(stampaj_vrednosti_svih_poteza, 3, optimizovana_neka_nova_staticka_funkcija_procene2) # ovo je samo za test
+            return MiniMaxAlfaBeta(stampaj_vrednosti_svih_poteza, 6, staticka_funkcija_procene)
         elif tip_igraca == TIPOVI_IGRACA[3]:  # AI hard
-            return MiniMaxAlfaBeta(stampaj_vrednosti_svih_poteza, 3, optimizovana_nova_staticka_funkcija_procene) 
-            # TODO ovo gore iznad, treba dubina da bude 4 za hard, ali sam smanjio zbog vremena koje je potrebno za pronalazenje poteza
+            return MiniMaxAlfaBeta(stampaj_vrednosti_svih_poteza, 20, optimizovana_nova_staticka_funkcija_procene) 
+            
 
     def crtaj(self):
         """Funkcija koja crta stanje table na Canvas-u uzimajuci u obzir i dozvoljena polja koja se crtaju zelenom bojom, i selektovanu figuru
@@ -170,11 +168,11 @@ class IgraCanvas(Canvas):
         # preracunavanje tih kooridnata u indekse polja tabele
         x = int(e.x / 100)
         y = int((e.y - 50) / 100)
-        print(f"Polje koje je pritisnuto je: {x}, {y}")
+        #print(f"Polje koje je pritisnuto je: {x}, {y}")
 
         # nalazenje svih dozvoljenih polja
         dozvoljena_polja = self.tabla.pronadji_dozvoljena_polja(self.game_state, self.selektovana_figura[0], self.selektovana_figura[1], self.na_potezu)
-        print("Dozvoljena polja: ", dozvoljena_polja)
+        #print("Dozvoljena polja: ", dozvoljena_polja)
         # ako pritisnuto polje ne pripada dozvoljenim poljima onda se prikazuje greska i zavrsava ova funkcija
         if (x, y) not in dozvoljena_polja:
             print("Neispravan potez!")
@@ -249,18 +247,18 @@ class IgraCanvas(Canvas):
             return
         # minimalno trajanje poteza AI, da se ne bi momentalno izvrsio potez, potez moze da traje i duze ako treba
         DOZVOLJENO_VREME = 1  # koliko vremena AI moze da trazi potez
-        # TODO if hard onda 2 sekunda ili vise
         pocetak = time.time()
         # AI odredi sledeci potez
         ai = None
         potez = None
-        dubina = 1
+        dubina = 2  # dubina od koje pocinje iterativno produbljivanje
         if self.na_potezu == Igrac.PLAVI:
             ai = self.plavi_AI
         else:
             ai = self.crveni_AI
 
-        while time.time() - pocetak < DOZVOLJENO_VREME:
+        #sve dok ima vremena i dubina nije presla max_dubinu tog ai-ja, povecavaj dubinu i ponovo trazi potez
+        while time.time() - pocetak < DOZVOLJENO_VREME and dubina <= ai.max_dubina:
             print("Iterativno produbljivanje, dubina", dubina)
             potez = ai.sledeci_potez(self.tabla, self.na_potezu, dubina)
             dubina += 1
