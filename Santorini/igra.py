@@ -85,9 +85,13 @@ class IgraCanvas(Canvas):
         if len(lines) > 0:
             self.game_state = GameState.SELEKTOVANJE_FIGURE
         # broj linija takodje odredjuje ko je sad na potezu
-        # paran broj poteza znaci da je sad na potezu plavi(0), a neparan znaci da je crveni(1)
+        # paran broj poteza znaci da je sad na potezu plavi, a neparan znaci da je crveni
+        if len(lines) %2 == 0:
+            self.na_potezu = Igrac.PLAVI
+        else:
+            self.na_potezu = Igrac.CRVENI
         # i to se sve jos jednom zameni jer se ispod poziva funkcija zameni_igraca() koja menja igraca i zapocinje igru
-        self.na_potezu = 1 - len(lines) % 2
+        self.na_potezu = protivnik(self.na_potezu)
             
         self.f.close()
 
@@ -144,9 +148,9 @@ class IgraCanvas(Canvas):
                 if stepen >= 4:
                     self.create_oval(x1 + 30, y1 + 30, x1 + 70, y1 + 70, fill="black")
                 # nacrtaj igraca
-                if self.tabla.matrica[i][j].igrac == Igrac.IGRAC_PLAVI:  # 1 znaci plavi igrac
+                if self.tabla.matrica[i][j].igrac == Igrac.PLAVI:  # 1 znaci plavi igrac
                     self.create_oval(x1 + 30, y1 + 30, x1 + 70, y1 + 70, fill="blue")
-                elif self.tabla.matrica[i][j].igrac == Igrac.IGRAC_CRVENI:  # 2 znaci crveni igrac
+                elif self.tabla.matrica[i][j].igrac == Igrac.CRVENI:  # 2 znaci crveni igrac
                     self.create_oval(x1 + 30, y1 + 30, x1 + 70, y1 + 70, fill="red")
 
         self.create_text(250, 25, text=self.sastavi_poruku(), font="Airal 12")
@@ -232,7 +236,7 @@ class IgraCanvas(Canvas):
         :return: True ako je AI na potezu, inace false
         :rtype: bool
         """        
-        return (self.na_potezu == Igrac.IGRAC_PLAVI and self.plavi_AI != None) or (self.na_potezu == Igrac.IGRAC_CRVENI and self.crveni_AI != None)
+        return (self.na_potezu == Igrac.PLAVI and self.plavi_AI != None) or (self.na_potezu == Igrac.CRVENI and self.crveni_AI != None)
 
     def AI_izvrsi_potez(self, pravi_pauzu: bool):
         """Funkcija koja poziva AI koji je trenutno na potezu, prosledjuje mu trenutno stanje table i dobija novi potez
@@ -251,7 +255,7 @@ class IgraCanvas(Canvas):
         ai = None
         potez = None
         dubina = 2
-        if self.na_potezu == Igrac.IGRAC_PLAVI:
+        if self.na_potezu == Igrac.PLAVI:
             ai = self.plavi_AI
         else:
             ai = self.crveni_AI
@@ -299,7 +303,7 @@ class IgraCanvas(Canvas):
             return
 
         if self.na_potezu == None:
-            self.na_potezu = Igrac.IGRAC_PLAVI
+            self.na_potezu = Igrac.PLAVI
         else:
             self.na_potezu = protivnik(self.na_potezu)
 

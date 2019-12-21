@@ -5,9 +5,9 @@ from enum import Enum
 
 #TODO komentari
 class Igrac:
-    NIJEDAN = 0
-    IGRAC_PLAVI = 1
-    IGRAC_CRVENI = 2
+    PLAVI = 0
+    CRVENI = 1
+    NIJEDAN = 2
 
 
 
@@ -19,7 +19,7 @@ def protivnik(igrac):
     :return: Protivnik trenutnog igraca
     :rtype: int
     """ 
-    return 3 - igrac
+    return 1 - igrac
 
 
 class GameState(Enum):
