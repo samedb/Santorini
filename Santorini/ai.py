@@ -58,6 +58,41 @@ def nova_neka_staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):
                 suma_visina -= tabla.matrica[i][j].broj_spratova**2
     return suma_visina
 
+def optimizovana_neka_nova_staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):
+    """Radi isto sto i funkcija iznad samo je malo optimizovana, brza je 40%
+    
+    :param tabla: Tabla/stanje za koju treba izracunati staticku funkciju procene
+    :type tabla: Tabla
+    :param potez: Potez koji je doveo to tog stanja
+    :type potez: Potez
+    :param na_potezu: Igrac za kojeg se racuna staticka funkcija procene
+    :type na_potezu: int
+    :return: Vrednost staticke funkcije procene
+    :rtype: int
+    """    
+    if not tabla.ima_mogucih_poteza(na_potezu):
+        return -100
+    elif not tabla.ima_mogucih_poteza(protivnik(na_potezu)):
+        return 100
+    else:
+        suma_visina = 0
+        brojac_figura = 0  # zbog ovoga imam 20% ubrzanje, jer prekidam petlje kad nadjem 4 figure
+        for i in range(5):
+            for j in range(5):
+                if brojac_figura == 4:
+                    return suma_visina
+                if tabla.matrica[i][j].igrac != None:
+                    brojac_figura += 1
+                    if tabla.matrica[i][j].igrac == na_potezu:
+                        if tabla.matrica[i][j].broj_spratova == 3:
+                            return 100
+                        suma_visina += tabla.matrica[i][j].broj_spratova**2
+                    elif tabla.matrica[i][j].igrac != na_potezu:  # protivnik
+                        if tabla.matrica[i][j].broj_spratova == 3:
+                            return -100
+                        suma_visina -= tabla.matrica[i][j].broj_spratova**2
+        return suma_visina
+
 
 def unapredjena_staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):
     """Ovo je unapredjena staticka funkcija procene f,koja se računa kao 𝑓 = 3 * 𝑛 + 𝑚 + suma_visina + 5 * razlika_u_visini,
@@ -399,72 +434,3 @@ class MiniMaxAlfaBeta(AI):
         return v
 
 
-# probna staicka funkcija procene, samo za test sluzi
-def test_staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):
-    return potez.x1
-
-# test vremena potregnog za nalazenje poteza
-# kad koristim pypy interpreter onda se vreme potrebno za nalazenje poteza za bilo koji algoritam smanji 10 do 15 puta
-if __name__ == "__main__":
-    tabla = Tabla()
-
-    tabla.matrica[2][2].igrac = IGRAC_PLAVI
-    tabla.matrica[2][3].igrac = IGRAC_PLAVI
-    tabla.matrica[0][0].igrac = IGRAC_CRVENI
-    tabla.matrica[0][1].igrac = IGRAC_CRVENI
-    tabla.matrica[1][1].broj_spratova = 3
-
-    # ukupno = 0
-    # for i in range(10):
-    #     start = time.time()
-    #     potez = MiniMax(False, 3, test_staticka_funkcija_procene).sledeci_potez(tabla, IGRAC_PLAVI)
-    #     print(potez)
-    #     print("Vreme potrebno za izracunavanje: ", time.time() - start)
-    #     ukupno += time.time() - start
-
-    # print("Prosek:", ukupno / 10.)
-
-    # ukupno = 0
-    # for i in range(10):
-    #     start = time.time()
-    #     potez = MiniMax(False, 3, test_staticka_funkcija_procene).sledeci_potez(tabla, IGRAC_PLAVI)
-    #     print(potez)
-    #     print("Vreme potrebno za izracunavanje: ", time.time() - start)
-    #     ukupno += time.time() - start
-
-    # print("Prosek:", ukupno / 10.)
-
-    # ukupno = 0
-    # for i in range(10):
-    #     start = time.time()
-    #     potez = MiniMax(False, 3, staticka_funkcija_procene).sledeci_potez(tabla, IGRAC_PLAVI)
-    #     print(potez)
-    #     print("Vreme potrebno za izracunavanje: ", time.time() - start)
-    #     ukupno += time.time() - start
-
-    # print("Prosek:", ukupno / 10.)
-
-    # ukupno = 0
-    # for i in range(10):
-    #     start = time.time()
-    #     potez = MiniMax(False, 3, unapredjena_staticka_funkcija_procene).sledeci_potez(tabla, IGRAC_PLAVI)
-    #     print(potez)
-    #     print("Vreme potrebno za izracunavanje: ", time.time() - start)
-    #     ukupno += time.time() - start
-
-    # print("Prosek:", ukupno / 10.)
-
-    start = time.time()
-    for i in range(1000000):
-        v = test_staticka_funkcija_procene(tabla, Potez(0, 2, 0, 1, 1, 1), 0)
-    print("Vreme potrebno za obicnu staticku funkciju procene ", time.time() - start)
-
-    start = time.time()
-    for i in range(100000):
-        v = staticka_funkcija_procene(tabla, Potez(0, 2, 0, 1, 1, 1), 0)
-    print("Vreme potrebno za obicnu staticku funkciju procene ", time.time() - start)
-
-    start = time.time()
-    for i in range(100000):
-        v = nova_neka_staticka_funkcija_procene(tabla, Potez(0, 2, 0, 1, 1, 1), 0)
-    print("Vreme potrebno za naprednu staticku funkciju procene ", time.time() - start)
