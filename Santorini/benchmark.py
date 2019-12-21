@@ -48,7 +48,7 @@ if __name__ == "__main__":
     ukupno = 0
     for i in range(10):
         start = time.time()
-        potez = MiniMaxAlfaBeta(False, 5, unapredjena_staticka_funkcija_procene).sledeci_potez(tabla, Igrac.PLAVI, 4)
+        potez = MiniMaxAlfaBeta(False, 5, optimizovana_neka_nova_staticka_funkcija_procene2).sledeci_potez(tabla, Igrac.PLAVI, 4)
         print(potez)
         print("Vreme potrebno za izracunavanje: ", time.time() - start)
         ukupno += time.time() - start

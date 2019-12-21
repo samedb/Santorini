@@ -106,8 +106,8 @@ class OdabirTipaIgreFrame(Frame):
         preskoci_crtanje_poteza = IntVar()
         Checkbutton(self, text="Izvršavanje implementirane strategije do kraja", variable=preskoci_crtanje_poteza).grid(row=6, columnspan=2)
 
-        objasnjenje_tezina = "Opis raznih nivoa veštačke inteligencije \n• AI easy - minimax algoritam sa dubinom 2 \n• AI medium - minimax algoritam sa dubinom 3 uz alfa-beta odsecanje \n• AI hard - minimax algoritam sa dubinom 4(3) uz alfa-beta odsecanje \n  sa unapredjenom statickom funkcijom procene"
-        Label(self, text=objasnjenje_tezina, justify=LEFT, font="Arial 16").grid(row=7, columnspan=2, pady=30)
+        objasnjenje_tezina = "Opis raznih nivoa veštačke inteligencije \nSvi nivoi koriste iterativno produbljivanje \n• AI easy - minimax algoritam sa statickom funkcijom procene \n• AI medium - minimax sa alfa-beta odsecanjem i statickom funkcijom procene \n• AI hard - minimax algoritam sa alfa-beta odsecanjem \n  sa optimizovanom statickom funkcijom procene"
+        Label(self, text=objasnjenje_tezina, justify=LEFT, font="Arial 15").grid(row=7, columnspan=2, pady=25)
 
         Button(self, text="Nazad na početnu stranu", command=lambda: controller.show_frame(PocetniFrame), width=20).grid(row=8, column=0)
         
