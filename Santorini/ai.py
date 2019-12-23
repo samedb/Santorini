@@ -70,6 +70,7 @@ def optimizovana_nova_staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_p
     Staticka funkcija procene stanja igre koja se racuna kao algebarski zbir visina figura na kvadrat.
     f = moja_figura1.broj_spratova^2 + moja_figura2.broj_spratova^2 - protivnikova_figura1.broj_spratova^2 - protivnikova_figura2.broj_spratova^2
     + visina polja na kojem se gradi
+    
     :param tabla: Tabla/stanje za koju treba izracunati staticku funkciju procene
     :type tabla: Tabla
     :param potez: Potez koji je doveo to tog stanja
@@ -103,6 +104,59 @@ def optimizovana_nova_staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_p
                             return -100
                         suma_visina -= tabla.matrica[i][j].broj_spratova**2
         return suma_visina + tabla.matrica[potez.xg][potez.yg].broj_spratova
+
+def optimizovana_nova_staticka_funkcija_procene_sa_rastojanjem(tabla: Tabla, potez: Potez, na_potezu):
+    """Radi slicno kao funkcija iznad samo je malo optimizovana, brza je 40%
+    Staticka funkcija procene stanja igre koja se racuna kao algebarski zbir visina figura na kvadrat.
+    f = moja_figura1.broj_spratova^2 + moja_figura2.broj_spratova^2 - protivnikova_figura1.broj_spratova^2 - protivnikova_figura2.broj_spratova^2
+    + visina polja na kojem se gradi - kazna
+    kod ove staticke funkcije procene kaznjava se preveliko rastojanje od protivnickih figura, tako se AI vise priblizava protivnickim
+    figurama, nema vise izolovanja i gradnje u cosku da bi se pobedio AI
+
+    :param tabla: Tabla/stanje za koju treba izracunati staticku funkciju procene
+    :type tabla: Tabla
+    :param potez: Potez koji je doveo to tog stanja
+    :type potez: Potez
+    :param na_potezu: Igrac za kojeg se racuna staticka funkcija procene
+    :type na_potezu: int
+    :return: Vrednost staticke funkcije procene
+    :rtype: int
+    """    
+    if not tabla.ima_mogucih_poteza(na_potezu):
+        return -100
+    elif not tabla.ima_mogucih_poteza(protivnik(na_potezu)):
+        return 100
+    elif tabla.matrica[potez.xg][potez.yg].broj_spratova == 4:
+        return -50  # nepotrebno postavljanje kupole se boduje sa -50
+    else:
+        suma_visina = 0
+        brojac_figura = 0  # zbog ovoga imam 20% ubrzanje, jer prekidam petlje kad nadjem 4 figure
+        nasi, njihovi = [], []  # pamtim pozicije mojih i protivnickih figura
+        kazna = 0
+        for i in range(5):
+            for j in range(5):
+                if brojac_figura == 4:
+                    return suma_visina
+                if tabla.matrica[i][j].igrac != Igrac.NIJEDAN:
+                    brojac_figura += 1
+                    if tabla.matrica[i][j].igrac == na_potezu:
+                        if tabla.matrica[i][j].broj_spratova == 3:
+                            return 100
+                        suma_visina += tabla.matrica[i][j].broj_spratova**2
+                        nasi.append((i, j))
+                    elif tabla.matrica[i][j].igrac != na_potezu:  # protivnik
+                        if tabla.matrica[i][j].broj_spratova == 3:
+                            return -100
+                        suma_visina -= tabla.matrica[i][j].broj_spratova**2
+                        njihovi.append((i, j))
+
+        #preveliko rastojanje se kaznjava
+        for nas in nasi:
+            for njihov in njihovi:
+                if tabla.rastojanje(nas[0], nas[1], njihov[0], njihov[1]) > 2:
+                    kazna += 2  # 2 sam lupio
+        
+        return suma_visina + tabla.matrica[potez.xg][potez.yg].broj_spratova - kazna
 
 # visak, na listi za izbacivanje
 def unapredjena_staticka_funkcija_procene(tabla: Tabla, potez: Potez, na_potezu):

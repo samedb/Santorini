@@ -3,7 +3,8 @@ primanja inputa od korisnika i upravljanje AI-om kada je jedan od igraca vestack
 from tkinter import Canvas, messagebox
 import time
 import random
-from ai import MiniMax, MiniMaxAlfaBeta, staticka_funkcija_procene, unapredjena_staticka_funkcija_procene, nova_staticka_funkcija_procene, optimizovana_nova_staticka_funkcija_procene
+from ai import MiniMax, MiniMaxAlfaBeta, staticka_funkcija_procene, unapredjena_staticka_funkcija_procene
+from ai import nova_staticka_funkcija_procene, optimizovana_nova_staticka_funkcija_procene, optimizovana_nova_staticka_funkcija_procene_sa_rastojanjem
 from tabla import Tabla, GameState, Igrac, protivnik, Potez
 
 
@@ -111,7 +112,7 @@ class IgraCanvas(Canvas):
         elif tip_igraca == TIPOVI_IGRACA[2]:  # AI medium
             return MiniMaxAlfaBeta(stampaj_vrednosti_svih_poteza, 7, staticka_funkcija_procene)
         elif tip_igraca == TIPOVI_IGRACA[3]:  # AI hard
-            return MiniMaxAlfaBeta(stampaj_vrednosti_svih_poteza, 20, optimizovana_nova_staticka_funkcija_procene) 
+            return MiniMaxAlfaBeta(stampaj_vrednosti_svih_poteza, 20, optimizovana_nova_staticka_funkcija_procene_sa_rastojanjem) 
             
 
     def crtaj(self):
@@ -184,11 +185,11 @@ class IgraCanvas(Canvas):
             self.f.write(Potez.koordinate_u_string(x, y) + " ")
             self.broj_figura += 1
             if self.broj_figura == 2:
-                self.zameni_igraca()
                 self.f.write("\n")
+                self.zameni_igraca()
             elif self.broj_figura == 4:
                 self.game_state = GameState.SELEKTOVANJE_FIGURE
-                self.f.write("\n")
+                #self.f.write("\n")
                 self.zameni_igraca()
                 print("Sad pocinje prava igra")
 
@@ -211,7 +212,7 @@ class IgraCanvas(Canvas):
             self.tabla.gradi(x, y)
             self.trenutni_potez_osobe.xg = x
             self.trenutni_potez_osobe.yg = y
-            self.f.write(str(self.trenutni_potez_osobe) + "\n")  # zapisi ovaj potez u fajlu
+            self.f.write("\n" + str(self.trenutni_potez_osobe))  # zapisi ovaj potez u fajlu
             self.game_state = GameState.SELEKTOVANJE_FIGURE
             self.after(1, self.zameni_igraca)
 
@@ -267,7 +268,7 @@ class IgraCanvas(Canvas):
         print("Na potezu je " + str(self.na_potezu) + " i on je odgirao sledeci potez: " + str(potez))
 
         self.tabla.izvrsi_potez(potez)
-        self.f.write(str(potez) + "\n")
+        self.f.write("\n" + str(potez))
         self.game_state = GameState.SELEKTOVANJE_FIGURE
         self.da_li_je_kraj()
 
