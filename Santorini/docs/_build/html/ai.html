@@ -377,15 +377,48 @@ f = moja_figura1.broj_spratova^2 + moja_figura2.broj_spratova^2 - protivnikova_f
 <dd><p>Radi slicno kao funkcija iznad samo je malo optimizovana, brza je 40%
 Staticka funkcija procene stanja igre koja se racuna kao algebarski zbir visina figura na kvadrat.
 f = moja_figura1.broj_spratova^2 + moja_figura2.broj_spratova^2 - protivnikova_figura1.broj_spratova^2 - protivnikova_figura2.broj_spratova^2
-+ visina polja na kojem se gradi
-:param tabla: Tabla/stanje za koju treba izracunati staticku funkciju procene
-:type tabla: Tabla
-:param potez: Potez koji je doveo to tog stanja
-:type potez: Potez
-:param na_potezu: Igrac za kojeg se racuna staticka funkcija procene
-:type na_potezu: int
-:return: Vrednost staticke funkcije procene
-:rtype: int</p>
++ visina polja na kojem se gradi</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tabla</strong> (<a class="reference internal" href="tabla.html#tabla.Tabla" title="tabla.Tabla"><em>Tabla</em></a>) – Tabla/stanje za koju treba izracunati staticku funkciju procene</p></li>
+<li><p><strong>potez</strong> (<a class="reference internal" href="tabla.html#tabla.Potez" title="tabla.Potez"><em>Potez</em></a>) – Potez koji je doveo to tog stanja</p></li>
+<li><p><strong>na_potezu</strong> (<em>int</em>) – Igrac za kojeg se racuna staticka funkcija procene</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Vrednost staticke funkcije procene</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="ai.optimizovana_nova_staticka_funkcija_procene_sa_rastojanjem">
+<code class="sig-prename descclassname">ai.</code><code class="sig-name descname">optimizovana_nova_staticka_funkcija_procene_sa_rastojanjem</code><span class="sig-paren">(</span><em class="sig-param">tabla: tabla.Tabla</em>, <em class="sig-param">potez: tabla.Potez</em>, <em class="sig-param">na_potezu</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ai.html#optimizovana_nova_staticka_funkcija_procene_sa_rastojanjem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ai.optimizovana_nova_staticka_funkcija_procene_sa_rastojanjem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Radi slicno kao funkcija iznad samo je malo optimizovana, brza je 40%
+Staticka funkcija procene stanja igre koja se racuna kao algebarski zbir visina figura na kvadrat.
+f = moja_figura1.broj_spratova^2 + moja_figura2.broj_spratova^2 - protivnikova_figura1.broj_spratova^2 - protivnikova_figura2.broj_spratova^2
++ visina polja na kojem se gradi - kazna
+kod ove staticke funkcije procene kaznjava se preveliko rastojanje od protivnickih figura, tako se AI vise priblizava protivnickim
+figurama, nema vise izolovanja i gradnje u cosku da bi se pobedio AI</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tabla</strong> (<a class="reference internal" href="tabla.html#tabla.Tabla" title="tabla.Tabla"><em>Tabla</em></a>) – Tabla/stanje za koju treba izracunati staticku funkciju procene</p></li>
+<li><p><strong>potez</strong> (<a class="reference internal" href="tabla.html#tabla.Potez" title="tabla.Potez"><em>Potez</em></a>) – Potez koji je doveo to tog stanja</p></li>
+<li><p><strong>na_potezu</strong> (<em>int</em>) – Igrac za kojeg se racuna staticka funkcija procene</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Vrednost staticke funkcije procene</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">

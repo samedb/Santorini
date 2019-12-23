@@ -149,7 +149,8 @@
 <span class="kn">from</span> <span class="nn">tkinter</span> <span class="k">import</span> <span class="n">Canvas</span><span class="p">,</span> <span class="n">messagebox</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">random</span>
-<span class="kn">from</span> <span class="nn">ai</span> <span class="k">import</span> <span class="n">MiniMax</span><span class="p">,</span> <span class="n">MiniMaxAlfaBeta</span><span class="p">,</span> <span class="n">staticka_funkcija_procene</span><span class="p">,</span> <span class="n">unapredjena_staticka_funkcija_procene</span><span class="p">,</span> <span class="n">nova_staticka_funkcija_procene</span><span class="p">,</span> <span class="n">optimizovana_nova_staticka_funkcija_procene</span>
+<span class="kn">from</span> <span class="nn">ai</span> <span class="k">import</span> <span class="n">MiniMax</span><span class="p">,</span> <span class="n">MiniMaxAlfaBeta</span><span class="p">,</span> <span class="n">staticka_funkcija_procene</span><span class="p">,</span> <span class="n">unapredjena_staticka_funkcija_procene</span>
+<span class="kn">from</span> <span class="nn">ai</span> <span class="k">import</span> <span class="n">nova_staticka_funkcija_procene</span><span class="p">,</span> <span class="n">optimizovana_nova_staticka_funkcija_procene</span><span class="p">,</span> <span class="n">optimizovana_nova_staticka_funkcija_procene_sa_rastojanjem</span>
 <span class="kn">from</span> <span class="nn">tabla</span> <span class="k">import</span> <span class="n">Tabla</span><span class="p">,</span> <span class="n">GameState</span><span class="p">,</span> <span class="n">Igrac</span><span class="p">,</span> <span class="n">protivnik</span><span class="p">,</span> <span class="n">Potez</span>
 
 
@@ -253,11 +254,11 @@
         <span class="k">if</span> <span class="n">tip_igraca</span> <span class="o">==</span> <span class="n">TIPOVI_IGRACA</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>  <span class="c1"># Osoba</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="k">elif</span> <span class="n">tip_igraca</span> <span class="o">==</span> <span class="n">TIPOVI_IGRACA</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>  <span class="c1"># AI easy</span>
-            <span class="k">return</span> <span class="n">MiniMax</span><span class="p">(</span><span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">staticka_funkcija_procene</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">MiniMax</span><span class="p">(</span><span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">staticka_funkcija_procene</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">tip_igraca</span> <span class="o">==</span> <span class="n">TIPOVI_IGRACA</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span>  <span class="c1"># AI medium</span>
-            <span class="k">return</span> <span class="n">MiniMaxAlfaBeta</span><span class="p">(</span><span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">staticka_funkcija_procene</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">MiniMaxAlfaBeta</span><span class="p">(</span><span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="n">staticka_funkcija_procene</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">tip_igraca</span> <span class="o">==</span> <span class="n">TIPOVI_IGRACA</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span>  <span class="c1"># AI hard</span>
-            <span class="k">return</span> <span class="n">MiniMaxAlfaBeta</span><span class="p">(</span><span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="n">optimizovana_nova_staticka_funkcija_procene</span><span class="p">)</span> </div>
+            <span class="k">return</span> <span class="n">MiniMaxAlfaBeta</span><span class="p">(</span><span class="n">stampaj_vrednosti_svih_poteza</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="n">optimizovana_nova_staticka_funkcija_procene_sa_rastojanjem</span><span class="p">)</span> </div>
             
 
 <div class="viewcode-block" id="IgraCanvas.crtaj"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas.crtaj">[docs]</a>    <span class="k">def</span> <span class="nf">crtaj</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -330,11 +331,11 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">Potez</span><span class="o">.</span><span class="n">koordinate_u_string</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">broj_figura</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">broj_figura</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">zameni_igraca</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">zameni_igraca</span><span class="p">()</span>
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">broj_figura</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">=</span> <span class="n">GameState</span><span class="o">.</span><span class="n">SELEKTOVANJE_FIGURE</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="c1">#self.f.write(&quot;\n&quot;)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">zameni_igraca</span><span class="p">()</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sad pocinje prava igra&quot;</span><span class="p">)</span>
 
@@ -357,7 +358,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="o">.</span><span class="n">gradi</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">trenutni_potez_osobe</span><span class="o">.</span><span class="n">xg</span> <span class="o">=</span> <span class="n">x</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">trenutni_potez_osobe</span><span class="o">.</span><span class="n">yg</span> <span class="o">=</span> <span class="n">y</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trenutni_potez_osobe</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># zapisi ovaj potez u fajlu</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">trenutni_potez_osobe</span><span class="p">))</span>  <span class="c1"># zapisi ovaj potez u fajlu</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">=</span> <span class="n">GameState</span><span class="o">.</span><span class="n">SELEKTOVANJE_FIGURE</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">after</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">zameni_igraca</span><span class="p">)</span>
 
@@ -413,7 +414,7 @@
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Na potezu je &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; i on je odgirao sledeci potez: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">potez</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="o">.</span><span class="n">izvrsi_potez</span><span class="p">(</span><span class="n">potez</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">potez</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">potez</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">=</span> <span class="n">GameState</span><span class="o">.</span><span class="n">SELEKTOVANJE_FIGURE</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">da_li_je_kraj</span><span class="p">()</span></div>
 
@@ -475,7 +476,7 @@
 <div class="viewcode-block" id="IgraCanvas.sastavi_poruku"><a class="viewcode-back" href="../igra.html#igra.IgraCanvas.sastavi_poruku">[docs]</a>    <span class="k">def</span> <span class="nf">sastavi_poruku</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Sastavlja poruku o trenutnom stanju igre i igracu koji je na potezu&quot;&quot;&quot;</span>
         <span class="n">igrac</span> <span class="o">=</span> <span class="s2">&quot;PLAVI&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span> <span class="o">==</span> <span class="n">Igrac</span><span class="o">.</span><span class="n">CRVENI</span><span class="p">:</span>
             <span class="n">igrac</span> <span class="o">=</span> <span class="s2">&quot;CRVENI&quot;</span>        
         <span class="k">return</span> <span class="n">f</span><span class="s2">&quot;Na potezu je </span><span class="si">{igrac}</span><span class="s2"> </span><span class="se">\n</span><span class="s2">a gamestate je </span><span class="si">{self.game_state}</span><span class="s2">&quot;</span></div>
 
@@ -490,7 +491,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">=</span> <span class="n">GameState</span><span class="o">.</span><span class="n">KRAJ_IGRE</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">zatovori_fajl</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">crtaj</span><span class="p">()</span>
-            <span class="n">messagebox</span><span class="o">.</span><span class="n">showinfo</span><span class="p">(</span><span class="s2">&quot;Pobeda&quot;</span><span class="p">,</span> <span class="n">f</span><span class="s2">&quot;Pobedio je {self.na_potezu.protivnik()} jer </span><span class="si">{self.na_potezu}</span><span class="s2"> nema mogucih poteza!&quot;</span><span class="p">)</span>
+            <span class="n">messagebox</span><span class="o">.</span><span class="n">showinfo</span><span class="p">(</span><span class="s2">&quot;Pobeda&quot;</span><span class="p">,</span> <span class="n">f</span><span class="s2">&quot;Pobedio je {protivnik(self.na_potezu)} jer </span><span class="si">{self.na_potezu}</span><span class="s2"> nema mogucih poteza!&quot;</span><span class="p">)</span>
         
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tabla</span><span class="o">.</span><span class="n">zauzeo_treci_sprat</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">na_potezu</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">game_state</span> <span class="o">=</span> <span class="n">GameState</span><span class="o">.</span><span class="n">KRAJ_IGRE</span>
