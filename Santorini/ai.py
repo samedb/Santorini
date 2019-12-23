@@ -193,7 +193,7 @@ def svi_moguci_potezi(tabla, na_potezu):
                                     if not unutar_matrice:
                                         continue
                                     novo_polje = m != k or n != l
-                                    slobodno_polje = tabla.matrica[m][n].igrac == Igrac.NIJEDAN
+                                    slobodno_polje = tabla.matrica[m][n].igrac == Igrac.NIJEDAN or (m == i and n == j)  # prazno polje ili je polje odakle smo dosli
                                     moze_da_se_gradi = tabla.matrica[m][n].broj_spratova < 4
                                     if unutar_matrice and novo_polje and slobodno_polje and moze_da_se_gradi:
                                         moguci_potezi.append(Potez(i, j, k, l, m, n))
