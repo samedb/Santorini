@@ -444,5 +444,3 @@ class MiniMaxAlfaBeta(AI):
                     return v
                 beta = min(beta, v)
         return v
-
-

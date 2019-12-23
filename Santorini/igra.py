@@ -329,7 +329,7 @@ class IgraCanvas(Canvas):
     def sastavi_poruku(self):
         """Sastavlja poruku o trenutnom stanju igre i igracu koji je na potezu"""
         igrac = "PLAVI"
-        if self.na_potezu == 2:
+        if self.na_potezu == Igrac.CRVENI:
             igrac = "CRVENI"        
         return f"Na potezu je {igrac} \na gamestate je {self.game_state}"
 
@@ -344,7 +344,7 @@ class IgraCanvas(Canvas):
             self.game_state = GameState.KRAJ_IGRE
             self.zatovori_fajl()
             self.crtaj()
-            messagebox.showinfo("Pobeda", f"Pobedio je {self.na_potezu.protivnik()} jer {self.na_potezu} nema mogucih poteza!")
+            messagebox.showinfo("Pobeda", f"Pobedio je {protivnik(self.na_potezu)} jer {self.na_potezu} nema mogucih poteza!")
         
         if self.tabla.zauzeo_treci_sprat(self.na_potezu):
             self.game_state = GameState.KRAJ_IGRE
